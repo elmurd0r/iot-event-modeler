@@ -1,9 +1,13 @@
-#IOT
-Custom artifacts, that are exportable, must be first sanitized and everything but the svg tag must be deleted.
+# IOT
+Custom artefacts, that are exportable, must be first sanitized and everything but the svg tag must be deleted.
 Currently this svg files must be placed in app/svg and webpack bundles everything in public directory.
 
 example of sanitizer: http://svg.enshrined.co.uk/
 
+\
+\
+\
+\
 
 > This example combines all aspects of our [:notebook: custom elements guide](https://github.com/bpmn-io/bpmn-js-examples/tree/master/custom-elements).
 
