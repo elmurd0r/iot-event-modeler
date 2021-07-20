@@ -1,7 +1,12 @@
 import BaseRenderer from 'diagram-js/lib/draw/BaseRenderer';
 
 import artifact from "../svg/test_artifact.svg";
-import start from "../svg/start.svg";
+import startSVG from "../svg/start.svg";
+import actorSVG from "../svg/Artefakt_Empfangend.svg";
+import actorSubSVG from "../svg/Artefakt_Empfangend_Sub.svg";
+import sensorSVG from "../svg/Artefakt_Sendend.svg";
+import sensorSubSVG from "../svg/Artefakt_Senden_Sub.svg";
+import artefaktObjSVG from "../svg/Artefakt_Allgemein.svg";
 
 import {
   remove as svgRemove,
@@ -45,23 +50,23 @@ export default class CustomRenderer extends BaseRenderer {
       let imageHref;
       switch (iotType) {
         case 'start':
-          imageHref = start;
+          imageHref = startSVG;
           break;
         case 'actor':
-          imageHref = artifact;
+          imageHref = actorSVG;
           break;
         case 'actor-sub':
-          imageHref = artifact;
+          imageHref = actorSubSVG;
           break;
         case 'obj':
-          imageHref = artifact;
+          imageHref = artefaktObjSVG;
           break;
         case 'sensor-sub':
-          imageHref = artifact;
+          imageHref = sensorSubSVG;
           break;
         case 'sensor':
         default:
-          imageHref = artifact;
+          imageHref = sensorSVG;
       }
 
       //const img = drawIot(parentNode, 36, 52, imageHref);

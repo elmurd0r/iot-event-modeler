@@ -33,19 +33,19 @@ html, body, #container {
 }
 
 .sensor {
-  background-image: url(http://localhost:5000/svg/test_artifact.svg);
+  background-image: url(http://localhost:5000/svg/Artefakt_Sendend.svg);
 }
 .actor {
-  background-image: url(http://localhost:5000/svg/test_artifact.svg);
+  background-image: url(http://localhost:5000/svg/Artefakt_Empfangend.svg);
 }
 .actor-sub {
-  background-image: url(http://localhost:5000/svg/test_artifact.svg);
+  background-image: url(http://localhost:5000/svg/Artefakt_Empfangend_Sub.svg);
 }
 .sensor-sub {
-  background-image: url(http://localhost:5000/svg/test_artifact.svg);
+  background-image: url(http://localhost:5000/svg/Artefakt_Senden_Sub.svg);
 }
 .obj {
-  background-image: url(http://localhost:5000/svg/test_artifact.svg);
+  background-image: url(http://localhost:5000/svg/Artefakt_Allgemein.svg);
 }
 .start {
   background-image: url(http://localhost:5000/svg/start.svg);
