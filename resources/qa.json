@@ -1,56 +1,18 @@
 {
-  "name": "QualityAssurance",
-  "uri": "http://some-company/schema/bpmn/qa",
-  "prefix": "qa",
+  "name": "Iot",
+  "uri": "http://some-company/schema/bpmn/iot",
+  "prefix": "iot",
   "xml": {
     "tagAlias": "lowerCase"
   },
   "types": [
     {
-      "name": "AnalyzedNode",
-      "extends": [
-        "bpmn:FlowNode"
-      ],
-      "properties": [
-        {
-          "name": "suitable",
-          "isAttr": true,
-          "type": "Integer"
-        }
-      ]
-    },
-    {
-      "name": "AnalysisDetails",
+      "name": "type",
       "superClass": [ "Element" ],
       "properties": [
         {
-          "name": "lastChecked",
+          "name": "type",
           "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "nextCheck",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "comments",
-          "isMany": true,
-          "type": "Comment"
-        }
-      ]
-    },
-    {
-      "name": "Comment",
-      "properties": [
-        {
-          "name": "author",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "text",
-          "isBody": true,
           "type": "String"
         }
       ]

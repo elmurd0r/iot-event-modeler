@@ -25,18 +25,6 @@ html, body, #container {
   font-family: 'Arial', sans-serif;
 }
 
-.bpmn-icon-task.red {
-  color: #cc0000 !important;
-}
-
-.bpmn-icon-task.yellow {
-  color: #ffc800 !important;
-}
-
-.bpmn-icon-task.green {
-  color: #52B415 !important;
-}
-
 #quality-assurance {
   color: #111;
   left: 50%;
@@ -67,8 +55,23 @@ html, body, #container {
   color: #111;
 }
 
-#hint {
+.hint {
   bottom: 20px;
   left: 20px;
   position: absolute;
+}
+
+
+.sensor {
+  background-image: url(http://localhost:5000/sensor.png);
+}
+.actor {
+  background-image: url(http://localhost:5000/artifact.svg);
+}
+
+
+.iot {
+  background-size: 25px 30px;
+  background-repeat: no-repeat;
+  background-position: center center;
 }

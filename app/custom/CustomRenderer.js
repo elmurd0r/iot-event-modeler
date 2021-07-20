@@ -2,6 +2,8 @@ import BaseRenderer from 'diagram-js/lib/draw/BaseRenderer';
 
 import {
   append as svgAppend,
+  prepend as svgPrepend,
+  remove as svgRemove,
   attr as svgAttr,
   classes as svgClasses,
   create as svgCreate
@@ -40,59 +42,46 @@ export default class CustomRenderer extends BaseRenderer {
 
   drawShape(parentNode, element) {
     const shape = this.bpmnRenderer.drawShape(parentNode, element);
+    const iotType = this.getIotType(element);
 
-    const suitabilityScore = this.getSuitabilityScore(element);
+    if (!isNil(iotType)) {
 
-    if (!isNil(suitabilityScore)) {
-      const color = this.getColor(suitabilityScore);
+      let imageHref;
+      switch (iotType) {
+        case 'actor':
+          imageHref = "./artifact.svg";
+          break
+        case 'sensor':
+        default:
+          imageHref = "./sensor.png";
+      }
 
-      const rect = drawRect(parentNode, 50, 20, TASK_BORDER_RADIUS, color);
+      const img = drawIot(parentNode, 36, 52, imageHref);
+      //const img = drawIot(parentNode, element.width, element.height);
 
-      svgAttr(rect, {
-        transform: 'translate(-20, -10)'
-      });
 
-      var text = svgCreate('text');
-
-      svgAttr(text, {
-        fill: '#fff',
-        transform: 'translate(-15, 5)'
-      });
-
-      svgClasses(text).add('djs-label');
-
-      svgAppend(text, document.createTextNode(suitabilityScore));
-
-      svgAppend(parentNode, text);
+      prependTo(img, parentNode);
+      svgRemove(shape);
+      return shape;
     }
 
     return shape;
   }
 
+  getIotType(element) {
+    const businessObject = getBusinessObject(element);
+
+    const type = businessObject.get('iot:type');
+
+    return type ? type : null;
+  }
+
   getShapePath(shape) {
-    if (is(shape, 'bpmn:Task')) {
+    if (is(shape, 'bpmn:DataObjectReference')) {
       return getRoundRectPath(shape, TASK_BORDER_RADIUS);
     }
 
     return this.bpmnRenderer.getShapePath(shape);
-  }
-
-  getSuitabilityScore(element) {
-    const businessObject = getBusinessObject(element);
-
-    const { suitable } = businessObject;
-
-    return Number.isFinite(suitable) ? suitable : null;
-  }
-
-  getColor(suitabilityScore) {
-    if (suitabilityScore > 75) {
-      return COLOR_GREEN;
-    } else if (suitabilityScore > 25) {
-      return COLOR_YELLOW;
-    }
-
-    return COLOR_RED;
   }
 }
 
@@ -117,4 +106,20 @@ function drawRect(parentNode, width, height, borderRadius, color) {
   svgAppend(parentNode, rect);
 
   return rect;
+}
+
+function drawIot(parentNode, width, height, image) {
+    const img = svgCreate('image');
+
+    svgAttr(img, {
+      width: width,
+      height: height,
+      strokeWidth: 2,
+      href: image
+    });
+
+    return img;
+}
+function prependTo(newNode, parentNode, siblingNode) {
+  parentNode.insertBefore(newNode, siblingNode || parentNode.firstChild);
 }

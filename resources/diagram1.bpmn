@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:iot="http://some-company/schema/bpmn/iot" xmlns:qa="http://some-company/schema/bpmn/qa" id="_RdgBELNaEeSYkoSLDs6j-w" targetNamespace="http://activiti.org/bpmn">
+  <bpmn2:process id="Process_1">
+    <bpmn2:dataObjectReference id="DataObjectReference_14sdj3l" dataObjectRef="DataObject_1qei67p" iot:type="sensor" />
+    <bpmn2:dataObject id="DataObject_1qei67p" />
+    <bpmn2:dataObjectReference id="DataObjectReference_0n5pm73" dataObjectRef="DataObject_1k0wuud" iot:type="actor" />
+    <bpmn2:dataObject id="DataObject_1k0wuud" />
+    <bpmn2:dataObjectReference id="DataObjectReference_14fuh69" dataObjectRef="DataObject_09ruyso" iot:type="actor" />
+    <bpmn2:dataObject id="DataObject_09ruyso" />
+    <bpmn2:dataObjectReference id="DataObjectReference_0r2fe58" dataObjectRef="DataObject_1triryb" iot:type="sensor" />
+    <bpmn2:dataObject id="DataObject_1triryb" />
+    <bpmn2:dataObjectReference id="DataObjectReference_0yp7yxu" dataObjectRef="DataObject_0xr9kl7" iot:type="actor" />
+    <bpmn2:dataObject id="DataObject_0xr9kl7" />
+    <bpmn2:dataObjectReference id="DataObjectReference_1i687df" dataObjectRef="DataObject_0hqr7gh" iot:type="actor" />
+    <bpmn2:dataObject id="DataObject_0hqr7gh" />
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="DataObjectReference_14sdj3l_di" bpmnElement="DataObjectReference_14sdj3l">
+        <dc:Bounds x="202" y="305" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_0n5pm73_di" bpmnElement="DataObjectReference_0n5pm73">
+        <dc:Bounds x="422" y="245" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_14fuh69_di" bpmnElement="DataObjectReference_14fuh69">
+        <dc:Bounds x="332" y="335" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_0r2fe58_di" bpmnElement="DataObjectReference_0r2fe58">
+        <dc:Bounds x="202" y="195" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_0yp7yxu_di" bpmnElement="DataObjectReference_0yp7yxu">
+        <dc:Bounds x="332" y="135" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_1i687df_di" bpmnElement="DataObjectReference_1i687df">
+        <dc:Bounds x="322" y="245" width="36" height="50" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

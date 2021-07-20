@@ -1,7 +1,3 @@
-const SUITABILITY_SCORE_HIGH = 100,
-      SUITABILITY_SCORE_AVERGE = 50,
-      SUITABILITY_SCORE_LOW = 25;
-
 export default class CustomPalette {
   constructor(bpmnFactory, create, elementFactory, palette, translate) {
     this.bpmnFactory = bpmnFactory;
@@ -20,14 +16,16 @@ export default class CustomPalette {
       translate
     } = this;
 
-    function createTask(suitabilityScore) {
+    function createIotObj(iotType) {
       return function(event) {
-        const businessObject = bpmnFactory.create('bpmn:Task');
+        const businessObject = bpmnFactory.create('bpmn:DataObjectReference');
 
-        businessObject.suitable = suitabilityScore;
+        businessObject.set('iot:type', iotType);
+
+        businessObject.iotType = iotType;
 
         const shape = elementFactory.createShape({
-          type: 'bpmn:Task',
+          type: 'bpmn:DataObjectReference',
           businessObject: businessObject
         });
 
@@ -36,31 +34,22 @@ export default class CustomPalette {
     }
 
     return {
-      'create.low-task': {
-        group: 'activity',
-        className: 'bpmn-icon-task red',
-        title: translate('Create Task with low suitability score'),
+      'create.iot-sensor': {
+        group: 'iot',
+        title: translate('Create IoT Sensor'),
+        className: 'iot sensor',
         action: {
-          dragstart: createTask(SUITABILITY_SCORE_LOW),
-          click: createTask(SUITABILITY_SCORE_LOW)
+          dragstart: createIotObj("sensor"),
+          click: createIotObj("sensor")
         }
       },
-      'create.average-task': {
-        group: 'activity',
-        className: 'bpmn-icon-task yellow',
-        title: translate('Create Task with average suitability score'),
+      'create.iot-actor': {
+        group: 'iot',
+        className: 'iot actor',
+        title: translate('Create IoT Actor'),
         action: {
-          dragstart: createTask(SUITABILITY_SCORE_AVERGE),
-          click: createTask(SUITABILITY_SCORE_AVERGE)
-        }
-      },
-      'create.high-task': {
-        group: 'activity',
-        className: 'bpmn-icon-task green',
-        title: translate('Create Task with high suitability score'),
-        action: {
-          dragstart: createTask(SUITABILITY_SCORE_HIGH),
-          click: createTask(SUITABILITY_SCORE_HIGH)
+          dragstart: createIotObj("actor"),
+          click: createIotObj("actor")
         }
       }
     };
