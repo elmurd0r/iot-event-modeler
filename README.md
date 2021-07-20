@@ -1,4 +1,4 @@
-# IOT
+# IoT
 Custom artefacts, that are exportable, must be first sanitized and everything but the svg tag must be deleted.
 Currently this svg files must be placed in app/svg and webpack bundles everything in public directory.
 
