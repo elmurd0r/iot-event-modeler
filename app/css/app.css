@@ -25,53 +25,52 @@ html, body, #container {
   font-family: 'Arial', sans-serif;
 }
 
-#quality-assurance {
-  color: #111;
-  left: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
 
-#quality-assurance #form input {
-  border: solid 1px #ccc;
-  border-radius: 2px;
-  font-family: 'Arial', sans-serif;
-  padding: 10px;
-}
-
-#quality-assurance #form input[type=text] {
-  width: 100%;
-}
-
-#quality-assurance #form #warning {
-  background-color: rgba(255, 0, 0, 0.25);
-  border-radius: 2px;
-  padding: 10px;
-}
-
-#quality-assurance #form input[type=submit] {
-  background-color: #FAFAFA;
-  color: #111;
-}
-
-.hint {
+.btn-container {
   bottom: 20px;
   left: 20px;
   position: absolute;
 }
 
-
 .sensor {
-  background-image: url(http://localhost:5000/sensor.png);
+  background-image: url(http://localhost:5000/svg/test_artifact.svg);
 }
 .actor {
-  background-image: url(http://localhost:5000/artifact.svg);
+  background-image: url(http://localhost:5000/svg/test_artifact.svg);
 }
-
+.actor-sub {
+  background-image: url(http://localhost:5000/svg/test_artifact.svg);
+}
+.sensor-sub {
+  background-image: url(http://localhost:5000/svg/test_artifact.svg);
+}
+.obj {
+  background-image: url(http://localhost:5000/svg/test_artifact.svg);
+}
+.start {
+  background-image: url(http://localhost:5000/svg/start.svg);
+  /*
+    alternative data uri
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNzhweCIgaGVpZ2h0PSI3OHB4IiB2aWV3Qm94PSItMC41IC0wLjUgNzggNzgiPgogICAgPGRlZnM+PC9kZWZzPgogICAgPGc+CiAgICAgICAgPGVsbGlwc2UgY3g9IjM5IiBjeT0iMzkiIHJ4PSIzNy41IiByeT0iMzcuNSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiPjwvZWxsaXBzZT4KICAgICAgICA8cmVjdCB4PSIxOSIgeT0iMjkiIHdpZHRoPSI0MCIgaGVpZ2h0PSIyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJub25lIj48L3JlY3Q+CiAgICAgICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTAuNSAtMC41KSI+CiAgICAgICAgICAgIDxzd2l0Y2g+CiAgICAgICAgICAgICAgICA8dGV4dCB4PSIzOSIgeT0iNTEiIGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EiIGZvbnQtc2l6ZT0iNDBweCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+SW9UPC90ZXh0PgogICAgICAgICAgICA8L3N3aXRjaD4KICAgICAgICA8L2c+CiAgICA8L2c+CiAgICA8c3dpdGNoPgogICAgICAgIDxnPjwvZz4KICAgICAgICA8YSB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLC01KSIgeGxpbms6aHJlZj0iaHR0cHM6Ly93d3cuZGlhZ3JhbXMubmV0L2RvYy9mYXEvc3ZnLWV4cG9ydC10ZXh0LXByb2JsZW1zIj4KICAgICAgICAgICAgPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMHB4IiB4PSI1MCUiIHk9IjEwMCUiPlZpZXdlciBkb2VzIG5vdCBzdXBwb3J0IGZ1bGwgU1ZHIDEuMTwvdGV4dD4KICAgICAgICA8L2E+CiAgICA8L3N3aXRjaD4KPC9zdmc+Cg==);;
+   */
+}
 
 .iot {
   background-size: 25px 30px;
   background-repeat: no-repeat;
   background-position: center center;
+}
+
+a.btn {
+  border-radius: .25rem;
+  border: 1px solid transparent;
+  padding: .5rem 1rem;
+  color: #fff;
+  background-color: #0d6efd!important;
+  text-decoration: none;
+}
+
+a.btn:hover {
+  border-radius: .25rem;
+  background-color: #0a4eb3 !important;
 }

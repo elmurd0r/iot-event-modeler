@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="78px" height="78px" viewBox="-0.5 -0.5 78 78">
+    <defs></defs>
+    <g>
+        <ellipse cx="39" cy="39" rx="37.5" ry="37.5" fill="#ffffff" stroke="#000000" stroke-width="3"></ellipse>
+        <rect x="19" y="29" width="40" height="20" fill="none" stroke="none"></rect>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <text x="39" y="51" fill="#000000" font-family="Helvetica" font-size="40px" text-anchor="middle">IoT</text>
+            </switch>
+        </g>
+    </g>
+    <switch>
+        <g></g>
+        <a transform="translate(0,-5)" xlink:href="https://www.diagrams.net/doc/faq/svg-export-text-problems">
+            <text text-anchor="middle" font-size="10px" x="50%" y="100%">Viewer does not support full SVG 1.1</text>
+        </a>
+    </switch>
+</svg>

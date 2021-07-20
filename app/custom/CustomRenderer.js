@@ -1,11 +1,11 @@
 import BaseRenderer from 'diagram-js/lib/draw/BaseRenderer';
 
+import artifact from "../svg/test_artifact.svg";
+import start from "../svg/start.svg";
+
 import {
-  append as svgAppend,
-  prepend as svgPrepend,
   remove as svgRemove,
   attr as svgAttr,
-  classes as svgClasses,
   create as svgCreate
 } from 'tiny-svg';
 
@@ -21,10 +21,7 @@ import {
 import { isNil } from 'min-dash';
 
 const HIGH_PRIORITY = 1500,
-      TASK_BORDER_RADIUS = 2,
-      COLOR_GREEN = '#52B415',
-      COLOR_YELLOW = '#ffc800',
-      COLOR_RED = '#cc0000';
+      TASK_BORDER_RADIUS = 2;
 
 
 export default class CustomRenderer extends BaseRenderer {
@@ -35,7 +32,6 @@ export default class CustomRenderer extends BaseRenderer {
   }
 
   canRender(element) {
-
     // ignore labels
     return !element.labelTarget;
   }
@@ -48,17 +44,28 @@ export default class CustomRenderer extends BaseRenderer {
 
       let imageHref;
       switch (iotType) {
+        case 'start':
+          imageHref = start;
+          break;
         case 'actor':
-          imageHref = "./artifact.svg";
-          break
+          imageHref = artifact;
+          break;
+        case 'actor-sub':
+          imageHref = artifact;
+          break;
+        case 'obj':
+          imageHref = artifact;
+          break;
+        case 'sensor-sub':
+          imageHref = artifact;
+          break;
         case 'sensor':
         default:
-          imageHref = "./sensor.png";
+          imageHref = artifact;
       }
 
-      const img = drawIot(parentNode, 36, 52, imageHref);
-      //const img = drawIot(parentNode, element.width, element.height);
-
+      //const img = drawIot(parentNode, 36, 52, imageHref);
+      const img = drawIot(parentNode, element.width, element.height, imageHref);
 
       prependTo(img, parentNode);
       svgRemove(shape);
@@ -89,33 +96,12 @@ CustomRenderer.$inject = [ 'eventBus', 'bpmnRenderer' ];
 
 // helpers //////////
 
-// copied from https://github.com/bpmn-io/bpmn-js/blob/master/lib/draw/BpmnRenderer.js
-function drawRect(parentNode, width, height, borderRadius, color) {
-  const rect = svgCreate('rect');
-
-  svgAttr(rect, {
-    width: width,
-    height: height,
-    rx: borderRadius,
-    ry: borderRadius,
-    stroke: color,
-    strokeWidth: 2,
-    fill: color
-  });
-
-  svgAppend(parentNode, rect);
-
-  return rect;
-}
-
 function drawIot(parentNode, width, height, image) {
-    const img = svgCreate('image');
+    const img = svgCreate(image);
 
     svgAttr(img, {
       width: width,
-      height: height,
-      strokeWidth: 2,
-      href: image
+      height: height
     });
 
     return img;

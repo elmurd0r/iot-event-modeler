@@ -13,6 +13,10 @@ module.exports = {
       {
         test: /\.bpmn$/,
         use: 'raw-loader'
+      },
+      {
+        test: /\.svg$/,
+        use: 'raw-loader'
       }
     ]
   },
@@ -20,7 +24,8 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: 'assets/**', to: 'vendor/bpmn-js', context: 'node_modules/bpmn-js/dist/' },
-        { from: '**/*.{html,css}', context: 'app/' }
+        { from: '**/*.{html,css}', context: 'app/' },
+        { from: '**/svg/*.svg', to: '.', context: 'app/' }
       ]
     })
   ],

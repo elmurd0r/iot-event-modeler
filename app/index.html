@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>bpmn-js-example-model-extension</title>
+  <title>bpmn-js-example-iot-model-extension</title>
 
   <link rel="stylesheet" href="vendor/bpmn-js/assets/diagram-js.css" />
   <link rel="stylesheet" href="vendor/bpmn-js/assets/bpmn-font/css/bpmn-embedded.css" />
@@ -10,7 +10,10 @@
 <body>
   <div id="container"></div>
 
-  <button id="saveBtn" class="hint">save XML</button>
+  <div class="btn-container">
+    <a id="saveXML" href title="Export XML" class="btn">Export XML</a>
+    <a id="saveSVG" href title="Export SVG" class="btn">Export SVG</a>
+  </div>
 
 </body>
 <script src="app.js"></script>
