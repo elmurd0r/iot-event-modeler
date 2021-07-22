@@ -38,6 +38,9 @@
   },
   "dependencies": {
     "bpmn-js": "^8.2.2",
-    "min-dash": "^3.7.0"
+    "diagram-js": "^7.3.0",
+    "inherits": "^2.0.4",
+    "min-dash": "^3.7.0",
+    "svg64": "^1.1.0"
   }
 }

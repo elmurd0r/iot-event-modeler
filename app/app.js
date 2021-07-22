@@ -17,6 +17,7 @@ const bpmnModeler = new BpmnModeler({
   additionalModules: [
     customModule
   ],
+  taskResizingEnabled: true,
   moddleExtensions: {
     qa: qaExtension
   }
