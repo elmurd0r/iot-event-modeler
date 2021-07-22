@@ -5,11 +5,16 @@
 
   <link rel="stylesheet" href="vendor/bpmn-js/assets/diagram-js.css" />
   <link rel="stylesheet" href="vendor/bpmn-js/assets/bpmn-font/css/bpmn-embedded.css" />
+  <link rel="stylesheet" href="vendor/bpmn-js-properties-panel/assets/bpmn-js-properties-panel.css" />
   <link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
-  <div id="container"></div>
+<div class="content" id="js-drop-zone">
 
+  <div class="canvas" id="js-canvas"></div>
+  <div class="properties-panel-parent" id="js-properties-panel"></div>
+
+</div>
   <div class="btn-container">
     <a id="saveXML" href title="Export XML" class="btn">Export XML</a>
     <a id="saveSVG" href title="Export SVG" class="btn">Export SVG</a>

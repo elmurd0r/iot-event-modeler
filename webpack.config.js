@@ -25,7 +25,8 @@ module.exports = {
       patterns: [
         { from: 'assets/**', to: 'vendor/bpmn-js', context: 'node_modules/bpmn-js/dist/' },
         { from: '**/*.{html,css}', context: 'app/' },
-        { from: '**/svg/*.svg', to: '.', context: 'app/' }
+        { from: '**/svg/*.svg', to: '.', context: 'app/' },
+        { from: 'node_modules/bpmn-js-properties-panel/dist/assets', to: 'vendor/bpmn-js-properties-panel/assets' },
       ]
     })
   ],

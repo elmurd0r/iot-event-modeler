@@ -1,4 +1,7 @@
 import BpmnModeler from 'bpmn-js/lib/Modeler';
+let propertiesPanelModule = require('bpmn-js-properties-panel'),
+    propertiesProviderModule = require('bpmn-js-properties-panel/lib/provider/bpmn');
+
 
 import diagramXML from '../resources/diagram1.bpmn';
 
@@ -6,7 +9,8 @@ import customModule from './custom';
 
 import qaExtension from '../resources/qa';
 
-const containerEl = document.getElementById('container'),
+const containerEl = document.getElementById('js-canvas'),
+      panel = document.getElementById('js-properties-panel'),
       saveXML = document.getElementById('saveXML'),
       saveSVG = document.getElementById('saveSVG');
 
@@ -14,8 +18,13 @@ const containerEl = document.getElementById('container'),
 // create modeler
 const bpmnModeler = new BpmnModeler({
   container: containerEl,
+  propertiesPanel: {
+    parent: panel
+  },
   additionalModules: [
-    customModule
+    customModule,
+    propertiesPanelModule,
+    propertiesProviderModule
   ],
   taskResizingEnabled: true,
   moddleExtensions: {
