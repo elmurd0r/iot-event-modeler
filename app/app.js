@@ -1,13 +1,14 @@
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 let propertiesPanelModule = require('bpmn-js-properties-panel'),
     propertiesProviderModule = require('bpmn-js-properties-panel/lib/provider/bpmn');
+import iotPropertiesProvider from './custom/iot-panel/';
 
 
 import diagramXML from '../resources/diagram1.bpmn';
 
 import customModule from './custom';
 
-import qaExtension from '../resources/qa';
+import iotExtension from '../resources/iot.json';
 
 const containerEl = document.getElementById('js-canvas'),
       panel = document.getElementById('js-properties-panel'),
@@ -24,11 +25,12 @@ const bpmnModeler = new BpmnModeler({
   additionalModules: [
     customModule,
     propertiesPanelModule,
-    propertiesProviderModule
+    propertiesProviderModule,
+    iotPropertiesProvider
   ],
   taskResizingEnabled: true,
   moddleExtensions: {
-    qa: qaExtension
+    iot: iotExtension
   }
 });
 

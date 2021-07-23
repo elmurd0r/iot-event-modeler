@@ -7,10 +7,16 @@
   },
   "types": [
     {
-      "name": "type",
-      "superClass": [ "Element" ],
+      "name": "iotObject",
+      "extends": [
+        "bpmn:DataObjectReference"
+      ],
       "properties": [
         {
+          "name": "value",
+          "isAttr": true,
+          "type": "String"
+        },{
           "name": "type",
           "isAttr": true,
           "type": "String"
