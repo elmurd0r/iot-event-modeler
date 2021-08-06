@@ -1,7 +1,7 @@
 import BaseRenderer from 'diagram-js/lib/draw/BaseRenderer';
 const svg64 = require('svg64');
 
-import startSVG from "../svg/start.svg";
+import startSVG from "../svg/NewStartSVG.svg";
 import actorSVG from "../svg/Artefakt_Empfangend.svg";
 import actorSubSVG from "../svg/Artefakt_Empfangend_Sub.svg";
 import sensorSVG from "../svg/Artefakt_Sendend.svg";

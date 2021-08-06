@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:iot="http://some-company/schema/bpmn/iot" xmlns:qa="http://some-company/schema/bpmn/qa" id="_RdgBELNaEeSYkoSLDs6j-w" targetNamespace="http://activiti.org/bpmn">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:iot="http://some-company/schema/bpmn/iot" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:qa="http://some-company/schema/bpmn/qa" id="_RdgBELNaEeSYkoSLDs6j-w" targetNamespace="http://activiti.org/bpmn">
   <bpmn2:process id="Process_1" isExecutable="true">
     <bpmn2:startEvent id="Event_1yx6juh">
       <bpmn2:outgoing>Flow_1se0sq7</bpmn2:outgoing>
     </bpmn2:startEvent>
     <bpmn2:task id="Activity_0j6bh35" name="Get Data">
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property />
+        </camunda:properties>
+      </bpmn2:extensionElements>
       <bpmn2:incoming>Flow_1se0sq7</bpmn2:incoming>
       <bpmn2:outgoing>Flow_0dmkgiw</bpmn2:outgoing>
       <bpmn2:property id="Property_05bfvdc" name="__targetRef_placeholder" />
@@ -28,14 +33,14 @@
       </bpmn2:dataOutputAssociation>
     </bpmn2:task>
     <bpmn2:sequenceFlow id="Flow_099cul0" sourceRef="Gateway_0pgqw4u" targetRef="Activity_1u3g49x">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" language="javaScript">next(null, this.environment.variables.input &lt;= 50);</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" language="javaScript">next(null, this.environment.variables.input &gt; 10);</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:task id="Activity_1lbfvku" name="Task B">
       <bpmn2:incoming>Flow_09ydh4y</bpmn2:incoming>
       <bpmn2:outgoing>Flow_02rnm2k</bpmn2:outgoing>
     </bpmn2:task>
     <bpmn2:sequenceFlow id="Flow_09ydh4y" sourceRef="Gateway_0pgqw4u" targetRef="Activity_1lbfvku">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" language="JavaScript">next(null, this.environment.variables.input == 50);</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" language="JavaScript">next(null, this.environment.variables.input == 10047);</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:exclusiveGateway id="Gateway_04yu78z">
       <bpmn2:incoming>Flow_1bs1hl9</bpmn2:incoming>
@@ -48,9 +53,9 @@
       <bpmn2:incoming>Flow_1nzvzva</bpmn2:incoming>
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="Flow_1nzvzva" sourceRef="Gateway_04yu78z" targetRef="Event_03jt82z" />
-    <bpmn2:dataObjectReference id="DataObjectReference_17rtrei" dataObjectRef="DataObject_09d2p9m" iot:type="sensor" />
+    <bpmn2:dataObjectReference id="DataObjectReference_17rtrei" dataObjectRef="DataObject_09d2p9m" iot:value="http://192.168.2.164:62400/api/v1/device/f4ebab63-c674-4c49-bd3f-0e1f4704fe2d" iot:type="sensor" />
     <bpmn2:dataObject id="DataObject_09d2p9m" />
-    <bpmn2:dataObjectReference id="DataObjectReference_1fepu07" dataObjectRef="DataObject_0494zph" iot:type="actor" />
+    <bpmn2:dataObjectReference id="DataObjectReference_1fepu07" dataObjectRef="DataObject_0494zph" iot:value="http://192.168.2.164:62400/api/v1/device/f4ebab63-c674-4c49-bd3f-0e1f4704fe2d?action=turnOn" iot:type="actor" />
     <bpmn2:dataObject id="DataObject_0494zph" />
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -106,11 +111,11 @@
       <bpmndi:BPMNShape id="Event_03jt82z_di" bpmnElement="Event_03jt82z">
         <dc:Bounds x="832" y="222" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DataObjectReference_1fepu07_di" bpmnElement="DataObjectReference_1fepu07">
-        <dc:Bounds x="562" y="105" width="36" height="50" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="DataObjectReference_17rtrei_di" bpmnElement="DataObjectReference_17rtrei">
         <dc:Bounds x="302" y="105" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_1fepu07_di" bpmnElement="DataObjectReference_1fepu07">
+        <dc:Bounds x="562" y="105" width="36" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="DataInputAssociation_0b9k7n7_di" bpmnElement="DataInputAssociation_0b9k7n7">
         <di:waypoint x="320" y="155" />
