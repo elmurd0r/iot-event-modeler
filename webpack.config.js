@@ -2,11 +2,12 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
-    bundle: ['./app/app.js']
-  },
+    'app': '/app/app.js',
+    'execute': '/app/executer/execute.js'
+},
   output: {
     path: __dirname + '/public',
-    filename: 'app.js'
+    filename: '[name].js'
   },
   module: {
     rules: [
