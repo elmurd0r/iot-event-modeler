@@ -1,6 +1,20 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
+  externals: [{
+    xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}'
+  }],
+  resolve: {
+    fallback: {
+      "fs": false,
+      "path": false,
+      "stream": false,
+      "vm": false,
+      "http": false,
+      "https": false,
+      "timers": false
+    }
+  },
   entry: {
     'app': '/app/app.js',
     'execute': '/app/executer/execute.js'
