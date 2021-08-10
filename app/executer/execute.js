@@ -183,7 +183,7 @@ listener.on('activity.start', (start) => {
   });
 
   overlays.add(elements, {
-    html: '<div class="overlay">Time:'+ time+' ms</div>',
+    html: '<div class="overlay">Time:'+ time/1000+' s</div>',
     position: {
       right: 0,
       bottom:0
