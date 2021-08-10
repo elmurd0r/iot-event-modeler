@@ -42,7 +42,6 @@ bpmnViewer.importXML(processModel).then(() => {
 });
 
 
-
 const listener = new EventEmitter();
 
 const engine = Engine({
@@ -103,9 +102,7 @@ listener.on('activity.start', (start) => {
         taskSensors.forEach(sensor => {
           sensType = sensor['$']['iot:type'];
           sensVal = sensor['$']['iot:value'];
-          sensName = sensor['$'].name;
-
-
+          sensName = sensor['$'].name!!!!!!!!
           if (inputsBoolean != undefined) {
             let propBooleanValue = inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value;
             while (whileBool) {
@@ -181,23 +178,15 @@ listener.on('activity.start', (start) => {
   let elements = bpmnViewer.get('elementRegistry').find(function(element) {
     return  element.id === start.id;
   });
-
-
   highlightElement(elements);
 
 });
 
-// listener.on('activity.end', (end) => {
-//
-//   let elements = bpmnViewer.get('elementRegistry').find(function(element) {
-//     return  element.id === end.id;
-//   });
-//
-//   console.log(elements);
-//
-//   highlightElement(elements);
-//
-// });
+listener.once('wait', (elementApi) => {
+  console.log("ICH BIN IN WAIT");
+  console.log(elementApi);
+  console.log(elementApi.id);
+});
 
 
 const highlightElement = (elem) => {
