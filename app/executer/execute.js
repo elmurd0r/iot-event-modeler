@@ -19,7 +19,7 @@ const processModel = sessionStorage.getItem('xml') ? sessionStorage.getItem('xml
 const runBtn = document.getElementById('runBtn');
 
 
-let worker = new Worker('newWorkerThread.js');
+
 
 // create modeler
 const bpmnViewer = new NavigatedViewer({
@@ -32,6 +32,8 @@ const bpmnViewer = new NavigatedViewer({
     camunda: camundaExtension
   }
 });
+
+let overlays = bpmnViewer.get('overlays');
 
 
 // import XML
@@ -102,7 +104,9 @@ listener.on('activity.start', (start) => {
         taskSensors.forEach(sensor => {
           sensType = sensor['$']['iot:type'];
           sensVal = sensor['$']['iot:value'];
-          sensName = sensor['$'].name!!!!!!!!
+          sensName = sensor['$'].name;
+
+
           if (inputsBoolean != undefined) {
             let propBooleanValue = inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value;
             while (whileBool) {
@@ -166,35 +170,41 @@ listener.on('activity.start', (start) => {
             console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
           }
         });
-
       }
     }
   });
   let end_t = new Date().getTime();
+
   let time = end_t - start_t;
   console.log("EXECUTION TIME: "+ time);
-
 
   let elements = bpmnViewer.get('elementRegistry').find(function(element) {
     return  element.id === start.id;
   });
+
+  overlays.add(elements, {
+    html: '<div class="overlay">Time:'+ time+' ms</div>',
+    position: {
+      right: 0,
+      bottom:0
+    }
+  });
+
   highlightElement(elements);
 
 });
 
-listener.once('wait', (elementApi) => {
-  console.log("ICH BIN IN WAIT");
-  console.log(elementApi);
-  console.log(elementApi.id);
-});
+
 
 
 const highlightElement = (elem) => {
-  elem.businessObject.di.set("fill", "rgba(60, 176, 67, 1)");
+  elem.businessObject.di.set("fill", "rgba(66, 180, 21, 0.7)");
   const gfx = bpmnViewer.get("elementRegistry").getGraphics(elem);
   const type = elem.waypoints ? "connection" : "shape";
   bpmnViewer.get("graphicsFactory").update(type, elem, gfx);
 };
+
+
 
 runBtn.addEventListener('click', (event)=>{
   engine.execute({

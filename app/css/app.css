@@ -29,6 +29,17 @@ a:link {
   width: 30%;
 }
 
+.overlay {
+  background-color: rgba(66, 180, 21, 0.7);
+  color: Black;
+  border-radius: 5px;
+  font-family: Arial;
+  font-size: 12px;
+  padding: 5px;
+  min-height: 16px;
+  text-align: center;
+}
+
 .properties-panel-parent > .djs-properties-panel {
   padding-bottom: 70px;
   min-height: 100%;
