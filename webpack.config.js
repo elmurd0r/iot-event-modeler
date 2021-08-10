@@ -6,9 +6,7 @@ module.exports = {
   }],
   resolve: {
     fallback: {
-      "fs": false,
       "path": false,
-      "stream": false,
       "vm": false,
       "http": false,
       "https": false,

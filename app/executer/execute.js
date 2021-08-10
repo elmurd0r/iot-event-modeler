@@ -174,7 +174,10 @@ listener.on('activity.start', (start) => {
 });
 
 
+
 runBtn.addEventListener('click', (event)=>{
+  console.log("HALLO ICH BIN JETZ HIER DRIN");
+  console.log("HALLO ICH BIN JETZ HIER DRIN");
   engine.execute({
     listener,
     variables: {
@@ -183,6 +186,7 @@ runBtn.addEventListener('click', (event)=>{
   }, (err) => {
     if (err) throw err;
   });
+
 })
 
 

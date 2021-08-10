@@ -43,6 +43,7 @@
     "diagram-js": "^7.3.0",
     "inherits": "^2.0.4",
     "min-dash": "^3.7.0",
+    "stream": "0.0.2",
     "svg64": "^1.1.0",
     "xml2js": "^0.4.23",
     "xmlhttprequest": "^1.8.0"
