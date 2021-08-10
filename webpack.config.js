@@ -6,12 +6,9 @@ module.exports = {
   }],
   resolve: {
     fallback: {
-      "path": false,
-      "vm": false,
-      "http": false,
-      "https": false,
-      "timers": false,
-      "string_decoder": false
+      "stream": require.resolve("stream-browserify"),
+      "vm": require.resolve("vm-browserify"),
+      "timers": require.resolve("timers-browserify")
     }
   },
   entry: {

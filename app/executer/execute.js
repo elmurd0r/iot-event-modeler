@@ -46,7 +46,11 @@ const listener = new EventEmitter();
 
 const engine = Engine({
   name: 'execution example',
-  processModel
+  source: processModel,
+  moddleOptions: {
+    iot: iotExtension,
+    camunda: camundaExtension
+  }
 });
 
 
