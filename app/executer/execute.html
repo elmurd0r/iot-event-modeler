@@ -17,44 +17,33 @@
 </div>
 
 <div id="mySidebar" class="sidebar">
+    <div class="d-flex align-items-center justify-content-center">
+        <div class="p-2 bd-highlight col-example" id="sidebarHeader">Execution order</div>
+    </div>
     <a href="javascript:void(0)" id="closebtn" class="closebtn">&times;</a>
 
-    <table class="table">
-        <thead>
+    <table id="overlayTable" class="table">
+        <thead class="thead-dark">
         <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            <th class="theader" scope="col">State</th>
+            <th class="theader" scope="col">Name</th>
+            <th class="theader" scope="col">ID</th>
+            <th class="theader" scope="col">Type</th>
+            <th class="theader" scope="col">Execution Time</th>
+
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-        </tr>
+
         </tbody>
     </table>
 </div>
 
 
 <div class="btn-container">
-    <button id="runBtn" class="btn">Play</button>
-    <a id="btnMain" href="/" title="Switch to modeling screen" class="btn">Back</a>
-    <button id="openbtn">&#9776; Open Sidebar</button>
+    <button id="runBtn" class="btn btn-success btn-lg">Play</button>
+    <a id="btnMain" href="/" title="Switch to modeling screen" class="btn btn-primary btn-lg">Back</a>
+    <button class="btn btn-primary btn-lg" id="openbtn">&#9776; Open Sidebar</button>
 </div>
 
 </body>

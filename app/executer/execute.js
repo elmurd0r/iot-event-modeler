@@ -182,19 +182,47 @@ listener.on('activity.start', (start) => {
     return  element.id === start.id;
   });
 
-  overlays.add(elements, {
-    html: '<div class="overlay">Time:'+ time/1000+' s</div>',
-    position: {
-      right: 0,
-      bottom:0
-    }
-  });
-
   highlightElement(elements);
+  addOverlays(elements, time);
+  fillSidebar("Done", start.name, start.id, time, start.type);
 
 });
 
+function fillSidebar(state, name, id, time, type) {
+  let table = document.getElementById("overlayTable");
+  let tableLength = table.rows.length;
+  let row = table.insertRow(tableLength);
 
+  let stateCell = row.insertCell(0);
+  let nameCell = row.insertCell(1);
+  let idCell = row.insertCell(2);
+  let typeCell = row.insertCell(3);
+  let executionTimeCell = row.insertCell(4);
+
+  //'<span class="badge badge-primary">Primary</span>'
+
+  stateCell.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16">\n' +
+      '  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>\n' +
+      '  <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>\n' +
+      '</svg>';
+  nameCell.innerHTML = name;
+  idCell.innerHTML = id;
+  typeCell.innerHTML = type;
+  executionTimeCell.innerHTML = time/1000 + " s";
+
+
+}
+
+
+const addOverlays= (elem, time) => {
+  overlays.add(elem, {
+    html: '<div class="overlay">Time:'+ time/1000+' s</div>',
+    position: {
+      left: 0,
+      top:0
+    }
+  });
+};
 
 
 const highlightElement = (elem) => {
