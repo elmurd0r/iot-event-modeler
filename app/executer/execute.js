@@ -19,7 +19,7 @@ const processModel = sessionStorage.getItem('xml') ? sessionStorage.getItem('xml
 const runBtn = document.getElementById('runBtn');
 
 
-
+let worker = new Worker('newWorkerThread.js');
 
 // create modeler
 const bpmnViewer = new NavigatedViewer({
@@ -32,6 +32,7 @@ const bpmnViewer = new NavigatedViewer({
     camunda: camundaExtension
   }
 });
+
 
 // import XML
 bpmnViewer.importXML(processModel).then(() => {
@@ -52,7 +53,6 @@ const engine = Engine({
     camunda: camundaExtension
   }
 });
-
 
 
 let parseString = require('xml2js').parseString;
@@ -116,6 +116,7 @@ listener.on('activity.start', (start) => {
 
               if (xhr.status === 200) {
                 let resp = JSON.parse(xhr.responseText);
+
                 if (resp.state === propBooleanValue) {
                   console.log(resp.name + " reached state " + resp.state);
                   whileBool = false;
@@ -175,13 +176,38 @@ listener.on('activity.start', (start) => {
   let end_t = new Date().getTime();
   let time = end_t - start_t;
   console.log("EXECUTION TIME: "+ time);
+
+
+  let elements = bpmnViewer.get('elementRegistry').find(function(element) {
+    return  element.id === start.id;
+  });
+
+
+  highlightElement(elements);
+
 });
 
+// listener.on('activity.end', (end) => {
+//
+//   let elements = bpmnViewer.get('elementRegistry').find(function(element) {
+//     return  element.id === end.id;
+//   });
+//
+//   console.log(elements);
+//
+//   highlightElement(elements);
+//
+// });
 
+
+const highlightElement = (elem) => {
+  elem.businessObject.di.set("fill", "rgba(60, 176, 67, 1)");
+  const gfx = bpmnViewer.get("elementRegistry").getGraphics(elem);
+  const type = elem.waypoints ? "connection" : "shape";
+  bpmnViewer.get("graphicsFactory").update(type, elem, gfx);
+};
 
 runBtn.addEventListener('click', (event)=>{
-  console.log("HALLO ICH BIN JETZ HIER DRIN");
-  console.log("HALLO ICH BIN JETZ HIER DRIN");
   engine.execute({
     listener,
     variables: {
