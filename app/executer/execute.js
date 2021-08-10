@@ -220,3 +220,11 @@ runBtn.addEventListener('click', (event)=>{
 
 
 
+document.getElementById('openbtn').addEventListener('click', (event)=>{
+    document.getElementById("mySidebar").style.display = "block";
+})
+
+/* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+document.getElementById('closebtn').addEventListener('click', (event)=>{
+  document.getElementById("mySidebar").style.display = "none";
+})
