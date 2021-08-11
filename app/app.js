@@ -40,7 +40,6 @@ const bpmnModeler = new BpmnModeler({
   }
 });
 
-bpmnModeler.get("canvas").zoom("fit-viewport", "auto");
 
 function setEncoded(link, name, data) {
   let encodedData = encodeURIComponent(data);
@@ -77,7 +76,7 @@ btnExec.addEventListener('click', (event)=>{
 
 // import XML
 bpmnModeler.importXML(diagramXML).then(() => {
-
+  bpmnModeler.get("canvas").zoom("fit-viewport", "auto");
 }).catch((err) => {
   console.error(err);
 });

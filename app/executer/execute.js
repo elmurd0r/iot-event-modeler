@@ -40,12 +40,12 @@ const bpmnViewer = new NavigatedViewer({
   }
 });
 
-bpmnViewer.get("canvas").zoom("fit-viewport", "auto");
 
 let overlays = bpmnViewer.get('overlays');
 // import XML
 
 bpmnViewer.importXML(processModel).then(() => {
+  bpmnViewer.get("canvas").zoom("fit-viewport", "auto");
 }).catch((err) => {
   console.error(err);
 });
