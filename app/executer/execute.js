@@ -109,30 +109,31 @@ listener.on('activity.wait', (start) => {
           sensVal = sensor['$']['iot:value'];
           sensName = sensor['$'].name;
 
-
+          console.log(inputsBoolean);
           if (inputsBoolean != undefined) {
             let propBooleanValue = inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value;
-            while (whileBool) {
 
+
+            function axiosGet() {
               axios.get( sensVal, {timeout: 5000}).then((resp)=>{
-                console.log(resp);
-                if (resp.state === propBooleanValue) {
-                  console.log(resp.name + " reached state " + resp.state);
-                  whileBool = false;
+                if (resp.data.state === propBooleanValue) {
+                  console.log(resp.data.name + " reached state " + resp.data.state);
                   start.signal();
                 } else {
-                  console.log("WAIT UNTIL " + resp.name + " with state "+ resp.state +" reached " + propBooleanValue + " state");
+                  console.log("WAIT UNTIL " + resp.data.name + " with state "+ resp.data.state +" reached " + propBooleanValue + " state");
+                  axiosGet();
                 }
               }).catch((e)=>{
                 console.log(e);
                 console.log("While loop axios error in input");
               });
-
             }
+
+            axiosGet();
+
           } else {
               axios.get( sensVal, {timeout: 5000}).then((resp)=>{
-                console.log(resp);
-                start.environment.variables.input = resp.vendor;
+                start.environment.variables.input = resp.data.vendor;
                 console.log("HTTP GET successfully completed");
                 console.log('Name: ' + sensName + ' Type: ' + sensType + ', Value: ' + sensVal);
                 start.signal();
@@ -158,7 +159,6 @@ listener.on('activity.wait', (start) => {
 
 
           axios.post( actVal, null, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
-            console.log(resp);
             console.log("HTTP POST successfully completed");
             console.log('Name: ' + actName + ' Type: ' + actType + ', Value: ' + actVal);
             start.signal();
