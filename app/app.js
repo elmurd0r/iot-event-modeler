@@ -40,6 +40,8 @@ const bpmnModeler = new BpmnModeler({
   }
 });
 
+bpmnModeler.get("canvas").zoom("fit-viewport", "auto");
+
 function setEncoded(link, name, data) {
   let encodedData = encodeURIComponent(data);
 

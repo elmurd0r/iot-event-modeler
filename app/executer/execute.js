@@ -12,16 +12,21 @@ import iotExtension from '../../resources/iot.json';
 
 import camundaExtension from '../../resources/camunda.json';
 
+const axios = require('axios').default;
+
 const containerEl = document.getElementById('js-canvas');
 
 const processModel = sessionStorage.getItem('xml') ? sessionStorage.getItem('xml') : '';
 
+const parseString = require('xml2js').parseString;
+
 const runBtn = document.getElementById('runBtn');
+let start_t;
 
 
-
-
+let end_t;
 // create modeler
+
 const bpmnViewer = new NavigatedViewer({
   container: containerEl,
   additionalModules: [
@@ -33,16 +38,15 @@ const bpmnViewer = new NavigatedViewer({
   }
 });
 
+bpmnViewer.get("canvas").zoom("fit-viewport", "auto");
+
 let overlays = bpmnViewer.get('overlays');
-
-
 // import XML
-bpmnViewer.importXML(processModel).then(() => {
 
+bpmnViewer.importXML(processModel).then(() => {
 }).catch((err) => {
   console.error(err);
 });
-
 
 const listener = new EventEmitter();
 
@@ -55,12 +59,11 @@ const engine = Engine({
   }
 });
 
-
-let parseString = require('xml2js').parseString;
-
 listener.on('activity.start', (start) => {
+  start_t = new Date().getTime();
+});
 
-  let start_t = new Date().getTime();
+listener.on('activity.wait', (start) => {
 
   let sens = '';
   let sensVal;
@@ -110,38 +113,34 @@ listener.on('activity.start', (start) => {
           if (inputsBoolean != undefined) {
             let propBooleanValue = inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value;
             while (whileBool) {
-              var xhr = new XMLHttpRequest();
-              xhr.open('GET', sensVal, false);
-              xhr.send(null);
 
-
-              if (xhr.status === 200) {
-                let resp = JSON.parse(xhr.responseText);
-
+              axios.get( sensVal, {timeout: 5000}).then((resp)=>{
+                console.log(resp);
                 if (resp.state === propBooleanValue) {
                   console.log(resp.name + " reached state " + resp.state);
                   whileBool = false;
+                  start.signal();
                 } else {
-                  whileBool = true;
                   console.log("WAIT UNTIL " + resp.name + " with state "+ resp.state +" reached " + propBooleanValue + " state");
                 }
-              } else {
-                console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
-              }
+              }).catch((e)=>{
+                console.log(e);
+                console.log("While loop axios error in input");
+              });
+
             }
           } else {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', sensVal, false);
-            xhr.send(null);
-
-            if (xhr.status === 200) {
-              let resp = JSON.parse(xhr.responseText);
-              start.environment.variables.input = resp.vendor;
-              console.log("HTTP GET successfully completed");
-              console.log('Name: ' + sensName + ' Type: ' + sensType + ', Value: ' + sensVal);
-            } else {
-              console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
-            }
+              axios.get( sensVal, {timeout: 5000}).then((resp)=>{
+                console.log(resp);
+                start.environment.variables.input = resp.vendor;
+                console.log("HTTP GET successfully completed");
+                console.log('Name: ' + sensName + ' Type: ' + sensType + ', Value: ' + sensVal);
+                start.signal();
+              }).catch((e)=>{
+                console.log(e);
+                console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
+                engine.stop();
+              });
           }
         });
       }
@@ -157,36 +156,43 @@ listener.on('activity.start', (start) => {
           actVal = actor['$']['iot:value'];
           actName = actor['$'].name;
 
-          var _xhr = new XMLHttpRequest();
-          _xhr.open('POST', actVal, false);
-          _xhr.setRequestHeader('Content-Type', 'application/json', 'Access-Control-Allow-Origin');
-          _xhr.send(null);
 
-          if (_xhr.status === 200) {
-            //let resp = JSON.parse(_xhr.responseText);
+          axios.post( actVal, null, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
+            console.log(resp);
             console.log("HTTP POST successfully completed");
             console.log('Name: ' + actName + ' Type: ' + actType + ', Value: ' + actVal);
-          } else {
+            start.signal();
+          }).catch((e)=>{
+            console.log(e);
             console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
-          }
+            engine.stop();
+          });
         });
+      }
+      if(!inputs && !outputs) {
+        start.signal();
       }
     }
   });
-  let end_t = new Date().getTime();
+})
+
+
+
+listener.on('activity.end', (element)=>{
+  end_t = new Date().getTime();
 
   let time = end_t - start_t;
   console.log("EXECUTION TIME: "+ time);
 
-  let elements = bpmnViewer.get('elementRegistry').find(function(element) {
-    return  element.id === start.id;
-  });
 
-  highlightElement(elements);
-  addOverlays(elements, time);
-  fillSidebar("Done", start.name, start.id, time, start.type);
+  let currentElement = bpmnViewer.get('elementRegistry').find((elem)=>elem.id === element.id);
 
-});
+  highlightElement(currentElement);
+  addOverlays(currentElement, time);
+  fillSidebar("Done", element.name, element.id, time, element.type);
+})
+
+
 
 function fillSidebar(state, name, id, time, type) {
   let table = document.getElementById("overlayTable");
