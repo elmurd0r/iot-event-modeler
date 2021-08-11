@@ -1,4 +1,5 @@
 import confirmIcon from "../svg/Icons";
+import errorIcon from "../svg/errorIcon";
 
 const {EventEmitter} = require('events');
 const {Engine} = require('bpmn-engine');
@@ -23,12 +24,15 @@ const processModel = sessionStorage.getItem('xml') ? sessionStorage.getItem('xml
 const parseString = require('xml2js').parseString;
 
 const runBtn = document.getElementById('runBtn');
+
 let start_t;
-
-
 let end_t;
-// create modeler
 
+let executedTasksArr = [];
+
+// all Viewer-BPMN-Elements
+
+// create modeler
 const bpmnViewer = new NavigatedViewer({
   container: containerEl,
   additionalModules: [
@@ -41,6 +45,7 @@ const bpmnViewer = new NavigatedViewer({
 });
 
 bpmnViewer.get("canvas").zoom("fit-viewport", "auto");
+
 
 let overlays = bpmnViewer.get('overlays');
 // import XML
@@ -67,6 +72,7 @@ listener.on('activity.start', (start) => {
 
 listener.on('activity.wait', (start) => {
 
+
   let sens = '';
   let sensVal;
   let sensType;
@@ -77,7 +83,6 @@ listener.on('activity.wait', (start) => {
   let actType;
   let actName;
 
-  let XMLtoJSON;
 
 
   parseString(processModel, function (err, data) {
@@ -111,7 +116,6 @@ listener.on('activity.wait', (start) => {
           sensVal = sensor['$']['iot:value'];
           sensName = sensor['$'].name;
 
-          console.log(inputsBoolean);
           if (inputsBoolean != undefined) {
             let propBooleanValue = inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value;
 
@@ -142,7 +146,7 @@ listener.on('activity.wait', (start) => {
               }).catch((e)=>{
                 console.log(e);
                 console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
-                engine.stop();
+                highlightErrorElements(start.name, start.id, "Not executed" ,start.messageProperties.timestamp, start.type, e);
               });
           }
         });
@@ -167,7 +171,7 @@ listener.on('activity.wait', (start) => {
           }).catch((e)=>{
             console.log(e);
             console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
-            engine.stop();
+            highlightErrorElements(start.name, start.id, "Not executed" ,start.messageProperties.timestamp, start.type, e);
           });
         });
       }
@@ -182,21 +186,54 @@ listener.on('activity.wait', (start) => {
 
 listener.on('activity.end', (element)=>{
   end_t = new Date().getTime();
-
   let time = end_t - start_t;
+
   console.log("EXECUTION TIME: "+ time);
 
-
   let currentElement = bpmnViewer.get('elementRegistry').find((elem)=>elem.id === element.id);
+  let timeStamp = timestampToDate(element.messageProperties.timestamp);
 
   highlightElement(currentElement);
   addOverlays(currentElement, time);
-  fillSidebar("Done", element.name, element.id, time, element.type);
+  fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type);
+
+  // -----------------
+  executedTasksArr.push(element.id);
 })
 
+function highlightErrorElements(name, id, time, timeStamp, type, errormsg) {
+  let executedElements = bpmnViewer.get('elementRegistry').filter((elem)=>!executedTasksArr.includes(elem.id));
+
+  console.log(executedTasksArr);
+  console.log(executedElements);
+  console.log(executedElements.length);
+
+  for(let i=0; i < executedElements.length; i++) {
+    executedElements[i].businessObject.di.set("fill", "rgb(245,61,51)");
+    const gfx = bpmnViewer.get("elementRegistry").getGraphics(executedElements[i]);
+    const type = executedElements[i].waypoints ? "connection" : "shape";
+    bpmnViewer.get("graphicsFactory").update(type, executedElements[i], gfx);
+  }
+
+  let convertedTimeStamp = timestampToDate(timeStamp);
+
+  fillSidebar(errorIcon, name, id, time, convertedTimeStamp, type,errormsg);
+  engine.stop();
+}
+
+function timestampToDate(timestamp) {
+  let date = new Date(timestamp);
+  let convertTimestamp = date.getDate()+
+      "/"+(date.getMonth()+1)+
+      "/"+date.getFullYear()+
+      " "+date.getHours()+
+      ":"+date.getMinutes();
+
+  return convertTimestamp;
+}
 
 
-function fillSidebar(state, name, id, time, type) {
+function fillSidebar(state, name, id, time, timeStamp,type, errormsg) {
   let table = document.getElementById("overlayTable");
   let tableLength = table.rows.length;
   let row = table.insertRow(tableLength);
@@ -205,16 +242,18 @@ function fillSidebar(state, name, id, time, type) {
   let nameCell = row.insertCell(1);
   let idCell = row.insertCell(2);
   let typeCell = row.insertCell(3);
-  let executionTimeCell = row.insertCell(4);
+  let startTimeCell = row.insertCell(4);
+  let executionTimeCell = row.insertCell(5);
+  let errorMsgCell = row.insertCell(6);
 
-  //'<span class="badge badge-primary">Primary</span>'
 
-  stateCell.innerHTML = confirmIcon;
+  stateCell.innerHTML = state;
   nameCell.innerHTML = name;
   idCell.innerHTML = id;
   typeCell.innerHTML = type;
+  startTimeCell.innerHTML = timeStamp;
   executionTimeCell.innerHTML = time/1000 + " s";
-
+  errorMsgCell.innerHTML = errormsg;
 
 }
 
