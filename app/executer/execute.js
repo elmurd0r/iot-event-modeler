@@ -60,27 +60,8 @@ listener.on('activity.start', (start) => {
 
 listener.on('activity.wait', (start) => {
 
-<<<<<<< HEAD
-  let sens = '';
-  let sensVal;
-  let sensType;
-  let sensName;
-
-  let act = '';
-  let actVal;
-  let actType;
-  let actName;
-
-
-
-  parseString(processModel, function (err, data) {
-    let sourceId = start.content.inbound;
-=======
   parseString(processModel, (err, data) => {
-    console.log("---------------");
-    console.log(start.id);
-
->>>>>>> 2c75a3694c17866cca49cc93e6ceca1ff2c5b1ac
+    let sourceId = start.content.inbound;
     let bpmnVersion = data['bpmn2:definitions'] ? 'bpmn2:' : '';
 
     let process = data[bpmnVersion+'definitions'][bpmnVersion+'process'][0];
@@ -136,16 +117,16 @@ listener.on('activity.wait', (start) => {
               axiosGet();
             }
           } else {
-              axios.get( sensVal, {timeout: 5000}).then((resp)=>{
-                start.environment.variables.input = resp.data.vendor;
-                console.log("HTTP GET successfully completed");
-                console.log('Name: ' + sensName + ' Type: ' + sensType + ', Value: ' + sensVal);
-                start.signal();
-              }).catch((e)=>{
-                console.log(e);
-                console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
-                highlightErrorElements(start.name, start.id, "Not executed" ,start.messageProperties.timestamp, start.type, e, sourceId[0].sourceId);
-              });
+            axios.get( sensVal, {timeout: 5000}).then((resp)=>{
+              start.environment.variables.input = resp.data.vendor;
+              console.log("HTTP GET successfully completed");
+              console.log('Name: ' + sensName + ' Type: ' + sensType + ', Value: ' + sensVal);
+              start.signal();
+            }).catch((e)=>{
+              console.log(e);
+              console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
+              highlightErrorElements(start.name, start.id, "Not executed" ,start.messageProperties.timestamp, start.type, e, sourceId[0].sourceId);
+            });
           }
         });
       }
@@ -192,11 +173,9 @@ listener.on('activity.end', (element)=>{
 
   highlightElement(currentElement, "rgba(66, 180, 21, 0.7)");
   addOverlays(currentElement, time);
-<<<<<<< HEAD
+  // -----------------
   let obj = element.content.inbound;
 
-
-  // Startereignis hat keine "Source" daher try/catch --> Sonst gibt es eine Fehlermeldung beim Startereignis und es geht nicht weiter
   try {
     fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type, "-", obj[0].sourceId);
   }
@@ -204,12 +183,6 @@ listener.on('activity.end', (element)=>{
     fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type, "-", "-");
   }
 
-
-  // Notwendig damit im Fehlerfall die Aktivitäten, welche nicht ausgeführt wurden, rot gefärbt werden.
-=======
-  fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type);
-  // -----------------
->>>>>>> 2c75a3694c17866cca49cc93e6ceca1ff2c5b1ac
   executedTasksArr.push(element.id);
 })
 
@@ -225,8 +198,6 @@ const highlightErrorElements = (name, id, time, timeStamp, type, errormsg) => {
 
 const timestampToDate = (timestamp) => {
   let date = new Date(timestamp);
-
-  let min = date.getMinutes();
   let convertTimestamp = date.getDate()+
       "/"+(date.getMonth()+1)+
       "/"+date.getFullYear()+
@@ -237,13 +208,8 @@ const timestampToDate = (timestamp) => {
 }
 
 
-<<<<<<< HEAD
 function fillSidebar(state, name, id, time, timeStamp,type, errormsg, source) {
   let table = document.getElementById("overlayTable").getElementsByTagName("tbody")[0];
-=======
-const fillSidebar = (state, name, id, time, timeStamp,type, errormsg) => {
-  let table = document.getElementById("overlayTable");
->>>>>>> 2c75a3694c17866cca49cc93e6ceca1ff2c5b1ac
   let tableLength = table.rows.length;
   let row = table.insertRow(tableLength);
 
@@ -265,15 +231,11 @@ const fillSidebar = (state, name, id, time, timeStamp,type, errormsg) => {
   startTimeCell.innerHTML = timeStamp;
   executionTimeCell.innerHTML = time/1000 + " s";
   errorMsgCell.innerHTML = errormsg;
+
 }
 
-<<<<<<< HEAD
-// Overlay hinzufügen --> In diesem Fall: Ausführungszeit
-const addOverlays= (elem, time) => {
-=======
 
 const addOverlays = (elem, time) => {
->>>>>>> 2c75a3694c17866cca49cc93e6ceca1ff2c5b1ac
   overlays.add(elem, {
     html: '<div class="overlay">Time:'+ time/1000+' s</div>',
     position: {
@@ -283,14 +245,8 @@ const addOverlays = (elem, time) => {
   });
 };
 
-<<<<<<< HEAD
-// Färben der Aktivitäten
-const highlightElement = (elem) => {
-  elem.businessObject.di.set("fill", "rgba(66, 180, 21, 0.7)");
-=======
 const highlightElement = (elem, colorStr) => {
   elem.businessObject.di.set("fill", colorStr);
->>>>>>> 2c75a3694c17866cca49cc93e6ceca1ff2c5b1ac
   const gfx = bpmnViewer.get("elementRegistry").getGraphics(elem);
   const type = elem.waypoints ? "connection" : "shape";
   bpmnViewer.get("graphicsFactory").update(type, elem, gfx);
@@ -308,14 +264,12 @@ const resetView = () => {
   overlays.clear()
   // Schleife um alle BPMN Elemente wieder mit der Standardfarbe zu färben
   highlightElementArr(allElements, "rgba(255,255,255,1.0)")
+
+  document.getElementById("tableBody").innerHTML = "";
 }
 
 runBtn.addEventListener('click', (event)=>{
   resetView();
-
-  executedTasksArr = [];
-
-  $('#overlayTable tbody').empty();
 
   engine.execute({
     listener,
@@ -329,7 +283,7 @@ runBtn.addEventListener('click', (event)=>{
 
 
 document.getElementById('openbtn').addEventListener('click', (event)=>{
-    document.getElementById("mySidebar").style.display = "block";
+  document.getElementById("mySidebar").style.display = "block";
 })
 
 /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
