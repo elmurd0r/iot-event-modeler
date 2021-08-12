@@ -5,11 +5,6 @@
       <bpmn2:outgoing>Flow_1se0sq7</bpmn2:outgoing>
     </bpmn2:startEvent>
     <bpmn2:task id="Activity_0j6bh35" name="Get Data">
-      <bpmn2:extensionElements>
-        <camunda:properties>
-          <camunda:property />
-        </camunda:properties>
-      </bpmn2:extensionElements>
       <bpmn2:incoming>Flow_1se0sq7</bpmn2:incoming>
       <bpmn2:outgoing>Flow_0dmkgiw</bpmn2:outgoing>
       <bpmn2:property id="Property_05bfvdc" name="__targetRef_placeholder" />
