@@ -22,14 +22,6 @@ a:link {
 .content .canvas {
   width: 100%;
 }
-.badge {
-  border-radius: 10rem;
-  font-size: 14px;
-  line-height: 1;
-  padding: .375rem .5625rem;
-  font-weight: normal;
-  background: green;
-}
 
 .properties-panel-parent {
   border-left: 1px solid #ccc;
@@ -111,71 +103,56 @@ a.btn:hover {
 }
 
 
+/* overlay */
 
-
-/* The sidebar menu */
-.sidebar {
-  display: none;
-  height: 30%; /* 100% Full-height */
-  width: 100%; /* 0 width - change this with JavaScript */
-  position: fixed; /* Stay in place */
-  z-index: 999; /* Stay on top */
-  bottom: 0;
-  left: 0;
-  background-color: lightblue;
-  overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 60px; /* Place content 60px from the top */
-  transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
-  overflow-y: auto;
-  font-size: 14px;
-}
-
-/* The sidebar links */
-.sidebar a {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 25px;
-  color: #818181;
-  display: block;
-  transition: 0.3s;
-}
-
-/* When you mouse over the navigation links, change their color */
-.sidebar a:hover {
-  color: #f1f1f1;
-}
-
-/* Position and style the close button (top right corner) */
-.sidebar .closebtn {
+.message {
+  width: 100%;
+  height: 100%;
   position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
+  background-color: white;
+  z-index: 99;
 }
 
-/* The button used to open the sidebar */
-.openbtn {
-  font-size: 20px;
-  cursor: pointer;
-  background-color: #111;
-  color: white;
-  padding: 10px 15px;
-  border: none;
+.content > .message {
+  text-align: center;
+  display: table;
+
+  font-size: 16px;
+  color: #111;
 }
 
-.openbtn:hover {
-  background-color: #444;
+.content > .message .note {
+  vertical-align: middle;
+  text-align: center;
+  display: table-cell;
 }
 
-/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
-#main {
-  transition: margin-left .5s; /* If you want a transition effect */
-  padding: 20px;
+.content .error .details {
+  max-width: 500px;
+  font-size: 12px;
+  margin: 20px auto;
+  text-align: left;
 }
 
-/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-height: 450px) {
-  .sidebar {padding-top: 15px;}
-  .sidebar a {font-size: 18px;}
+.content .error pre {
+  border: solid 1px #CCC;
+  background: #EEE;
+  padding: 10px;
 }
+
+.content:not(.with-error) .error,
+.content.with-error .intro,
+.content.with-diagram .intro {
+  display: none;
+}
+
+
+.content .canvas,
+.content.with-error .canvas {
+  visibility: hidden;
+}
+
+.content.with-diagram .canvas {
+  visibility: visible;
+}
+

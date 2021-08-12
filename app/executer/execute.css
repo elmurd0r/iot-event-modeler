@@ -1,0 +1,138 @@
+* {
+    box-sizing: border-box;
+}
+body, html {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    height: 100%;
+    max-height: 100%;
+    padding: 0;
+    margin: 0;
+}
+a:link {
+    text-decoration: none;
+}
+.content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.content .canvas {
+    width: 100%;
+}
+
+
+.theader {
+    font-family: Arial;
+    font-size: 18px;
+}
+
+#sidebarHeader {
+    position: absolute;
+    top: 0px;
+    font-family: Arial;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.overlay {
+    background-color: rgba(255,165,0, 0.7);
+    color: Black;
+    border-radius: 5px;
+    font-family: Arial;
+    font-size: 12px;
+    padding: 5px;
+    text-align: center;
+    width: 120%;
+}
+
+
+a.btn {
+    border-radius: .25rem;
+    border: 1px solid transparent;
+    padding: .5rem 1rem;
+    color: #fff;
+    background-color: #0d6efd!important;
+    text-decoration: none;
+}
+
+a.btn:hover {
+    border-radius: .25rem;
+    background-color: #0a4eb3 !important;
+}
+.btn-container {
+    bottom: 20px;
+    left: 20px;
+    position: absolute;
+}
+
+
+
+/* The sidebar menu */
+.sidebar {
+    display: none;
+    height: 30%; /* 100% Full-height */
+    width: 100%; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 999; /* Stay on top */
+    bottom: 0;
+    left: 0;
+    background-color: lightblue;
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+    overflow-y: auto;
+    font-size: 14px;
+}
+
+/* The sidebar links */
+.sidebar a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidebar a:hover {
+    color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.sidebar .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+/* The button used to open the sidebar */
+.openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #111;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+}
+
+.openbtn:hover {
+    background-color: #444;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+    transition: margin-left .5s; /* If you want a transition effect */
+    padding: 20px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+    .sidebar {padding-top: 15px;}
+    .sidebar a {font-size: 18px;}
+}

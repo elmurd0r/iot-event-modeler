@@ -1,10 +1,7 @@
-import confirmIcon from "../svg/Icons";
-import errorIcon from "../svg/errorIcon";
+import {confirmIcon, errIcon} from "../svg/Icons";
 
 const {EventEmitter} = require('events');
 const {Engine} = require('bpmn-engine');
-
-const {XMLHttpRequest} = require("xmlhttprequest");
 
 import NavigatedViewer from 'bpmn-js/lib/NavigatedViewer';
 
@@ -88,27 +85,30 @@ listener.on('activity.wait', (start) => {
   parseString(processModel, function (err, data) {
     console.log("---------------");
     console.log(start.id);
-    // Schleife, um jede Aktivität im Prozess zu überprüfen
-    let process = data['bpmn2:definitions']['bpmn2:process'][0];
-    let taskArray = process['bpmn2:task'];
 
-    let dataObjectReference = process['bpmn2:dataObjectReference'];
+    let bpmnVersion = data['bpmn2:definitions'] ? 'bpmn2:' : '';
+
+    // Schleife, um jede Aktivität im Prozess zu überprüfen
+    let process = data[bpmnVersion+'definitions'][bpmnVersion+'process'][0];
+    let taskArray = process[bpmnVersion+'task'];
+
+    let dataObjectReference = process[bpmnVersion+'dataObjectReference'];
 
     // Finde die ID der Aktivität welche gerade in der Engine ausgeführt werde (activity.start)
     let task = taskArray.find(task => task['$'].id === start.id);
     if (task) {
-      let inputs = task['bpmn2:dataInputAssociation'];
-      let outputs = task['bpmn2:dataOutputAssociation'];
+      let inputs = task[bpmnVersion+'dataInputAssociation'];
+      let outputs = task[bpmnVersion+'dataOutputAssociation'];
 
 
       // Wenn es ein dataInputAssociation gibt bzw. dataOutputAssociation (siehe nächste else if) überprüfe ob es ein normales Datenobjekt ist oder ein IoT-Datenobjekt,
       // indem geprüft wird, ob "iot" in 'dataObjectReference' drin steht
       if (inputs) {
         // Wenn "iot" in 'dataObjectReference' steht, dann schreibe sowohl Type als auch Value in variablen rein um diese später weiter zu bearbeiten
-        let inputIDArr = inputs.map(inputAssociation => inputAssociation['bpmn2:sourceRef'][0]);
+        let inputIDArr = inputs.map(inputAssociation => inputAssociation[bpmnVersion+'sourceRef'][0]);
         let sensorArr = dataObjectReference.filter(ref => ref['$']['iot:type'] === 'sensor');
         let taskSensors = sensorArr.filter(sensor => inputIDArr.includes(sensor['$'].id));
-        let inputsBoolean = task['bpmn2:extensionElements'];
+        let inputsBoolean = task[bpmnVersion+'extensionElements'];
         let whileBool = true;
 
         taskSensors.forEach(sensor => {
@@ -154,7 +154,7 @@ listener.on('activity.wait', (start) => {
 
 
       if (outputs) {
-        let outputIDArr = outputs.map(outputAssociation => outputAssociation['bpmn2:targetRef'][0]);
+        let outputIDArr = outputs.map(outputAssociation => outputAssociation[bpmnVersion+'targetRef'][0]);
         let actorArr = dataObjectReference.filter(ref => ref['$']['iot:type'] === 'actor');
         let taskActors = actorArr.filter(actor => outputIDArr.includes(actor['$'].id));
 
@@ -217,7 +217,7 @@ function highlightErrorElements(name, id, time, timeStamp, type, errormsg) {
 
   let convertedTimeStamp = timestampToDate(timeStamp);
 
-  fillSidebar(errorIcon, name, id, time, convertedTimeStamp, type,errormsg);
+  fillSidebar(errIcon, name, id, time, convertedTimeStamp, type,errormsg);
   engine.stop();
 }
 
