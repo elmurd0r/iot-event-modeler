@@ -1,18 +1,11 @@
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 let propertiesPanelModule = require('bpmn-js-properties-panel'),
-    //propertiesProviderModule = require('bpmn-js-properties-panel/lib/provider/bpmn');
     propertiesProviderModule = require('bpmn-js-properties-panel/lib/provider/camunda');
 
 import iotPropertiesProvider from './custom/iot-panel/';
-
-
-import diagramXML from '../resources/diaGateway.bpmn';
 import newDiagram from '../resources/newDiagram.bpmn';
-
 import customModule from './custom';
-
 import iotExtension from '../resources/iot.json';
-
 import camundaExtension from '../resources/camunda.json';
 
 const containerEl = document.getElementById('js-canvas'),
@@ -97,13 +90,10 @@ const openDiagram = async (xml) => {
     container.classList.add('with-diagram');
     //document.getElementsByClassName('properties-panel-parent').item(0).style.display = 'block';
   } catch (err) {
-
+    console.error(err);
     container.classList.add('with-error');
     container.classList.remove('with-diagram');
-
-    container.find('.error pre').text(err.message);
-
-    console.error(err);
+    document.getElementById('pre-err-container').innerHTML = err.message;
   }
 }
 

@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>bpmn-js-example-iot-model-extension</title>
-
+  <link rel="stylesheet" href="vendor/bootstrap/bootstrap.css" />
   <link rel="stylesheet" href="vendor/bpmn-js/assets/diagram-js.css" />
   <link rel="stylesheet" href="vendor/bpmn-js/assets/bpmn-font/css/bpmn-embedded.css" />
   <link rel="stylesheet" href="vendor/bpmn-js-properties-panel/assets/bpmn-js-properties-panel.css" />
@@ -22,8 +22,10 @@
       <p>Ooops, we could not display the BPMN 2.0 diagram.</p>
 
       <div class="details">
-        <span>cause of the problem</span>
-        <pre></pre>
+        <span>cause of the problem:</span>
+        <div class="card">
+          <div class="card-body text-danger" id="pre-err-container"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -40,5 +42,6 @@
   </div>
 
 </body>
+<script src="vendor/bootstrap.bundle.js"></script>
 <script src="app.js"></script>
 </html>
