@@ -65,10 +65,12 @@ const engine = Engine({
 
 listener.on('activity.start', (start) => {
   start_t = new Date().getTime();
+
+  console.log("---------------");
+  console.log(start.id);
 });
 
 listener.on('activity.wait', (start) => {
-
 
   let sens = '';
   let sensVal;
@@ -83,9 +85,7 @@ listener.on('activity.wait', (start) => {
 
 
   parseString(processModel, function (err, data) {
-    console.log("---------------");
-    console.log(start.id);
-
+    let sourceId = start.content.inbound;
     let bpmnVersion = data['bpmn2:definitions'] ? 'bpmn2:' : '';
 
     // Schleife, um jede Aktivität im Prozess zu überprüfen
@@ -146,7 +146,7 @@ listener.on('activity.wait', (start) => {
               }).catch((e)=>{
                 console.log(e);
                 console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
-                highlightErrorElements(start.name, start.id, "Not executed" ,start.messageProperties.timestamp, start.type, e);
+                highlightErrorElements(start.name, start.id, "Not executed" ,start.messageProperties.timestamp, start.type, e, sourceId[0].sourceId);
               });
           }
         });
@@ -171,7 +171,7 @@ listener.on('activity.wait', (start) => {
           }).catch((e)=>{
             console.log(e);
             console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
-            highlightErrorElements(start.name, start.id, "Not executed" ,start.messageProperties.timestamp, start.type, e);
+            highlightErrorElements(start.name, start.id, "Not executed" ,start.messageProperties.timestamp, start.type, e, sourceId[0].sourceId);
           });
         });
       }
@@ -195,9 +195,19 @@ listener.on('activity.end', (element)=>{
 
   highlightElement(currentElement);
   addOverlays(currentElement, time);
-  fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type);
+  let obj = element.content.inbound;
 
-  // -----------------
+
+  // Startereignis hat keine "Source" daher try/catch --> Sonst gibt es eine Fehlermeldung beim Startereignis und es geht nicht weiter
+  try {
+    fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type, "-", obj[0].sourceId);
+  }
+  catch {
+    fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type, "-", "-");
+  }
+
+
+  // Notwendig damit im Fehlerfall die Aktivitäten, welche nicht ausgeführt wurden, rot gefärbt werden.
   executedTasksArr.push(element.id);
 })
 
@@ -219,18 +229,20 @@ function highlightErrorElements(name, id, time, timeStamp, type, errormsg) {
 
 function timestampToDate(timestamp) {
   let date = new Date(timestamp);
+
+  let min = date.getMinutes();
   let convertTimestamp = date.getDate()+
       "/"+(date.getMonth()+1)+
       "/"+date.getFullYear()+
       " "+date.getHours()+
-      ":"+date.getMinutes();
+      ":"+(date.getMinutes()<10?'0':'') + date.getMinutes();
 
   return convertTimestamp;
 }
 
 
-function fillSidebar(state, name, id, time, timeStamp,type, errormsg) {
-  let table = document.getElementById("overlayTable");
+function fillSidebar(state, name, id, time, timeStamp,type, errormsg, source) {
+  let table = document.getElementById("overlayTable").getElementsByTagName("tbody")[0];
   let tableLength = table.rows.length;
   let row = table.insertRow(tableLength);
 
@@ -238,22 +250,24 @@ function fillSidebar(state, name, id, time, timeStamp,type, errormsg) {
   let nameCell = row.insertCell(1);
   let idCell = row.insertCell(2);
   let typeCell = row.insertCell(3);
-  let startTimeCell = row.insertCell(4);
-  let executionTimeCell = row.insertCell(5);
-  let errorMsgCell = row.insertCell(6);
+  let sourceCell = row.insertCell(4);
+  let startTimeCell = row.insertCell(5);
+  let executionTimeCell = row.insertCell(6);
+  let errorMsgCell = row.insertCell(7);
 
 
   stateCell.innerHTML = state;
   nameCell.innerHTML = name;
   idCell.innerHTML = id;
   typeCell.innerHTML = type;
+  sourceCell.innerHTML = source;
   startTimeCell.innerHTML = timeStamp;
   executionTimeCell.innerHTML = time/1000 + " s";
   errorMsgCell.innerHTML = errormsg;
 
 }
 
-
+// Overlay hinzufügen --> In diesem Fall: Ausführungszeit
 const addOverlays= (elem, time) => {
   overlays.add(elem, {
     html: '<div class="overlay">Time:'+ time/1000+' s</div>',
@@ -264,7 +278,7 @@ const addOverlays= (elem, time) => {
   });
 };
 
-
+// Färben der Aktivitäten
 const highlightElement = (elem) => {
   elem.businessObject.di.set("fill", "rgba(66, 180, 21, 0.7)");
   const gfx = bpmnViewer.get("elementRegistry").getGraphics(elem);
@@ -290,6 +304,10 @@ runBtn.addEventListener('click', (event)=>{
     const type = allElements[i].waypoints ? "connection" : "shape";
     bpmnViewer.get("graphicsFactory").update(type, allElements[i], gfx);
   }
+
+  executedTasksArr = [];
+
+  $('#overlayTable tbody').empty();
 
   engine.execute({
     listener,
