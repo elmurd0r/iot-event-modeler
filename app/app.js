@@ -14,8 +14,10 @@ const containerEl = document.getElementById('js-canvas'),
       saveXML = document.getElementById('saveXML'),
       saveSVG = document.getElementById('saveSVG'),
       btnExec = document.getElementById('btnExec'),
-      newDiaBtn = document.getElementById('js-create-diagram');
+      newDiaBtn = document.getElementById('js-create-diagram'),
+      newDia = document.getElementById('newDia');
 
+const processModel = sessionStorage.getItem('xml') ? sessionStorage.getItem('xml') : null;
 
 // create modeler
 const bpmnModeler = new BpmnModeler({
@@ -76,6 +78,12 @@ newDiaBtn.addEventListener('click', (e)=>{
     createNewDiagram();
 })
 
+newDia.addEventListener('click', (e)=>{
+  e.stopPropagation();
+  e.preventDefault();
+  createNewDiagram();
+})
+
 const createNewDiagram = () => {
   openDiagram(newDiagram);
 }
@@ -84,7 +92,6 @@ const openDiagram = async (xml) => {
   try {
     await bpmnModeler.importXML(xml);
     bpmnModeler.get("canvas").zoom("fit-viewport", "auto");
-
 
     container.classList.remove('with-error');
     container.classList.add('with-diagram');
@@ -143,4 +150,6 @@ if (!window.FileList || !window.FileReader) {
   registerFileDrop(container, openDiagram);
 }
 
-
+if(processModel) {
+  openDiagram(processModel);
+}
