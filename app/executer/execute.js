@@ -1,33 +1,21 @@
-import {confirmIcon, errIcon} from "../svg/Icons";
-
+import NavigatedViewer from 'bpmn-js/lib/NavigatedViewer';
 const {EventEmitter} = require('events');
 const {Engine} = require('bpmn-engine');
-
-import NavigatedViewer from 'bpmn-js/lib/NavigatedViewer';
-
-
-import customModule from '../custom/executer';
-
-import iotExtension from '../../resources/iot.json';
-
-import camundaExtension from '../../resources/camunda.json';
-
 const axios = require('axios').default;
-
-const containerEl = document.getElementById('js-canvas');
-
-const processModel = sessionStorage.getItem('xml') ? sessionStorage.getItem('xml') : '';
-
 const parseString = require('xml2js').parseString;
 
+import {confirmIcon, errIcon} from "../svg/Icons";
+import customModule from '../custom/executer';
+import iotExtension from '../../resources/iot.json';
+import camundaExtension from '../../resources/camunda.json';
+
+const processModel = sessionStorage.getItem('xml') ? sessionStorage.getItem('xml') : '';
+const containerEl = document.getElementById('js-canvas');
 const runBtn = document.getElementById('runBtn');
 
 let start_t;
 let end_t;
-
 let executedTasksArr = [];
-
-// all Viewer-BPMN-Elements
 
 // create modeler
 const bpmnViewer = new NavigatedViewer({
@@ -41,21 +29,21 @@ const bpmnViewer = new NavigatedViewer({
   }
 });
 
-
-
 let overlays = bpmnViewer.get('overlays');
-// import XML
 
+// import XML
 bpmnViewer.importXML(processModel).then(() => {
   bpmnViewer.get("canvas").zoom("fit-viewport", "auto");
 }).catch((err) => {
   console.error(err);
 });
 
+
+//Engine stuff
 const listener = new EventEmitter();
 
 const engine = Engine({
-  name: 'execution example',
+  name: 'process model execution',
   source: processModel,
   moddleOptions: {
     iot: iotExtension,
@@ -72,6 +60,7 @@ listener.on('activity.start', (start) => {
 
 listener.on('activity.wait', (start) => {
 
+<<<<<<< HEAD
   let sens = '';
   let sensVal;
   let sensType;
@@ -86,9 +75,14 @@ listener.on('activity.wait', (start) => {
 
   parseString(processModel, function (err, data) {
     let sourceId = start.content.inbound;
+=======
+  parseString(processModel, (err, data) => {
+    console.log("---------------");
+    console.log(start.id);
+
+>>>>>>> 2c75a3694c17866cca49cc93e6ceca1ff2c5b1ac
     let bpmnVersion = data['bpmn2:definitions'] ? 'bpmn2:' : '';
 
-    // Schleife, um jede Aktivität im Prozess zu überprüfen
     let process = data[bpmnVersion+'definitions'][bpmnVersion+'process'][0];
     let taskArray = process[bpmnVersion+'task'];
 
@@ -100,16 +94,22 @@ listener.on('activity.wait', (start) => {
       let inputs = task[bpmnVersion+'dataInputAssociation'];
       let outputs = task[bpmnVersion+'dataOutputAssociation'];
 
+      if(!inputs && !outputs) {
+        start.signal();
+      }
 
       // Wenn es ein dataInputAssociation gibt bzw. dataOutputAssociation (siehe nächste else if) überprüfe ob es ein normales Datenobjekt ist oder ein IoT-Datenobjekt,
       // indem geprüft wird, ob "iot" in 'dataObjectReference' drin steht
       if (inputs) {
+        let sens = '';
+        let sensVal;
+        let sensType;
+        let sensName;
         // Wenn "iot" in 'dataObjectReference' steht, dann schreibe sowohl Type als auch Value in variablen rein um diese später weiter zu bearbeiten
         let inputIDArr = inputs.map(inputAssociation => inputAssociation[bpmnVersion+'sourceRef'][0]);
         let sensorArr = dataObjectReference.filter(ref => ref['$']['iot:type'] === 'sensor');
         let taskSensors = sensorArr.filter(sensor => inputIDArr.includes(sensor['$'].id));
         let inputsBoolean = task[bpmnVersion+'extensionElements'];
-        let whileBool = true;
 
         taskSensors.forEach(sensor => {
           sensType = sensor['$']['iot:type'];
@@ -117,26 +117,24 @@ listener.on('activity.wait', (start) => {
           sensName = sensor['$'].name;
 
           if (inputsBoolean != undefined) {
-            let propBooleanValue = inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value;
-
-
-            function axiosGet() {
-              axios.get( sensVal, {timeout: 5000}).then((resp)=>{
-                if (resp.data.state === propBooleanValue) {
-                  console.log(resp.data.name + " reached state " + resp.data.state);
-                  start.signal();
-                } else {
-                  console.log("WAIT UNTIL " + resp.data.name + " with state "+ resp.data.state +" reached " + propBooleanValue + " state");
-                  axiosGet();
-                }
-              }).catch((e)=>{
-                console.log(e);
-                console.log("While loop axios error in input");
-              });
+            let propBooleanValue = inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value ? inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value : null;
+            if(propBooleanValue) {
+              const axiosGet = () => {
+                axios.get( sensVal, {timeout: 5000}).then((resp)=>{
+                  if (resp.data.state === propBooleanValue) {
+                    console.log(resp.data.name + " reached state " + resp.data.state);
+                    start.signal();
+                  } else {
+                    console.log("WAIT UNTIL " + resp.data.name + " with state "+ resp.data.state +" reached " + propBooleanValue + " state");
+                    axiosGet();
+                  }
+                }).catch((e)=>{
+                  console.log(e);
+                  console.log("While loop axios error in input");
+                });
+              }
+              axiosGet();
             }
-
-            axiosGet();
-
           } else {
               axios.get( sensVal, {timeout: 5000}).then((resp)=>{
                 start.environment.variables.input = resp.data.vendor;
@@ -152,8 +150,11 @@ listener.on('activity.wait', (start) => {
         });
       }
 
-
       if (outputs) {
+        let actVal;
+        let actType;
+        let actName;
+
         let outputIDArr = outputs.map(outputAssociation => outputAssociation[bpmnVersion+'targetRef'][0]);
         let actorArr = dataObjectReference.filter(ref => ref['$']['iot:type'] === 'actor');
         let taskActors = actorArr.filter(actor => outputIDArr.includes(actor['$'].id));
@@ -175,13 +176,9 @@ listener.on('activity.wait', (start) => {
           });
         });
       }
-      if(!inputs && !outputs) {
-        start.signal();
-      }
     }
   });
 })
-
 
 
 listener.on('activity.end', (element)=>{
@@ -193,8 +190,9 @@ listener.on('activity.end', (element)=>{
   let currentElement = bpmnViewer.get('elementRegistry').find((elem)=>elem.id === element.id);
   let timeStamp = timestampToDate(element.messageProperties.timestamp);
 
-  highlightElement(currentElement);
+  highlightElement(currentElement, "rgba(66, 180, 21, 0.7)");
   addOverlays(currentElement, time);
+<<<<<<< HEAD
   let obj = element.content.inbound;
 
 
@@ -208,26 +206,24 @@ listener.on('activity.end', (element)=>{
 
 
   // Notwendig damit im Fehlerfall die Aktivitäten, welche nicht ausgeführt wurden, rot gefärbt werden.
+=======
+  fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type);
+  // -----------------
+>>>>>>> 2c75a3694c17866cca49cc93e6ceca1ff2c5b1ac
   executedTasksArr.push(element.id);
 })
 
-function highlightErrorElements(name, id, time, timeStamp, type, errormsg) {
-  let executedElements = bpmnViewer.get('elementRegistry').filter((elem)=>!executedTasksArr.includes(elem.id));
+const highlightErrorElements = (name, id, time, timeStamp, type, errormsg) => {
+  let notExecutedElements = bpmnViewer.get('elementRegistry').filter((elem)=>!executedTasksArr.includes(elem.id));
 
-  for(let i=0; i < executedElements.length; i++) {
-    executedElements[i].businessObject.di.set("fill", "rgb(245,61,51)");
-    const gfx = bpmnViewer.get("elementRegistry").getGraphics(executedElements[i]);
-    const type = executedElements[i].waypoints ? "connection" : "shape";
-    bpmnViewer.get("graphicsFactory").update(type, executedElements[i], gfx);
-  }
-
+  highlightElementArr(notExecutedElements, "rgb(245,61,51)");
   let convertedTimeStamp = timestampToDate(timeStamp);
 
   fillSidebar(errIcon, name, id, time, convertedTimeStamp, type,errormsg);
   engine.stop();
 }
 
-function timestampToDate(timestamp) {
+const timestampToDate = (timestamp) => {
   let date = new Date(timestamp);
 
   let min = date.getMinutes();
@@ -241,8 +237,13 @@ function timestampToDate(timestamp) {
 }
 
 
+<<<<<<< HEAD
 function fillSidebar(state, name, id, time, timeStamp,type, errormsg, source) {
   let table = document.getElementById("overlayTable").getElementsByTagName("tbody")[0];
+=======
+const fillSidebar = (state, name, id, time, timeStamp,type, errormsg) => {
+  let table = document.getElementById("overlayTable");
+>>>>>>> 2c75a3694c17866cca49cc93e6ceca1ff2c5b1ac
   let tableLength = table.rows.length;
   let row = table.insertRow(tableLength);
 
@@ -264,11 +265,15 @@ function fillSidebar(state, name, id, time, timeStamp,type, errormsg, source) {
   startTimeCell.innerHTML = timeStamp;
   executionTimeCell.innerHTML = time/1000 + " s";
   errorMsgCell.innerHTML = errormsg;
-
 }
 
+<<<<<<< HEAD
 // Overlay hinzufügen --> In diesem Fall: Ausführungszeit
 const addOverlays= (elem, time) => {
+=======
+
+const addOverlays = (elem, time) => {
+>>>>>>> 2c75a3694c17866cca49cc93e6ceca1ff2c5b1ac
   overlays.add(elem, {
     html: '<div class="overlay">Time:'+ time/1000+' s</div>',
     position: {
@@ -278,32 +283,35 @@ const addOverlays= (elem, time) => {
   });
 };
 
+<<<<<<< HEAD
 // Färben der Aktivitäten
 const highlightElement = (elem) => {
   elem.businessObject.di.set("fill", "rgba(66, 180, 21, 0.7)");
+=======
+const highlightElement = (elem, colorStr) => {
+  elem.businessObject.di.set("fill", colorStr);
+>>>>>>> 2c75a3694c17866cca49cc93e6ceca1ff2c5b1ac
   const gfx = bpmnViewer.get("elementRegistry").getGraphics(elem);
   const type = elem.waypoints ? "connection" : "shape";
   bpmnViewer.get("graphicsFactory").update(type, elem, gfx);
 };
 
+const highlightElementArr = (elementArr, colorStr) => {
+  elementArr.forEach((elem)=>highlightElement(elem, colorStr));
+}
 
-runBtn.addEventListener('click', (event)=>{
+const resetView = () => {
+  // clear executed task array
+  executedTasksArr.length = 0;
   // Alle BPMN Elemente aus der elementRegistry holen
   let allElements = bpmnViewer.get('elementRegistry').filter((elem)=>elem.id);
-
-  // ES6: forEach schleife um etwas zu entfernen (z.B. class)
-  const removeElements = (elms) => elms.forEach(el => el.remove());
-
-  // Selection und Angabe zum löschen
-  removeElements( document.querySelectorAll(".overlay") );
-
+  overlays.clear()
   // Schleife um alle BPMN Elemente wieder mit der Standardfarbe zu färben
-  for(let i=0; i < allElements.length; i++) {
-    allElements[i].businessObject.di.set("fill", "rgba(255,255,255,1.0)");
-    const gfx = bpmnViewer.get("elementRegistry").getGraphics(allElements[i]);
-    const type = allElements[i].waypoints ? "connection" : "shape";
-    bpmnViewer.get("graphicsFactory").update(type, allElements[i], gfx);
-  }
+  highlightElementArr(allElements, "rgba(255,255,255,1.0)")
+}
+
+runBtn.addEventListener('click', (event)=>{
+  resetView();
 
   executedTasksArr = [];
 
@@ -318,7 +326,6 @@ runBtn.addEventListener('click', (event)=>{
     if (err) throw err;
   });
 })
-
 
 
 document.getElementById('openbtn').addEventListener('click', (event)=>{

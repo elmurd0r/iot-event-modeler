@@ -38,7 +38,9 @@ module.exports = {
         { from: '**/*.{html,css}', context: 'app/' },
         { from: '**/*.{html,css}', context: 'app/executer' },
         { from: '**/svg/*.svg', to: '.', context: 'app/' },
-        { from: 'node_modules/bpmn-js-properties-panel/dist/assets', to: 'vendor/bpmn-js-properties-panel/assets' }
+        { from: 'node_modules/bpmn-js-properties-panel/dist/assets', to: 'vendor/bpmn-js-properties-panel/assets' },
+        { from: 'css/bootstrap.css', to: 'vendor/bootstrap/', context: 'node_modules/bootstrap/dist/' },
+        { from: 'js/bootstrap.bundle.js', to: 'vendor/bootstrap/', context: 'node_modules/bootstrap/dist/' }
       ]
     })
   ],
