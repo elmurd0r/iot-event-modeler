@@ -204,10 +204,6 @@ listener.on('activity.end', (element)=>{
 function highlightErrorElements(name, id, time, timeStamp, type, errormsg) {
   let executedElements = bpmnViewer.get('elementRegistry').filter((elem)=>!executedTasksArr.includes(elem.id));
 
-  console.log(executedTasksArr);
-  console.log(executedElements);
-  console.log(executedElements.length);
-
   for(let i=0; i < executedElements.length; i++) {
     executedElements[i].businessObject.di.set("fill", "rgb(245,61,51)");
     const gfx = bpmnViewer.get("elementRegistry").getGraphics(executedElements[i]);
@@ -277,8 +273,24 @@ const highlightElement = (elem) => {
 };
 
 
-
 runBtn.addEventListener('click', (event)=>{
+  // Alle BPMN Elemente aus der elementRegistry holen
+  let allElements = bpmnViewer.get('elementRegistry').filter((elem)=>elem.id);
+
+  // ES6: forEach schleife um etwas zu entfernen (z.B. class)
+  const removeElements = (elms) => elms.forEach(el => el.remove());
+
+  // Selection und Angabe zum löschen
+  removeElements( document.querySelectorAll(".overlay") );
+
+  // Schleife um alle BPMN Elemente wieder mit der Standardfarbe zu färben
+  for(let i=0; i < allElements.length; i++) {
+    allElements[i].businessObject.di.set("fill", "rgba(255,255,255,1.0)");
+    const gfx = bpmnViewer.get("elementRegistry").getGraphics(allElements[i]);
+    const type = allElements[i].waypoints ? "connection" : "shape";
+    bpmnViewer.get("graphicsFactory").update(type, allElements[i], gfx);
+  }
+
   engine.execute({
     listener,
     variables: {
@@ -287,7 +299,6 @@ runBtn.addEventListener('click', (event)=>{
   }, (err) => {
     if (err) throw err;
   });
-
 })
 
 
