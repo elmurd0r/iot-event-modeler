@@ -277,11 +277,7 @@ runBtn.addEventListener('click', (event)=>{
   // Alle BPMN Elemente aus der elementRegistry holen
   let allElements = bpmnViewer.get('elementRegistry').filter((elem)=>elem.id);
 
-  // ES6: forEach schleife um etwas zu entfernen (z.B. class)
-  const removeElements = (elms) => elms.forEach(el => el.remove());
-
-  // Selection und Angabe zum löschen
-  removeElements( document.querySelectorAll(".overlay") );
+  overlays.clear()
 
   // Schleife um alle BPMN Elemente wieder mit der Standardfarbe zu färben
   for(let i=0; i < allElements.length; i++) {
