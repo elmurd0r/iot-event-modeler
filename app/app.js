@@ -22,6 +22,7 @@ const processModel = sessionStorage.getItem('xml') ? sessionStorage.getItem('xml
 // create modeler
 const bpmnModeler = new BpmnModeler({
   container: containerEl,
+  keyboard: { bindTo: document },
   propertiesPanel: {
     parent: panel
   },
