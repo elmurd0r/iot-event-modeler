@@ -75,7 +75,7 @@ export default class CustomRenderer extends BaseRenderer {
         case 'sensor-sub':
           imageHref = sensorSubSVGEncoded;
           break;
-        case 'sensor':git
+        case 'sensor':
         default:
           imageHref = sensorSVGEncoded;
       }

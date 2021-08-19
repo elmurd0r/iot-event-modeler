@@ -1,4 +1,5 @@
 import NavigatedViewer from 'bpmn-js/lib/NavigatedViewer';
+import {is} from 'bpmn-js/lib/util/ModelUtil';
 const {EventEmitter} = require('events');
 const {Engine} = require('bpmn-engine');
 const axios = require('axios').default;
@@ -56,18 +57,65 @@ listener.on('activity.start', (start) => {
 
   console.log("---------------");
   console.log(start.id);
+
 });
 
 listener.on('activity.wait', (start) => {
-
+  //console.log(start);
   parseString(processModel, (err, data) => {
     let sourceId = start.content.inbound;
     let bpmnVersion = data['bpmn2:definitions'] ? 'bpmn2:' : '';
+    let processArr = data[bpmnVersion+'definitions'][bpmnVersion+'process'];
 
-    let process = data[bpmnVersion+'definitions'][bpmnVersion+'process'][0];
+
+    let processID;
+    if(start.content.parent.type === "bpmn:Process") {
+      processID = start.content.parent.id;
+    } else {
+      let parentID = start.content.parent.path;
+      processID = parentID.find(p => p.type === "bpmn:Process").id;
+    }
+
+    let process = processArr.find(p => p['$'].id === processID);
+    //let taskArrayElementRegistry = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:Task"));
     let taskArray = process[bpmnVersion+'task'];
-
+    let startEvent = process[bpmnVersion+'startEvent'];
     let dataObjectReference = process[bpmnVersion+'dataObjectReference'];
+
+
+    let BPMNstart = startEvent.find(task => task['$'].id === start.id);
+    if(BPMNstart  && startEvent[0]['$']['iot:type']) {
+      let startEventValue = startEvent[0]['$'].value;
+      let inputsBoolean = startEvent[0][bpmnVersion+'extensionElements'];
+      if(inputsBoolean) {
+        let propBooleanValue = inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value ? inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value : null;
+        if(propBooleanValue) {
+          const axiosGet = () => {
+            axios.get( startEventValue, {timeout: 5000}).then((resp)=>{
+              if (resp.data.state === propBooleanValue) {
+                console.log(resp.data.name + " reached state " + resp.data.state);
+                start.signal();
+              } else {
+                console.log("WAIT UNTIL " + resp.data.name + " with state "+ resp.data.state +" reached " + propBooleanValue + " state");
+                axiosGet();
+              }
+            }).catch((e)=>{
+              console.log(e);
+              console.log("While loop axios error in input");
+              highlightErrorElements(start.name, start.id, "Not executed" ,start.messageProperties.timestamp, start.type, e, "-");
+            });
+          }
+          axiosGet();
+        }
+        else {
+          start.signal();
+        }
+      }
+      else {
+        start.signal();
+      }
+    }
+
 
     // Finde die ID der Aktivität welche gerade in der Engine ausgeführt werde (activity.start)
     let task = taskArray.find(task => task['$'].id === start.id);
