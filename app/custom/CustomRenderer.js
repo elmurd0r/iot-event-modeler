@@ -75,13 +75,12 @@ export default class CustomRenderer extends BaseRenderer {
         case 'sensor-sub':
           imageHref = sensorSubSVGEncoded;
           break;
-        case 'sensor':
+        case 'sensor':git
         default:
           imageHref = sensorSVGEncoded;
       }
 
-      //const img = drawIot(parentNode, 36, 52, imageHref);
-      const img = drawImg(parentNode, element.width, element.height, imageHref);
+      const img = drawImg(element.width, element.height, imageHref);
 
       svgClear(parentNode);
       svgAppend(parentNode, img);
@@ -112,21 +111,7 @@ CustomRenderer.$inject = [ 'eventBus', 'bpmnRenderer' ];
 
 // helpers //////////
 
-function drawIot(parentNode, width, height, image) {
-    const img = svgCreate(image);
-
-    svgAttr(img, {
-      width: width,
-      height: height
-    });
-
-    return img;
-}
-function prependTo(newNode, parentNode, siblingNode) {
-  parentNode.insertBefore(newNode, siblingNode || parentNode.firstChild);
-}
-
-function drawImg(parentNode, width, height, image) {
+function drawImg(width, height, image) {
   const img = svgCreate('image');
 
   svgAttr(img, {
