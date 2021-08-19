@@ -18,7 +18,8 @@ let artefaktObjSVGEncoded = svg64(artefaktObjSVG);
 
 
 import {
-  remove as svgRemove,
+  append as svgAppend,
+  clear as svgClear,
   attr as svgAttr,
   create as svgCreate
 } from 'tiny-svg';
@@ -34,7 +35,7 @@ import {
 
 import { isNil } from 'min-dash';
 
-const HIGH_PRIORITY = 1500,
+const HIGH_PRIORITY = 9000,
       TASK_BORDER_RADIUS = 2;
 
 
@@ -42,6 +43,7 @@ export default class CustomRenderer extends BaseRenderer {
   constructor(eventBus, bpmnRenderer) {
     super(eventBus, HIGH_PRIORITY);
 
+    this.eventBus = eventBus;
     this.bpmnRenderer = bpmnRenderer;
   }
 
@@ -81,9 +83,9 @@ export default class CustomRenderer extends BaseRenderer {
       //const img = drawIot(parentNode, 36, 52, imageHref);
       const img = drawImg(parentNode, element.width, element.height, imageHref);
 
-      prependTo(img, parentNode);
-      svgRemove(shape);
-      return shape;
+      svgClear(parentNode);
+      svgAppend(parentNode, img);
+      return img;
     }
 
     return shape;
