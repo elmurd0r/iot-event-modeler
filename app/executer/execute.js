@@ -57,7 +57,6 @@ listener.on('activity.start', (start) => {
 
   console.log("---------------");
   console.log(start.id);
-
 });
 
 listener.on('activity.wait', (start) => {
@@ -119,6 +118,7 @@ listener.on('activity.wait', (start) => {
 
     // Finde die ID der Aktivität welche gerade in der Engine ausgeführt werde (activity.start)
     let task = taskArray.find(task => task['$'].id === start.id);
+
     if (task) {
       let inputs = task[bpmnVersion+'dataInputAssociation'];
       let outputs = task[bpmnVersion+'dataOutputAssociation'];
@@ -145,8 +145,19 @@ listener.on('activity.wait', (start) => {
           sensVal = sensor['$']['iot:value'];
           sensName = sensor['$'].name;
 
-          if (inputsBoolean != undefined) {
-            let propBooleanValue = inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value ? inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value : null;
+          if (inputsBoolean) {
+            //let propBooleanValue = inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value ? inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value : null;
+            let propBooleanValue = inputsBoolean[0]['camunda:properties'][0]['camunda:property'].find(s => s.$?.name === "loop")?.$?.value;
+            let key = inputsBoolean[0]['camunda:properties'][0]['camunda:property'].find(s => s['$'].name === "key")?.$?.value;
+            let mathOp = inputsBoolean[0]['camunda:properties'][0]['camunda:property'].find(s => s?.$?.name === ">" || s?.$?.name === "<" || s?.$?.name === "=")?.$?.value;
+
+            console.log(propBooleanValue);
+            console.log(key);
+            console.log(mathOp);
+
+            //console.log(inputsBoolean[0]['camunda:properties'][0]['camunda:property']);
+
+
             if(propBooleanValue) {
               const axiosGet = () => {
                 axios.get( sensVal, {timeout: 5000}).then((resp)=>{
@@ -163,6 +174,9 @@ listener.on('activity.wait', (start) => {
                 });
               }
               axiosGet();
+            }
+            else {
+              start.signal();
             }
           } else {
             axios.get( sensVal, {timeout: 5000}).then((resp)=>{

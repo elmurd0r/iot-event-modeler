@@ -7,6 +7,8 @@ import actorSubSVG from "../svg/Artefakt_Empfangend_Sub.svg";
 import sensorSVG from "../svg/Artefakt_Sendend.svg";
 import sensorSubSVG from "../svg/Artefakt_Senden_Sub.svg";
 import artefaktObjSVG from "../svg/Artefakt_Allgemein.svg";
+import catchEvent from "../svg/IoT_Artefakt_Intermediate_Catch_Event.svg";
+import throwEvent from "../svg/IoT_Artefakt_Intermediate_Throw_Event.svg";
 
 //Base 64 encode SVG files
 let startSVGEncoded = svg64(startSVG);
@@ -15,6 +17,8 @@ let actorSubSVGEncoded = svg64(actorSubSVG);
 let sensorSVGEncoded = svg64(sensorSVG);
 let sensorSubSVGEncoded = svg64(sensorSubSVG);
 let artefaktObjSVGEncoded = svg64(artefaktObjSVG);
+let catchEventEncoded = svg64(catchEvent);
+let throwEventEncoded = svg64(throwEvent);
 
 
 import {
@@ -74,6 +78,12 @@ export default class CustomRenderer extends BaseRenderer {
           break;
         case 'sensor-sub':
           imageHref = sensorSubSVGEncoded;
+          break;
+        case 'throw':
+          imageHref = throwEventEncoded;
+          break;
+        case 'catch':
+          imageHref = catchEventEncoded;
           break;
         case 'sensor':
         default:

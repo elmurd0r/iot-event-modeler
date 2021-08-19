@@ -76,6 +76,12 @@ a:link {
 .start {
   background-image: url(http://localhost:5000/svg/NewStartSVG.svg);
 }
+.catch {
+  background-image: url(http://localhost:5000/svg/IoT_Artefakt_Intermediate_Catch_Event.svg);
+}
+.throw {
+  background-image: url(http://localhost:5000/svg/IoT_Artefakt_Intermediate_Throw_Event.svg);
+}
 
 .iot {
   background-size: 25px 30px;

@@ -51,6 +51,42 @@ export default class CustomPalette {
       };
     }
 
+    function createIoTCatchEvent(iotType) {
+      return function(event) {
+        const businessObject = bpmnFactory.create('bpmn:IntermediateCatchEvent');
+
+        businessObject.set('iot:type', iotType);
+
+        businessObject.iotType = iotType;
+
+        const shape = elementFactory.createShape({
+          type: 'bpmn:IntermediateCatchEvent',
+          businessObject: businessObject,
+          eventDefinitionType: 'bpmn:MessageEventDefinition'
+        });
+
+        create.start(event, shape);
+      }
+    }
+
+    function createIoTThrowEvent(iotType) {
+      return function(event) {
+        const businessObject = bpmnFactory.create('bpmn:IntermediateThrowEvent');
+
+        businessObject.set('iot:type', iotType);
+
+        businessObject.iotType = iotType;
+
+        const shape = elementFactory.createShape({
+          type: 'bpmn:IntermediateThrowEvent',
+          businessObject: businessObject,
+          eventDefinitionType: 'bpmn:MessageEventDefinition'
+        });
+
+        create.start(event, shape);
+      }
+    }
+
     return {
       'create.iot-sensor': {
         group: 'iot',
@@ -104,6 +140,24 @@ export default class CustomPalette {
         action: {
           dragstart: createIotStart("start"),
           click: createIotStart("start")
+        }
+      },
+      'create.iot-catch': {
+        group: 'iot',
+        className: 'iot catch',
+        title: translate('Create IoT Catch Event'),
+        action: {
+          dragstart: createIoTCatchEvent("catch"),
+          click: createIoTCatchEvent("catch")
+        }
+      },
+      'create.iot-throw': {
+        group: 'iot',
+        className: 'iot throw',
+        title: translate('Create IoT Throw Event'),
+        action: {
+          dragstart: createIoTThrowEvent("throw"),
+          click: createIoTThrowEvent("throw")
         }
       }
     };
