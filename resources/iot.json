@@ -22,6 +22,23 @@
           "type": "String"
         }
       ]
+    },
+    {
+      "name": "iotStart",
+      "extends": [
+        "bpmn:StartEvent"
+      ],
+      "properties": [
+        {
+          "name": "value",
+          "isAttr": true,
+          "type": "String"
+        },{
+          "name": "type",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
     }
   ],
   "emumerations": [],

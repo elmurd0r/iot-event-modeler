@@ -1,9 +1,8 @@
 import NavigatedViewer from 'bpmn-js/lib/NavigatedViewer';
-import {is} from 'bpmn-js/lib/util/ModelUtil';
+import {is, getBusinessObject} from 'bpmn-js/lib/util/ModelUtil';
 const {EventEmitter} = require('events');
 const {Engine} = require('bpmn-engine');
 const axios = require('axios').default;
-const parseString = require('xml2js').parseString;
 
 import {confirmIcon, errIcon} from "../svg/Icons";
 import customModule from '../custom/executer';
@@ -59,168 +58,251 @@ listener.on('activity.start', (start) => {
   console.log(start.id);
 });
 
-listener.on('activity.wait', (start) => {
-  //console.log(start);
-  parseString(processModel, (err, data) => {
-    let sourceId = start.content.inbound;
-    let bpmnVersion = data['bpmn2:definitions'] ? 'bpmn2:' : '';
-    let processArr = data[bpmnVersion+'definitions'][bpmnVersion+'process'];
+listener.on('activity.wait', (waitObj) => {
+  //console.log(waitObj);
+  console.log(bpmnViewer.get('elementRegistry'));
+
+  let taskArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:Task"));
+  let startEventArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:StartEvent"));
+
+  let startEvent = startEventArr.find(startEvent => startEvent.id === waitObj.id);
+  let task = taskArr.find(task => task.id === waitObj.id);
 
 
-    let processID;
-    if(start.content.parent.type === "bpmn:Process") {
-      processID = start.content.parent.id;
-    } else {
-      let parentID = start.content.parent.path;
-      processID = parentID.find(p => p.type === "bpmn:Process").id;
-    }
+  if(startEvent && getBusinessObject(startEvent).type) {
 
-    let process = processArr.find(p => p['$'].id === processID);
-    //let taskArrayElementRegistry = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:Task"));
-    let taskArray = process[bpmnVersion+'task'];
-    let startEvent = process[bpmnVersion+'startEvent'];
-    let dataObjectReference = process[bpmnVersion+'dataObjectReference'];
+    const mathLoopCall = (businessObj, eventValue) => {
+      let name = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'key')?.value;
+      let mathOp = businessObj.get("extensionElements")?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.name;
+      let mathOpVal = businessObj.get("extensionElements")?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.value;
 
-
-    let BPMNstart = startEvent.find(task => task['$'].id === start.id);
-    if(BPMNstart  && startEvent[0]['$']['iot:type']) {
-      let startEventValue = startEvent[0]['$'].value;
-      let inputsBoolean = startEvent[0][bpmnVersion+'extensionElements'];
-      if(inputsBoolean) {
-        let propBooleanValue = inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value ? inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value : null;
-        if(propBooleanValue) {
-          const axiosGet = () => {
-            axios.get( startEventValue, {timeout: 5000}).then((resp)=>{
-              if (resp.data.state === propBooleanValue) {
-                console.log(resp.data.name + " reached state " + resp.data.state);
-                start.signal();
-              } else {
-                console.log("WAIT UNTIL " + resp.data.name + " with state "+ resp.data.state +" reached " + propBooleanValue + " state");
-                axiosGet();
-              }
-            }).catch((e)=>{
-              console.log(e);
-              console.log("While loop axios error in input");
-              highlightErrorElements(start.name, start.id, "Not executed" ,start.messageProperties.timestamp, start.type, e, "-");
-            });
-          }
-          axiosGet();
-        }
-        else {
-          start.signal();
-        }
-      }
-      else {
-        start.signal();
-      }
-    }
-
-
-    // Finde die ID der Aktivität welche gerade in der Engine ausgeführt werde (activity.start)
-    let task = taskArray.find(task => task['$'].id === start.id);
-
-    if (task) {
-      let inputs = task[bpmnVersion+'dataInputAssociation'];
-      let outputs = task[bpmnVersion+'dataOutputAssociation'];
-
-      if(!inputs && !outputs) {
-        start.signal();
-      }
-
-      // Wenn es ein dataInputAssociation gibt bzw. dataOutputAssociation (siehe nächste else if) überprüfe ob es ein normales Datenobjekt ist oder ein IoT-Datenobjekt,
-      // indem geprüft wird, ob "iot" in 'dataObjectReference' drin steht
-      if (inputs) {
-        let sens = '';
-        let sensVal;
-        let sensType;
-        let sensName;
-        // Wenn "iot" in 'dataObjectReference' steht, dann schreibe sowohl Type als auch Value in variablen rein um diese später weiter zu bearbeiten
-        let inputIDArr = inputs.map(inputAssociation => inputAssociation[bpmnVersion+'sourceRef'][0]);
-        let sensorArr = dataObjectReference.filter(ref => ref['$']['iot:type'] === 'sensor');
-        let taskSensors = sensorArr.filter(sensor => inputIDArr.includes(sensor['$'].id));
-        let inputsBoolean = task[bpmnVersion+'extensionElements'];
-
-        taskSensors.forEach(sensor => {
-          sensType = sensor['$']['iot:type'];
-          sensVal = sensor['$']['iot:value'];
-          sensName = sensor['$'].name;
-
-          if (inputsBoolean) {
-            //let propBooleanValue = inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value ? inputsBoolean[0]['camunda:properties'][0]['camunda:property'][0]['$'].value : null;
-            let propBooleanValue = inputsBoolean[0]['camunda:properties'][0]['camunda:property'].find(s => s.$?.name === "loop")?.$?.value;
-            let key = inputsBoolean[0]['camunda:properties'][0]['camunda:property'].find(s => s['$'].name === "key")?.$?.value;
-            let mathOp = inputsBoolean[0]['camunda:properties'][0]['camunda:property'].find(s => s?.$?.name === ">" || s?.$?.name === "<" || s?.$?.name === "=")?.$?.value;
-
-            console.log(propBooleanValue);
-            console.log(key);
-            console.log(mathOp);
-
-            //console.log(inputsBoolean[0]['camunda:properties'][0]['camunda:property']);
-
-
-            if(propBooleanValue) {
-              const axiosGet = () => {
-                axios.get( sensVal, {timeout: 5000}).then((resp)=>{
-                  if (resp.data.state === propBooleanValue) {
-                    console.log(resp.data.name + " reached state " + resp.data.state);
-                    start.signal();
+      if (name && mathOp && mathOpVal && !isNaN(parseFloat(mathOpVal))) {
+        mathOpVal = parseFloat(mathOpVal);
+        const axiosGet = () => {
+          axios.get(eventValue, {timeout: 5000}).then((resp) => {
+            let resVal = resp.data[name];
+            if (resVal && !isNaN(parseFloat(resVal))) {
+              resVal = parseFloat(resVal);
+              switch (mathOp) {
+                case '<' :
+                  if (mathOpVal < resVal) {
+                    console.log(name + " reached state " + resp.data[name]);
+                    waitObj.signal();
                   } else {
-                    console.log("WAIT UNTIL " + resp.data.name + " with state "+ resp.data.state +" reached " + propBooleanValue + " state");
+                    console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
                     axiosGet();
                   }
-                }).catch((e)=>{
-                  console.log(e);
-                  console.log("While loop axios error in input");
-                });
+                  break;
+                case '=' :
+                  if (mathOpVal === resVal) {
+                    console.log(name + " reached state " + resp.data[name]);
+                    waitObj.signal();
+                  } else {
+                    console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
+                    axiosGet();
+                  }
+                  break;
+                case '>' :
+                  if (mathOpVal > resVal) {
+                    console.log(name + " reached state " + resp.data[name]);
+                    waitObj.signal();
+                  } else {
+                    console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
+                    axiosGet();
+                  }
+                  break;
+                default:
+                  console.log("Default case stopped IoT start");
+                  engine.stop();
               }
-              axiosGet();
+            } else {
+              console.log("Key not in response - IoT start");
             }
-            else {
-              start.signal();
-            }
-          } else {
-            axios.get( sensVal, {timeout: 5000}).then((resp)=>{
-              start.environment.variables.input = resp.data.vendor;
-              console.log("HTTP GET successfully completed");
-              console.log('Name: ' + sensName + ' Type: ' + sensType + ', Value: ' + sensVal);
-              start.signal();
-            }).catch((e)=>{
-              console.log(e);
-              console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
-              highlightErrorElements(start.name, start.id, "Not executed" ,start.messageProperties.timestamp, start.type, e, sourceId[0].sourceId);
-            });
-          }
-        });
+          }).catch((e) => {
+            console.log(e);
+            console.log("Recursion axios error in input");
+            highlightErrorElements(waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-");
+          });
+        }
+        axiosGet();
+      } else {
+        console.log("Error in extensionsElement in IoT start");
+        engine.stop();
       }
+    }
 
-      if (outputs) {
-        let actVal;
-        let actType;
-        let actName;
+    let businessObj = getBusinessObject(startEvent);
+    let eventValUrl = businessObj.value;
 
-        let outputIDArr = outputs.map(outputAssociation => outputAssociation[bpmnVersion+'targetRef'][0]);
-        let actorArr = dataObjectReference.filter(ref => ref['$']['iot:type'] === 'actor');
-        let taskActors = actorArr.filter(actor => outputIDArr.includes(actor['$'].id));
+    if(eventValUrl) {
+      mathLoopCall(businessObj, eventValUrl);
+    }
+    else {
+      console.log("No iot start URL value defined");
+      engine.stop();
+    }
+  }
 
-        taskActors.forEach(actor => {
-          actType = actor['$']['iot:type'];
-          actVal = actor['$']['iot:value'];
-          actName = actor['$'].name;
+  if(task) {
+    let businessObj = getBusinessObject(task);
 
+    let iotInputs = businessObj.get("dataInputAssociations")?.map(input => {
+      if (input.sourceRef[0].type) {
+        return input.sourceRef[0];
+      }
+    });
+    let iotOutputs = businessObj.get("dataOutputAssociations")?.map(input => {
+      if(input.targetRef.type) {
+        return input.targetRef;
+      }
+    });
 
-          axios.post( actVal, null, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
+    if(!iotInputs && !iotOutputs){
+      waitObj.signal();
+    }
+
+    debugger;
+    let successfull = true;
+
+    if(iotInputs.length > 0 && iotOutputs.length === 0) {
+      const inputRecursion = (input) => {
+        let businessObj = getBusinessObject(input);
+        let eventValUrl = businessObj.value;
+        let name = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'key')?.value;
+        let envName = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'envName')?.value;
+
+        if(eventValUrl && name && envName) {
+          axios.get( eventValUrl, {timeout: 5000}).then((resp)=>{
+            let value = resp.data[name];
+            if(!isNaN(parseFloat(value))) {
+              value = parseFloat(value);
+              waitObj.environment.variables[envName] = value;
+              console.log("HTTP GET successfully completed");
+              console.log('Name: ' + name + ', Value: ' + value);
+              if(iotInputs.length > 0) {
+                inputRecursion(iotInputs.pop());
+              } else {
+                waitObj.signal();
+                //end
+              }
+            } else {
+              console.log('response value is NaN');
+              engine.stop();
+              successfull = false;
+            }
+          }).catch((e)=>{
+            console.log(e);
+            console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
+            engine.stop();
+            successfull = false;
+          });
+        } else {
+          engine.stop();
+          console.log("Error in extensionsElement in IoT sensor Task");
+          successfull = false;
+        }
+      }
+      inputRecursion(iotInputs.pop());
+    }
+
+    if(iotOutputs.length > 0 && iotInputs.length === 0) {
+      const outputRecursion = (input) => {
+        let businessObj = getBusinessObject(input);
+        let eventValUrl = businessObj.value;
+
+        if(eventValUrl) {
+          axios.post( eventValUrl, null, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
             console.log("HTTP POST successfully completed");
-            console.log('Name: ' + actName + ' Type: ' + actType + ', Value: ' + actVal);
-            start.signal();
+            console.log('Executed call: ' + eventValUrl);
+            if(iotOutputs.length > 0) {
+              outputRecursion(iotOutputs.pop());
+            } else {
+              waitObj.signal();
+              //end
+            }
           }).catch((e)=>{
             console.log(e);
             console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
-            highlightErrorElements(start.name, start.id, "Not executed" ,start.messageProperties.timestamp, start.type, e, sourceId[0].sourceId);
+            engine.stop();
+            successfull = false;
           });
-        });
+        } else {
+          engine.stop();
+          console.log("Error in extensionsElement in IoT sensor Task");
+          successfull = false;
+        }
       }
+      outputRecursion(iotOutputs.pop());
     }
-  });
+
+    if (iotOutputs.length > 0 && iotInputs.length > 0) {
+      const inputRecursion = (input) => {
+        let businessObj = getBusinessObject(input);
+        let eventValUrl = businessObj.value;
+        let name = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'key')?.value;
+        let envName = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'envName')?.value;
+
+        if(eventValUrl && name && envName) {
+          axios.get( eventValUrl, {timeout: 5000}).then((resp)=>{
+            let value = resp.data[name];
+            if(!isNaN(parseFloat(value))) {
+              value = parseFloat(value);
+              waitObj.environment.variables[envName] = value;
+              console.log("HTTP GET successfully completed");
+              console.log('Name: ' + name + ', Value: ' + value);
+              if(iotInputs.length > 0) {
+                inputRecursion(iotInputs.pop());
+              } else {
+                outputRecursion(iotOutputs.pop());
+              }
+            } else {
+              console.log('response value is NaN');
+              engine.stop();
+              successfull = false;
+            }
+          }).catch((e)=>{
+            console.log(e);
+            console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
+            engine.stop();
+            successfull = false;
+          });
+        } else {
+          engine.stop();
+          console.log("Error in extensionsElement in IoT sensor Task");
+          successfull = false;
+        }
+      }
+      const outputRecursion = (input) => {
+        let businessObj = getBusinessObject(input);
+        let eventValUrl = businessObj.value;
+
+        if(eventValUrl) {
+          axios.post( eventValUrl, null, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
+            console.log("HTTP POST successfully completed");
+            console.log('Executed call: ' + eventValUrl);
+            if(iotOutputs.length > 0) {
+              outputRecursion(iotOutputs.pop());
+            } else {
+              waitObj.signal();
+              //end
+            }
+          }).catch((e)=>{
+            console.log(e);
+            console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
+            engine.stop();
+            successfull = false;
+          });
+        } else {
+          engine.stop();
+          console.log("Error in extensionsElement in IoT sensor Task");
+          successfull = false;
+        }
+      }
+      inputRecursion(iotInputs.pop());
+    }
+  } else {
+    waitObj.signal();
+  }
 })
 
 
@@ -286,7 +368,7 @@ function fillSidebar(state, name, id, time, timeStamp,type, errormsg, source) {
 
 
   stateCell.innerHTML = state;
-  nameCell.innerHTML = name;
+  nameCell.innerHTML = name ? name : '-';
   idCell.innerHTML = id;
   typeCell.innerHTML = type;
   sourceCell.innerHTML = source;
