@@ -39,6 +39,40 @@
           "type": "String"
         }
       ]
+    },
+    {
+      "name": "iotIntermediateThrow",
+      "extends": [
+        "bpmn:IntermediateThrowEvent"
+      ],
+      "properties": [
+        {
+          "name": "value",
+          "isAttr": true,
+          "type": "String"
+        },{
+          "name": "type",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    },
+    {
+      "name": "iotIntermediateCatch",
+      "extends": [
+        "bpmn:IntermediateCatchEvent"
+      ],
+      "properties": [
+        {
+          "name": "value",
+          "isAttr": true,
+          "type": "String"
+        },{
+          "name": "type",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
     }
   ],
   "emumerations": [],

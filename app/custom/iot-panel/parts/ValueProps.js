@@ -14,7 +14,7 @@ export default function(group, element, translate) {
     // element is a start event.
     const iotType = getIotType(element);
 
-    if (is(element, 'bpmn:DataObjectReference') || is(element, 'bpmn:StartEvent') && !isNil(iotType)) {
+    if ((is(element, 'bpmn:DataObjectReference') || is(element, 'bpmn:StartEvent') || is(element, 'bpmn:IntermediateCatchEvent') || is(element, 'bpmn:IntermediateThrowEvent')) && !isNil(iotType)) {
         group.entries.push(entryFactory.textField(translate, {
             id : 'value',
             description : 'Set value of Data Object',
