@@ -87,7 +87,7 @@ listener.on('activity.wait', (waitObj) => {
               resVal = parseFloat(resVal);
               switch (mathOp) {
                 case '<' :
-                  if (mathOpVal < resVal) {
+                  if (resVal < mathOpVal) {
                     console.log(name + " reached state " + resp.data[name]);
                     waitObj.signal();
                   } else {
@@ -96,7 +96,7 @@ listener.on('activity.wait', (waitObj) => {
                   }
                   break;
                 case '=' :
-                  if (mathOpVal === resVal) {
+                  if (resVal === mathOpVal) {
                     console.log(name + " reached state " + resp.data[name]);
                     waitObj.signal();
                   } else {
@@ -105,7 +105,7 @@ listener.on('activity.wait', (waitObj) => {
                   }
                   break;
                 case '>' :
-                  if (mathOpVal > resVal) {
+                  if (resVal > mathOpVal) {
                     console.log(name + " reached state " + resp.data[name]);
                     waitObj.signal();
                   } else {
@@ -163,7 +163,7 @@ listener.on('activity.wait', (waitObj) => {
       }
     });
 
-    if(!iotInputs && !iotOutputs){
+    if(iotInputs.length === 0 && iotOutputs.length === 0){
       waitObj.signal();
     }
 
