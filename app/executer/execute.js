@@ -332,20 +332,40 @@ listener.on('activity.end', (element)=>{
   addOverlays(currentElement, time);
   // -----------------
   let obj = element.content.inbound;
-
-  try {
-    fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type, "-", obj[0].sourceId);
-  }
-  catch {
-    fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type, "-", "-");
-  }
+  fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type, "-", obj ? obj[0].sourceId : '-');
 
   executedTasksArr.push(element.id);
+
+  let taskArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:Task"));
+  let task = taskArr.find(task => task.id === element.id);
+  if(task) {
+    let businessObj = getBusinessObject(task);
+    let iotInputs = businessObj.get("dataInputAssociations")?.map(input => {
+      if (input.sourceRef[0].type) {
+        let elementToColor = bpmnViewer.get('elementRegistry').find(element => element.id === input.sourceRef[0].id);
+        highlightElement(elementToColor, "rgba(66, 180, 21, 0.7)");
+        return input.sourceRef[0].id;
+      }
+    });
+    let iotOutputs = businessObj.get("dataOutputAssociations")?.map(input => {
+      if(input.targetRef.type) {
+        let elementToColor = bpmnViewer.get('elementRegistry').find(element => element.id === input.sourceRef[0].id);
+        highlightElement(elementToColor, "rgba(66, 180, 21, 0.7)");
+        return input.targetRef.id;
+      }
+    });
+    executedTasksArr.push(...iotInputs);
+    executedTasksArr.push(...iotOutputs);
+  }
 })
 
 const highlightErrorElements = (name, id, time, timeStamp, type, errormsg, source) => {
   engine.stop();
-  let notExecutedElements = bpmnViewer.get('elementRegistry').filter((elem)=>!executedTasksArr.includes(elem.id));
+  let notExecutedElements = bpmnViewer.get('elementRegistry').filter((elem)=> {
+    if(!executedTasksArr.includes(elem.id) && !is(elem, "bpmn:Process") && !is(elem, "bpmn:SequenceFlow") && !is(elem, "bpmn:DataInputAssociation")) {
+      return elem;
+    }
+  });
   highlightElementArr(notExecutedElements, "rgb(245,61,51)");
   let convertedTimeStamp = timestampToDate(timeStamp);
   fillSidebar(errIcon, name, id, time, convertedTimeStamp, type, errormsg, source);

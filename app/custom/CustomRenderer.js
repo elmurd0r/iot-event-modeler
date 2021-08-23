@@ -1,5 +1,4 @@
 import BaseRenderer from 'diagram-js/lib/draw/BaseRenderer';
-const svg64 = require('svg64');
 
 import startSVG from "../svg/NewStartSVG.svg";
 import actorSVG from "../svg/Artefakt_Empfangend.svg";
@@ -9,21 +8,13 @@ import sensorSubSVG from "../svg/Artefakt_Senden_Sub.svg";
 import artefaktObjSVG from "../svg/Artefakt_Allgemein.svg";
 import catchEvent from "../svg/IoT_Artefakt_Intermediate_Catch_Event.svg";
 import throwEvent from "../svg/IoT_Artefakt_Intermediate_Throw_Event.svg";
-
-//Base 64 encode SVG files
-let startSVGEncoded = svg64(startSVG);
-let actorSVGEncoded = svg64(actorSVG);
-let actorSubSVGEncoded = svg64(actorSubSVG);
-let sensorSVGEncoded = svg64(sensorSVG);
-let sensorSubSVGEncoded = svg64(sensorSubSVG);
-let artefaktObjSVGEncoded = svg64(artefaktObjSVG);
-let catchEventEncoded = svg64(catchEvent);
-let throwEventEncoded = svg64(throwEvent);
+import {getFillColor} from "bpmn-js/lib/draw/BpmnRenderUtil";
 
 
 import {
   append as svgAppend,
   clear as svgClear,
+  classes as svgClass,
   attr as svgAttr,
   create as svgCreate
 } from 'tiny-svg';
@@ -59,39 +50,38 @@ export default class CustomRenderer extends BaseRenderer {
   drawShape(parentNode, element) {
     const shape = this.bpmnRenderer.drawShape(parentNode, element);
     const iotType = this.getIotType(element);
-
     if (!isNil(iotType)) {
 
-      let imageHref;
+      let imageHref, color;
       switch (iotType) {
         case 'start':
-          imageHref = startSVGEncoded;
+          imageHref = startSVG;
           break;
         case 'actor':
-          imageHref = actorSVGEncoded;
+          imageHref = actorSVG;
           break;
         case 'actor-sub':
-          imageHref = actorSubSVGEncoded;
+          imageHref = actorSubSVG;
           break;
         case 'obj':
-          imageHref = artefaktObjSVGEncoded;
+          imageHref = artefaktObjSVG;
           break;
         case 'sensor-sub':
-          imageHref = sensorSubSVGEncoded;
+          imageHref = sensorSubSVG;
           break;
         case 'throw':
-          imageHref = throwEventEncoded;
+          imageHref = throwEvent;
           break;
         case 'catch':
-          imageHref = catchEventEncoded;
+          imageHref = catchEvent;
           break;
         case 'sensor':
         default:
-          imageHref = sensorSVGEncoded;
+          color = getFillColor(element);
+          imageHref = sensorSVG;
       }
 
-      const img = drawImg(element.width, element.height, imageHref);
-
+      const img = drawImg(element.width, element.height, imageHref, color);
       svgClear(parentNode);
       svgAppend(parentNode, img);
       return img;
@@ -121,15 +111,22 @@ CustomRenderer.$inject = [ 'eventBus', 'bpmnRenderer' ];
 
 // helpers //////////
 
-function drawImg(width, height, image) {
-  const img = svgCreate('image');
-
+function drawImg(width, height, image, color) {
+  const img = svgCreate(image);
   svgAttr(img, {
     width: width,
     height: height,
     strokeWidth: 2,
-    href: image
   });
+  switch (color) {
+    case 'rgb(245,61,51)':
+    svgClass(img).add('svgColorRed');
+    break;
+    case 'rgba(66, 180, 21, 0.7)':
+    svgClass(img).add('svgColorGreen');
+    break;
+    default:
+  }
 
   return img;
 }
