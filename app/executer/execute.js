@@ -69,6 +69,7 @@ listener.on('activity.wait', (waitObj) => {
 
   let startEvent = startEventArr.find(startEvent => startEvent.id === waitObj.id);
   let catchEvent = catchEventArr.find(catchEvent => catchEvent.id === waitObj.id);
+  let throwEvent = throwEventArr.find(throwEvent => throwEvent.id === waitObj.id);
   let task = taskArr.find(task => task.id === waitObj.id);
 
   if(startEvent || catchEvent) {
@@ -146,6 +147,26 @@ listener.on('activity.wait', (waitObj) => {
       }
     } else {
       waitObj.signal();
+    }
+  }
+
+  if(throwEvent) {
+    let businessObj = getBusinessObject(throwEvent);
+    let eventValUrl = businessObj.value;
+
+    if(eventValUrl) {
+      axios.post( eventValUrl, null, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
+        console.log("HTTP POST successfully completed");
+        console.log('Executed call: ' + eventValUrl);
+        waitObj.signal();
+      }).catch((e)=>{
+        console.log(e);
+        console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
+        highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
+      });
+    } else {
+      console.log("Error in extensionsElement in IoT intermediate actor event");
+      highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "extensionElement", sourceId[0].sourceId);
     }
   }
 
