@@ -136,3 +136,11 @@ a.btn:hover {
     .sidebar {padding-top: 15px;}
     .sidebar a {font-size: 18px;}
 }
+
+.svgColorRed g rect:first-child {
+    fill: rgb(245, 61, 51);
+}
+
+.svgColorGreen g rect:first-child {
+    fill: rgba(66, 180, 21, 0.7);
+}
