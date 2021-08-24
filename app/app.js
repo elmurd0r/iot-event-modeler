@@ -85,6 +85,19 @@ newDia.addEventListener('click', (e)=>{
   createNewDiagram();
 })
 
+const sriptTextAreaListener = (event) =>{
+  let element = event.target;
+  if(element.id === 'cam-script-val'){
+    element.addEventListener('focusout', (e)=>{
+      if(!e.target.value.includes('next(null')) {
+        e.target.value = 'next(null, this.environment.variables.' + e.target.value + ');';
+      }
+    })
+  }
+}
+document.addEventListener( "click", sriptTextAreaListener );
+
+
 const createNewDiagram = () => {
   openDiagram(newDiagram);
 }
