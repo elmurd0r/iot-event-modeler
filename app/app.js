@@ -7,6 +7,7 @@ import newDiagram from '../resources/newDiagram.bpmn';
 import customModule from './custom';
 import iotExtension from '../resources/iot.json';
 import camundaExtension from '../resources/camunda.json';
+import {is, getBusinessObject} from "bpmn-js/lib/util/ModelUtil";
 
 const containerEl = document.getElementById('js-canvas'),
       container = document.getElementById('js-drop-zone'),
@@ -90,7 +91,12 @@ const sriptTextAreaListener = (event) =>{
   if(element.id === 'cam-script-val'){
     element.addEventListener('focusout', (e)=>{
       if(!e.target.value.includes('next(null')) {
-        e.target.value = 'next(null, this.environment.variables.' + e.target.value + ');';
+        let ID = document.getElementById("camunda-id").value;
+        let taskArr = bpmnModeler.get('elementRegistry').filter(element => is(element, "bpmn:SequenceFlow"));
+        let task = taskArr.find(task => task.id === ID);
+        let businessObj = getBusinessObject(task);
+        businessObj.conditionExpression.body = 'next(null, this.environment.variables.' + businessObj.conditionExpression.body + ');';
+        e.target.value = businessObj.conditionExpression.body;
       }
     })
   }
