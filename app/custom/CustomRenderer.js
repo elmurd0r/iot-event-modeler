@@ -1,13 +1,13 @@
 import BaseRenderer from 'diagram-js/lib/draw/BaseRenderer';
 
-import startSVG from "../svg/NewStartSVG.svg";
-import actorSVG from "../svg/Artefakt_Empfangend.svg";
+import startSVG from "../svg/default/NewStartSVG.svg";
+import actorSVG from "../svg/default/Artefakt_Empfangend.svg";
 import actorSubSVG from "../svg/Artefakt_Empfangend_Sub.svg";
 import sensorSVG from "../svg/Artefakt_Sendend.svg";
 import sensorSubSVG from "../svg/Artefakt_Senden_Sub.svg";
-import artefaktObjSVG from "../svg/Artefakt_Allgemein.svg";
-import catchEvent from "../svg/IoT_Artefakt_Intermediate_Catch_Event.svg";
-import throwEvent from "../svg/IoT_Artefakt_Intermediate_Throw_Event.svg";
+import artefaktObjSVG from "../svg/default/Artefakt_Allgemein.svg";
+import catchEvent from "../svg/default/IoT_Artefakt_Intermediate_Catch_Event.svg";
+import throwEvent from "../svg/default/IoT_Artefakt_Intermediate_Throw_Event.svg";
 import {getFillColor} from "bpmn-js/lib/draw/BpmnRenderUtil";
 
 
