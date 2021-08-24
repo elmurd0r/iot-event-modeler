@@ -349,7 +349,7 @@ listener.on('activity.end', (element)=>{
     });
     let iotOutputs = businessObj.get("dataOutputAssociations")?.map(input => {
       if(input.targetRef.type) {
-        let elementToColor = bpmnViewer.get('elementRegistry').find(element => element.id === input.sourceRef[0].id);
+        let elementToColor = bpmnViewer.get('elementRegistry').find(element => element.id === input.targetRef.id);
         highlightElement(elementToColor, "rgba(66, 180, 21, 0.7)");
         return input.targetRef.id;
       }
