@@ -8,6 +8,7 @@ import {confirmIcon, errIcon} from "../svg/Icons";
 import customModule from '../custom/executer';
 import iotExtension from '../../resources/iot.json';
 import camundaExtension from '../../resources/camunda.json';
+import { isNil } from 'min-dash';
 
 const processModel = sessionStorage.getItem('xml') ? sessionStorage.getItem('xml') : '';
 const containerEl = document.getElementById('js-canvas');
@@ -84,7 +85,8 @@ listener.on('activity.wait', (waitObj) => {
         const axiosGet = () => {
           axios.get(eventValue, {timeout: 5000}).then((resp) => {
             let resVal = resp.data[name];
-            if (resVal && !isNaN(parseFloat(resVal))) {
+
+            if (!isNil(resVal) && !isNaN(parseFloat(resVal))) {
               resVal = parseFloat(resVal);
               switch (mathOp) {
                 case '<' :
@@ -198,7 +200,11 @@ listener.on('activity.wait', (waitObj) => {
 
         if(eventValUrl && name && envName) {
           axios.get( eventValUrl, {timeout: 5000}).then((resp)=>{
-            let value = resp.data[name];
+            let value = resp.data;
+            let keyArr = name.split('.');
+            keyArr.forEach(k => {
+              value = value[k];
+            });
             if(!isNaN(parseFloat(value))) {
               value = parseFloat(value);
               waitObj.environment.variables[envName] = value;

@@ -63,7 +63,7 @@ a.btn:hover {
     background-color: #0a4eb3 !important;
 }
 .btn-container {
-    bottom: 20px;
+    top: 20px;
     left: 20px;
     position: absolute;
 }
