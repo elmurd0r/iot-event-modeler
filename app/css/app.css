@@ -9,9 +9,6 @@ body, html {
   padding: 0;
   margin: 0;
 }
-a:link {
-  text-decoration: none;
-}
 .content {
   position: relative;
   width: 100%;
@@ -58,50 +55,7 @@ a:link {
   min-height: 100%;
 }
 
-.sensor {
-  background-image: url(http://localhost:5000/svg/default/Artefakt_Sendend.svg);
-}
-.actor {
-  background-image: url(http://localhost:5000/svg/default/Artefakt_Empfangend.svg);
-}
-.actor-sub {
-  background-image: url(http://localhost:5000/svg/default/Artefakt_Empfangend_Sub.svg);
-}
-.sensor-sub {
-  background-image: url(http://localhost:5000/svg/default/Artefakt_Senden_Sub.svg);
-}
-.obj {
-  background-image: url(http://localhost:5000/svg/default/Artefakt_Allgemein.svg);
-}
-.start {
-  background-image: url(http://localhost:5000/svg/default/NewStartSVG.svg);
-}
-.catch {
-  background-image: url(http://localhost:5000/svg/default/IoT_Artefakt_Intermediate_Catch_Event.svg);
-}
-.throw {
-  background-image: url(http://localhost:5000/svg/default/IoT_Artefakt_Intermediate_Throw_Event.svg);
-}
 
-.iot {
-  background-size: 25px 30px;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-
-a.btn {
-  border-radius: .25rem;
-  border: 1px solid transparent;
-  padding: .5rem 1rem;
-  color: #fff;
-  background-color: #0d6efd!important;
-  text-decoration: none;
-}
-
-a.btn:hover {
-  border-radius: .25rem;
-  background-color: #0a4eb3 !important;
-}
 .btn-container {
   bottom: 20px;
   left: 20px;

@@ -141,7 +141,7 @@ First, let's add the ability to create elements with different suitability score
 }
 ```
 
-See the entire palette [here](app/custom/CustomPalette.js).
+See the entire palette [here](app/custom/palette/CustomPalette.js).
 
 #### Context Pad
 

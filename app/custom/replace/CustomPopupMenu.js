@@ -15,7 +15,7 @@ import {
     remove as domRemove
 } from 'min-dom';
 
-import * as SVGEncoded from "../../svg/SvgExporter";
+import {getEncodedSvg} from "../CustomUtil";
 
 var DATA_REF = 'data-id';
 
@@ -528,33 +528,7 @@ CustomPopupMenu.prototype._createEntry = function(entry, id) {
         });
         // custom img if iot
         if (entry.iot) {
-            let svgSrc;
-            switch (entry.iot) {
-                case 'start':
-                    svgSrc = SVGEncoded.startSVGEncoded;
-                    break;
-                case 'actor':
-                    svgSrc = SVGEncoded.actorSVGEncoded;
-                    break;
-                case 'actor-sub':
-                    svgSrc = SVGEncoded.actorSubSVGEncoded;
-                    break;
-                case 'obj':
-                    svgSrc = SVGEncoded.artefaktObjSVGEncoded;
-                    break;
-                case 'sensor-sub':
-                    svgSrc = SVGEncoded.sensorSubSVGEncoded;
-                    break;
-                case 'throw':
-                    svgSrc = SVGEncoded.throwEventEncoded;
-                    break;
-                case 'catch':
-                    svgSrc = SVGEncoded.catchEventEncoded;
-                    break;
-                case 'sensor':
-                default:
-                    svgSrc = SVGEncoded.sensorSVGEncoded;
-            }
+            let svgSrc = getEncodedSvg(entry.iot, null);
             entryContainer.appendChild(domify('<img style="width: 20px" src="' + svgSrc  + '" />'));
         }
     }
