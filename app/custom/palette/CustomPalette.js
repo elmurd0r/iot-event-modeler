@@ -132,7 +132,7 @@ export default class CustomPalette {
         group: 'iot',
         className: 'iot-obj',
         title: translate('Create IoT Object'),
-        iot: 'iot-obj',
+        iot: 'obj',
         action: {
           dragstart: createIotObj("obj"),
           click: createIotObj("obj")
