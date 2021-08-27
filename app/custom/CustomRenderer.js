@@ -118,10 +118,8 @@ export default class CustomRenderer extends BaseRenderer {
 
   getIotType(element) {
     const businessObject = getBusinessObject(element);
-
     const type = businessObject.get('iot:type');
-
-    return type ? type : null;
+    return type || null;
   }
 
   getShapePath(shape) {
