@@ -59,28 +59,28 @@ a:link {
 }
 
 .sensor {
-  background-image: url(http://localhost:5000/svg/Artefakt_Sendend.svg);
+  background-image: url(http://localhost:5000/svg/default/Artefakt_Sendend.svg);
 }
 .actor {
-  background-image: url(http://localhost:5000/svg/Artefakt_Empfangend.svg);
+  background-image: url(http://localhost:5000/svg/default/Artefakt_Empfangend.svg);
 }
 .actor-sub {
-  background-image: url(http://localhost:5000/svg/Artefakt_Empfangend_Sub.svg);
+  background-image: url(http://localhost:5000/svg/default/Artefakt_Empfangend_Sub.svg);
 }
 .sensor-sub {
-  background-image: url(http://localhost:5000/svg/Artefakt_Senden_Sub.svg);
+  background-image: url(http://localhost:5000/svg/default/Artefakt_Senden_Sub.svg);
 }
 .obj {
-  background-image: url(http://localhost:5000/svg/Artefakt_Allgemein.svg);
+  background-image: url(http://localhost:5000/svg/default/Artefakt_Allgemein.svg);
 }
 .start {
-  background-image: url(http://localhost:5000/svg/NewStartSVG.svg);
+  background-image: url(http://localhost:5000/svg/default/NewStartSVG.svg);
 }
 .catch {
-  background-image: url(http://localhost:5000/svg/IoT_Artefakt_Intermediate_Catch_Event.svg);
+  background-image: url(http://localhost:5000/svg/default/IoT_Artefakt_Intermediate_Catch_Event.svg);
 }
 .throw {
-  background-image: url(http://localhost:5000/svg/IoT_Artefakt_Intermediate_Throw_Event.svg);
+  background-image: url(http://localhost:5000/svg/default/IoT_Artefakt_Intermediate_Throw_Event.svg);
 }
 
 .iot {
