@@ -570,15 +570,7 @@ export var TASK = [
     }
 ];
 
-export var DATA_OBJECT_REFERENCE = [
-    {
-        label: 'Data Store Reference',
-        actionName: 'replace-with-data-store-reference',
-        className: 'bpmn-icon-data-store',
-        target: {
-            type: 'bpmn:DataStoreReference'
-        }
-    },
+export var IOT_REFERENCE = [
     {
         label: 'IoT Sensor',
         actionName: 'replace-with-iot-sensor',
@@ -629,6 +621,18 @@ export var DATA_OBJECT_REFERENCE = [
             'iot:type': 'sensor-sub'
         }
     }
+]
+
+
+export var DATA_OBJECT_REFERENCE = [
+    {
+        label: 'Data Store Reference',
+        actionName: 'replace-with-data-store-reference',
+        className: 'bpmn-icon-data-store',
+        target: {
+            type: 'bpmn:DataStoreReference'
+        }
+    }
 ];
 
 export var DATA_STORE_REFERENCE = [
@@ -638,56 +642,6 @@ export var DATA_STORE_REFERENCE = [
         className: 'bpmn-icon-data-object',
         target: {
             type: 'bpmn:DataObjectReference'
-        }
-    },
-    {
-        label: 'IoT Sensor',
-        actionName: 'replace-with-iot-sensor',
-        className: 'iot-element',
-        iot: 'sensor',
-        target: {
-            type: 'bpmn:DataObjectReference',
-            'iot:type': 'sensor'
-        }
-    },
-    {
-        label: 'IoT Actor',
-        actionName: 'replace-with-iot-actor',
-        className: 'iot-element',
-        iot: 'actor',
-        target: {
-            type: 'bpmn:DataObjectReference',
-            'iot:type': 'actor'
-        }
-    },
-    {
-        label: 'IoT Actor Sub',
-        actionName: 'replace-with-iot-actor-sub',
-        className: 'iot-element',
-        iot: 'actor-sub',
-        target: {
-            type: 'bpmn:DataObjectReference',
-            'iot:type': 'actor-sub'
-        }
-    },
-    {
-        label: 'IoT Object',
-        actionName: 'replace-with-iot-obj',
-        className: 'iot-element',
-        iot: 'obj',
-        target: {
-            type: 'bpmn:DataObjectReference',
-            'iot:type': 'obj'
-        }
-    },
-    {
-        label: 'IoT Sensor Sub',
-        actionName: 'replace-with-iot-sensor-sub',
-        className: 'iot-element',
-        iot: 'sensor-sub',
-        target: {
-            type: 'bpmn:DataObjectReference',
-            'iot:type': 'sensor-sub'
         }
     }
 ];

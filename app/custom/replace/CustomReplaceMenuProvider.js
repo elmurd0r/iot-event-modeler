@@ -14,10 +14,11 @@ import {
 
 import {
     forEach,
-    filter
+    filter, isNil
 } from 'min-dash';
 
 import * as replaceOptions from './CustomReplaceOptions';
+import {IOT_REFERENCE} from "./CustomReplaceOptions";
 
 
 /**
@@ -80,6 +81,10 @@ CustomReplaceMenuProvider.prototype.getEntries = function(element) {
     var differentType = isDifferentType(element);
 
     if (is(businessObject, 'bpmn:DataObjectReference')) {
+
+        if (businessObject.type) {
+            return this._createEntries(element, replaceOptions.IOT_REFERENCE);
+        }
         return this._createEntries(element, replaceOptions.DATA_OBJECT_REFERENCE);
     }
 
