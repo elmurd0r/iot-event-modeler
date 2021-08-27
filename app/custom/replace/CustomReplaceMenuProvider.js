@@ -14,11 +14,10 @@ import {
 
 import {
     forEach,
-    filter, isNil
+    filter
 } from 'min-dash';
 
 import * as replaceOptions from './CustomReplaceOptions';
-import {IOT_REFERENCE} from "./CustomReplaceOptions";
 
 
 /**
