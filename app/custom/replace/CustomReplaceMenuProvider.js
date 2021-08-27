@@ -270,8 +270,8 @@ CustomReplaceMenuProvider.prototype.getHeaderEntries = function(element) {
     if (is(element, 'bpmn:Activity') && !isEventSubProcess(element)) {
         headerEntries = headerEntries.concat(this._getLoopEntries(element));
     }
-
-    if (is(element, 'bpmn:DataObjectReference')) {
+    // show collection header if it is not iot
+    if (is(element, 'bpmn:DataObjectReference') && !getBusinessObject(element).get('type')) {
         headerEntries = headerEntries.concat(this._getDataObjectIsCollection(element));
     }
 
