@@ -89,7 +89,7 @@ CustomReplaceMenuProvider.prototype.getEntries = function(element) {
 
     // start events outside sub processes
     if (is(businessObject, 'bpmn:StartEvent') && !is(businessObject.$parent, 'bpmn:SubProcess')) {
-        console.log("start");
+        //TODO: filter current selected element (optional :D)
         //entries = filter(replaceOptions.START_EVENT, differentType);
         entries = replaceOptions.START_EVENT;
 
@@ -315,7 +315,7 @@ CustomReplaceMenuProvider.prototype._createEntries = function(element, replaceOp
 
  * @return {Array<Object>} a list of menu items
  */
-CustomReplaceMenuProvider.createSequenceFlowEntries = function(element, replaceOptions) {
+CustomReplaceMenuProvider.prototype._createSequenceFlowEntries = function(element, replaceOptions) {
 
     var businessObject = getBusinessObject(element);
 
