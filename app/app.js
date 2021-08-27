@@ -103,6 +103,21 @@ const sriptTextAreaListener = (event) =>{
 }
 document.addEventListener( "click", sriptTextAreaListener );
 
+//listener to remove keyboard listener while inside panel
+panel.addEventListener('click', e => {
+  let keyboard = bpmnModeler.get('keyboard');
+  if (keyboard.getBinding()) {
+    keyboard.unbind();
+  }
+});
+//add keyboard listener when click on canvas
+containerEl.addEventListener('click', e => {
+  let keyboard = bpmnModeler.get('keyboard');
+  if (!keyboard.getBinding()) {
+    keyboard.bind(document)
+  }
+});
+
 
 const createNewDiagram = () => {
   openDiagram(newDiagram);
