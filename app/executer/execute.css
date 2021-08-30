@@ -23,6 +23,11 @@ a:link {
     width: 100%;
 }
 
+#tableBody {
+    font-family: Arial;
+    font-size: 18px;
+}
+
 
 .theader {
     font-family: Arial;
@@ -36,6 +41,7 @@ a:link {
     font-size: 20px;
     font-weight: bold;
 }
+
 
 .overlay {
     background-color: rgba(255,165,0, 0.7);
@@ -69,6 +75,49 @@ a.btn:hover {
 }
 
 
+/* Sidebar menu for Log - Right side */
+.sidebarLogRight {
+    display: block;
+    width: 20%; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 900; /* Stay on top */
+    top: 0;
+    right: 0;
+    background-color: lightblue;
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+    overflow-y: auto;
+    font-size: 14px;
+}
+
+#sidebarLogRightHeader {
+    font-family: Arial;
+    font-size: 18px;
+}
+
+#overlayTableLogRight {
+    font-style: normal;
+    font-variant-ligatures: normal;
+    font-variant-caps: normal;
+    font-variant-numeric: normal;
+    font-variant-east-asian: normal;
+    font-weight: normal;
+    font-stretch: normal;
+    font-size: 12px;
+    line-height: 16px;
+    font-family: Menlo, Consolas, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;
+}
+
+
+.closebtnRight {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
 
 /* The sidebar menu */
 .sidebar {
@@ -85,6 +134,7 @@ a.btn:hover {
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
     overflow-y: auto;
     font-size: 14px;
+    z-index: 999;
 }
 
 /* The sidebar links */

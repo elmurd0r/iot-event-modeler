@@ -55,8 +55,10 @@ const engine = Engine({
 listener.on('activity.start', (start) => {
   start_t = new Date().getTime();
 
-  console.log("---------------");
+  console.log("=-=-=-=-=-=-=-=");
   console.log(start.id);
+  fillSidebarRightLog("=-=-=-=-=-=-=-=");
+  fillSidebarRightLog(start.id);
 });
 
 listener.on('activity.wait', (waitObj) => {
@@ -92,46 +94,56 @@ listener.on('activity.wait', (waitObj) => {
                 case '<' :
                   if (resVal < mathOpVal) {
                     console.log(name + " reached state " + resp.data[name]);
+                    fillSidebarRightLog(name + " reached state " + resp.data[name]);
                     waitObj.signal();
                   } else {
                     console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
+                    fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
                     axiosGet();
                   }
                   break;
                 case '=' :
                   if (resVal === mathOpVal) {
                     console.log(name + " reached state " + resp.data[name]);
+                    fillSidebarRightLog(name + " reached state " + resp.data[name]);
                     waitObj.signal();
                   } else {
                     console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
+                    fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
                     axiosGet();
                   }
                   break;
                 case '>' :
                   if (resVal > mathOpVal) {
                     console.log(name + " reached state " + resp.data[name]);
+                    fillSidebarRightLog(name + " reached state " + resp.data[name]);
                     waitObj.signal();
                   } else {
                     console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
+                    fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
                     axiosGet();
                   }
                   break;
                 default:
                   console.log("Default case stopped IoT start");
+                  fillSidebarRightLog("Default case stopped IoT start");
                   engine.stop();
               }
             } else {
               console.log("Key not in response - IoT start");
+              fillSidebarRightLog("Key not in response - IoT start");
             }
           }).catch((e) => {
             console.log(e);
             console.log("Recursion axios error in input");
+            fillSidebarRightLog("Recursion axios error in input: " + e);
             highlightErrorElements(waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-");
           });
         }
         axiosGet();
       } else {
         console.log("Error in extensionsElement in IoT start");
+        fillSidebarRightLog("Error in extensionsElement in IoT start");
         highlightErrorElements(waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, "start extensionElement", '-');
       }
     }
@@ -145,6 +157,7 @@ listener.on('activity.wait', (waitObj) => {
       }
       else {
         console.log("No iot start URL value defined");
+        fillSidebarRightLog("No iot start URL value defined");
         engine.stop();
       }
     } else {
@@ -160,14 +173,18 @@ listener.on('activity.wait', (waitObj) => {
       axios.post( eventValUrl, null, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
         console.log("HTTP POST successfully completed");
         console.log('Executed call: ' + eventValUrl);
+        fillSidebarRightLog("HTTP POST successfully completed");
+        fillSidebarRightLog('Executed call: ' + eventValUrl);
         waitObj.signal();
       }).catch((e)=>{
         console.log(e);
         console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
+        fillSidebarRightLog("HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e);
         highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
       });
     } else {
       console.log("Error in extensionsElement in IoT intermediate actor event");
+      fillSidebarRightLog("Error in extensionsElement in IoT intermediate actor event");
       highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "extensionElement", sourceId[0].sourceId);
     }
   }
@@ -210,6 +227,8 @@ listener.on('activity.wait', (waitObj) => {
               waitObj.environment.variables[envName] = value;
               console.log("HTTP GET successfully completed");
               console.log('Name: ' + name + ', Value: ' + value);
+              fillSidebarRightLog("HTTP GET successfully completed");
+              fillSidebarRightLog('Name: ' + name + ', Value: ' + value);
               if(iotInputs.length > 0) {
                 inputRecursion(iotInputs.pop());
               } else {
@@ -218,15 +237,18 @@ listener.on('activity.wait', (waitObj) => {
               }
             } else {
               console.log('response value is NaN');
+              fillSidebarRightLog('response value is NaN');
               highlightErrorElements(waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, "response value is NaN", sourceId[0].sourceId);
             }
           }).catch((e)=>{
             console.log(e);
             console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
+            fillSidebarRightLog("HTTP GET FAILED!! - DataInputAssociation SENSOR: " + e);
             highlightErrorElements(waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
           });
         } else {
           console.log("Error in extensionsElement in IoT sensor Task");
+          fillSidebarRightLog("Error in extensionsElement in IoT sensor Task");
           highlightErrorElements(waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, "input extensionsElement", sourceId[0].sourceId);
         }
       }
@@ -242,6 +264,8 @@ listener.on('activity.wait', (waitObj) => {
           axios.post( eventValUrl, null, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
             console.log("HTTP POST successfully completed");
             console.log('Executed call: ' + eventValUrl);
+            fillSidebarRightLog("HTTP POST successfully completed");
+            fillSidebarRightLog('Executed call: ' + eventValUrl);
             if(iotOutputs.length > 0) {
               outputRecursion(iotOutputs.pop());
             } else {
@@ -251,10 +275,12 @@ listener.on('activity.wait', (waitObj) => {
           }).catch((e)=>{
             console.log(e);
             console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
+            fillSidebarRightLog("HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e);
             highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
           });
         } else {
-          console.log("Error in extensionsElement in IoT sensor Task");
+          console.log("Error in extensionsElement in IoT actor Task");
+          fillSidebarRightLog("Error in extensionsElement in IoT actor Task");
           highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "extensionElement", sourceId[0].sourceId);
         }
       }
@@ -276,6 +302,8 @@ listener.on('activity.wait', (waitObj) => {
               waitObj.environment.variables[envName] = value;
               console.log("HTTP GET successfully completed");
               console.log('Name: ' + name + ', Value: ' + value);
+              fillSidebarRightLog("HTTP GET successfully completed");
+              fillSidebarRightLog('Name: ' + name + ', Value: ' + value);
               if(iotInputs.length > 0) {
                 inputRecursion(iotInputs.pop());
               } else {
@@ -283,15 +311,18 @@ listener.on('activity.wait', (waitObj) => {
               }
             } else {
               console.log('response value is NaN');
+              fillSidebarRightLog('response value is NaN');
               highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "GET response value is NaN", sourceId[0].sourceId);
             }
           }).catch((e)=>{
             console.log(e);
             console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
+            fillSidebarRightLog("HTTP GET FAILED!! - DataInputAssociation SENSOR: "+e );
             highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
           });
         } else {
           console.log("Error in extensionsElement in IoT sensor Task");
+          fillSidebarRightLog("Error in extensionsElement in IoT sensor Task");
           highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "GET extensionElement", sourceId[0].sourceId);
         }
       }
@@ -303,6 +334,8 @@ listener.on('activity.wait', (waitObj) => {
           axios.post( eventValUrl, null, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
             console.log("HTTP POST successfully completed");
             console.log('Executed call: ' + eventValUrl);
+            fillSidebarRightLog("HTTP POST successfully completed");
+            fillSidebarRightLog('Executed call: ' + eventValUrl);
             if(iotOutputs.length > 0) {
               outputRecursion(iotOutputs.pop());
             } else {
@@ -312,10 +345,12 @@ listener.on('activity.wait', (waitObj) => {
           }).catch((e)=>{
             console.log(e);
             console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
+            fillSidebarRightLog("HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e);
             highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
           });
         } else {
           console.log("Error in extensionsElement in IoT sensor Task");
+          fillSidebarRightLog("Error in extensionsElement in IoT sensor Task");
           highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "POST extensionElement", sourceId[0].sourceId);
         }
       }
@@ -330,6 +365,7 @@ listener.on('activity.end', (element)=>{
   let time = end_t - start_t;
 
   console.log("EXECUTION TIME: "+ time);
+  fillSidebarRightLog("EXECUTION TIME: "+ time);
 
   let currentElement = bpmnViewer.get('elementRegistry').find((elem)=>elem.id === element.id);
   let timeStamp = timestampToDate(element.messageProperties.timestamp);
@@ -386,6 +422,15 @@ const timestampToDate = (timestamp) => {
       ":"+(date.getMinutes()<10?'0':'') + date.getMinutes();
 
   return convertTimestamp;
+}
+
+function fillSidebarRightLog(msg) {
+  let table = document.getElementById("overlayTableLogRight").getElementsByTagName("tbody")[0];
+  let tableLength = table.rows.length;
+  let row = table.insertRow(tableLength);
+
+  let text = row.insertCell(0);
+  text.innerHTML = msg;
 }
 
 
@@ -464,9 +509,14 @@ runBtn.addEventListener('click', (event)=>{
 
 document.getElementById('openbtn').addEventListener('click', (event)=>{
   document.getElementById("mySidebar").style.display = "block";
+  document.getElementById("mySidebarLog").style.display = "none";
 })
 
 /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
 document.getElementById('closebtn').addEventListener('click', (event)=>{
   document.getElementById("mySidebar").style.display = "none";
+})
+
+document.getElementById('closebtnRight').addEventListener('click', (event)=>{
+  document.getElementById("mySidebarLog").style.display = "none";
 })
