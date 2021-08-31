@@ -21,6 +21,13 @@ export default function(group, element, translate) {
             label : 'Value',
             modelProperty : 'value'
         }));
+
+        // Hinzufügen einer checkBox
+        /* group.entries.push(entryFactory.checkbox(translate, {
+            id : 'value1',
+            label : 'Value 2',
+            modelProperty : 'value 2'
+        })); */
     }
 }
 

@@ -52,6 +52,11 @@ const engine = Engine({
   }
 });
 
+listener.on('activity.timer', (api, execution) => {
+  console.log(api.content.startedAt + api.content.timeout);
+});
+
+
 listener.on('activity.start', (start) => {
   start_t = new Date().getTime();
 
@@ -196,17 +201,18 @@ listener.on('activity.wait', (waitObj) => {
       if (input.sourceRef[0].type) {
         return input.sourceRef[0];
       }
-    });
+    }).filter(e => e !== undefined);
     let iotOutputs = businessObj.get("dataOutputAssociations")?.map(input => {
       if(input.targetRef.type) {
         return input.targetRef;
       }
-    });
+    }).filter(e => e !== undefined);
 
     if(iotInputs.length === 0 && iotOutputs.length === 0){
       waitObj.signal();
     }
 
+    console.log(iotInputs);
 
     if(iotInputs.length > 0 && iotOutputs.length === 0) {
       const inputRecursion = (input) => {
@@ -403,11 +409,20 @@ listener.on('activity.end', (element)=>{
 
 const highlightErrorElements = (name, id, time, timeStamp, type, errormsg, source) => {
   engine.stop();
+
   let notExecutedElements = bpmnViewer.get('elementRegistry').filter((elem)=> {
-    if(!executedTasksArr.includes(elem.id) && !is(elem, "bpmn:Process") && !is(elem, "bpmn:SequenceFlow") && !is(elem, "bpmn:DataInputAssociation")) {
-      return elem;
+    let dataobjctReference = is(elem, "bpmn:DataObjectReference") ? elem : null;
+    if(dataobjctReference) {
+      if(dataobjctReference.businessObject.type) {
+        return elem;
+      }
+    } else {
+      if(!executedTasksArr.includes(elem.id) && !is(elem, "bpmn:Process") && !is(elem, "bpmn:SequenceFlow") && !is(elem, "bpmn:DataInputAssociation") && !is(elem, "bpmn:DataStoreReference") ) {
+        return elem;
+      }
     }
   });
+
   highlightElementArr(notExecutedElements, "rgb(245,61,51)");
   let convertedTimeStamp = timestampToDate(timeStamp);
   fillSidebar(errIcon, name, id, time, convertedTimeStamp, type, errormsg, source);
