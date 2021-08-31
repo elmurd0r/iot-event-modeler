@@ -15,15 +15,15 @@
     <div class="canvas" id="js-canvas"></div>
 </div>
 
-<div id="mySidebar" class="sidebar">
+<div id="mySidebar" class="sidebar border-top border-3 border-secondary">
     <div class="d-flex align-items-center justify-content-center">
         <div class="p-2 bd-highlight col-example" id="sidebarHeader">Execution order</div>
     </div>
     <a href="javascript:void(0)" id="closebtn" class="closebtn">&times;</a>
-    <div class="p-5">
+    <div class="p-5 pt-0 mt-5" style="overflow-y: auto; height: 100%">
         <table id="overlayTable" class="table">
-            <thead class="thead-dark">
-            <tr class="theader">
+            <thead class="thead-dark text-center">
+            <tr class="thead-row theader">
                 <th class="theader" scope="col">State</th>
                 <th class="theader" scope="col">Name</th>
                 <th class="theader" scope="col">ID</th>
@@ -41,12 +41,14 @@
     </div>
 </div>
 
-<div id="mySidebarLog" class="sidebarLogRight">
-    <div class="d-flex align-items-center justify-content-center">
-        <div id="sidebarLogRightHeader">Execution </div>
+<div id="mySidebarLog" class="sidebarLogRight pt-2">
+    <a href="javascript:void(0)" id="closebtnRight" class="closebtnRight text-dark">&times;</a>
+    <div class="row pt-2">
+        <div class="col text-center">
+            <div id="sidebarLogRightHeader" class="fs-2">Execution </div>
+        </div>
     </div>
-    <a href="javascript:void(0)" id="closebtnRight" class="closebtnRight">&times;</a>
-    <div class="p-5">
+    <div class="p-5 pt-0" id="logDiv" style="overflow-y: auto; height: 90%">
         <table id="overlayTableLogRight" class="table">
             <thead class="thead-dark">
             </thead>

@@ -365,7 +365,7 @@ listener.on('activity.end', (element)=>{
   let time = end_t - start_t;
 
   console.log("EXECUTION TIME: "+ time);
-  fillSidebarRightLog("EXECUTION TIME: "+ time);
+  fillSidebarRightLog("EXECUTION TIME: " + time + " ms");
 
   let currentElement = bpmnViewer.get('elementRegistry').find((elem)=>elem.id === element.id);
   let timeStamp = timestampToDate(element.messageProperties.timestamp);
@@ -427,10 +427,23 @@ const timestampToDate = (timestamp) => {
 function fillSidebarRightLog(msg) {
   let table = document.getElementById("overlayTableLogRight").getElementsByTagName("tbody")[0];
   let tableLength = table.rows.length;
-  let row = table.insertRow(tableLength);
+  let row;
+  if(tableLength > 100) {
+    table.deleteRow(0);
+    row = table.insertRow(tableLength -1);
+  } else {
+    row = table.insertRow(tableLength);
+  }
 
   let text = row.insertCell(0);
   text.innerHTML = msg;
+
+  scrollLogToBottom();
+}
+
+const scrollLogToBottom = () => {
+  let div = document.getElementById("logDiv");
+  div.scrollTop = div.scrollHeight - div.clientHeight;
 }
 
 
@@ -438,6 +451,7 @@ function fillSidebar(state, name, id, time, timeStamp,type, errormsg, source) {
   let table = document.getElementById("overlayTable").getElementsByTagName("tbody")[0];
   let tableLength = table.rows.length;
   let row = table.insertRow(tableLength);
+  row.classList.add("text-center");
 
   let stateCell = row.insertCell(0);
   let nameCell = row.insertCell(1);
@@ -491,9 +505,11 @@ const resetView = () => {
   highlightElementArr(allElements, "rgba(255,255,255,1.0)")
 
   document.getElementById("tableBody").innerHTML = "";
+  document.getElementById("tableBodyLogRight").innerHTML = "";
 }
 
 runBtn.addEventListener('click', (event)=>{
+  document.getElementById("mySidebarLog").style.display = "block";
   resetView();
 
   engine.execute({

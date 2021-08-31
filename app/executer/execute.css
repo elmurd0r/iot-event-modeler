@@ -77,23 +77,16 @@ a.btn:hover {
 
 /* Sidebar menu for Log - Right side */
 .sidebarLogRight {
-    display: block;
+    display: none;
+    height: 50vh;
     width: 20%; /* 0 width - change this with JavaScript */
     position: fixed; /* Stay in place */
     z-index: 900; /* Stay on top */
     top: 0;
     right: 0;
-    background-color: lightblue;
-    overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 60px; /* Place content 60px from the top */
+    background-color: #F5F5F5;
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
-    overflow-y: auto;
     font-size: 14px;
-}
-
-#sidebarLogRightHeader {
-    font-family: Arial;
-    font-size: 18px;
 }
 
 #overlayTableLogRight {
@@ -128,13 +121,12 @@ a.btn:hover {
     z-index: 999; /* Stay on top */
     bottom: 0;
     left: 0;
-    background-color: lightblue;
+    background-color: #F5F5F5;
     overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 60px; /* Place content 60px from the top */
+    padding-top: 20px; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
-    overflow-y: auto;
+    overflow-y: hidden;
     font-size: 14px;
-    z-index: 999;
 }
 
 /* The sidebar links */
@@ -159,6 +151,17 @@ a.btn:hover {
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
+}
+#overlayTable {
+    border-collapse: separate;
+}
+
+.thead-dark .thead-row{
+    background: #F5F5F5;
+}
+.theader {
+    position: sticky;
+    top: 0;
 }
 
 /* The button used to open the sidebar */
