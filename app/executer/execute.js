@@ -142,14 +142,14 @@ listener.on('activity.wait', (waitObj) => {
             console.log(e);
             console.log("Recursion axios error in input");
             fillSidebarRightLog("Recursion axios error in input: " + e);
-            highlightErrorElements(waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-");
+            highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-");
           });
         }
         axiosGet();
       } else {
         console.log("Error in extensionsElement in IoT start");
         fillSidebarRightLog("Error in extensionsElement in IoT start");
-        highlightErrorElements(waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, "start extensionElement", '-');
+        highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, "start extensionElement", '-');
       }
     }
 
@@ -185,12 +185,12 @@ listener.on('activity.wait', (waitObj) => {
         console.log(e);
         console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
         fillSidebarRightLog("HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e);
-        highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
+        highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
       });
     } else {
       console.log("Error in extensionsElement in IoT intermediate actor event");
       fillSidebarRightLog("Error in extensionsElement in IoT intermediate actor event");
-      highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "extensionElement", sourceId[0].sourceId);
+      highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "extensionElement", sourceId[0].sourceId);
     }
   }
 
@@ -199,12 +199,14 @@ listener.on('activity.wait', (waitObj) => {
 
     let iotInputs = businessObj.get("dataInputAssociations")?.map(input => {
       if (input.sourceRef[0].type) {
-        return input.sourceRef[0];
+        return  bpmnViewer.get('elementRegistry').find(element => element.id === input.sourceRef[0].id);
+        //return input.sourceRef[0];
       }
     }).filter(e => e !== undefined);
     let iotOutputs = businessObj.get("dataOutputAssociations")?.map(input => {
       if(input.targetRef.type) {
-        return input.targetRef;
+        return  bpmnViewer.get('elementRegistry').find(element => element.id === input.targetRef.id);
+        //return input.targetRef;
       }
     }).filter(e => e !== undefined);
 
@@ -235,6 +237,7 @@ listener.on('activity.wait', (waitObj) => {
               console.log('Name: ' + name + ', Value: ' + value);
               fillSidebarRightLog("HTTP GET successfully completed");
               fillSidebarRightLog('Name: ' + name + ', Value: ' + value);
+              highlightElement(input, "rgba(66, 180, 21, 0.7)");
               if(iotInputs.length > 0) {
                 inputRecursion(iotInputs.pop());
               } else {
@@ -244,26 +247,26 @@ listener.on('activity.wait', (waitObj) => {
             } else {
               console.log('response value is NaN');
               fillSidebarRightLog('response value is NaN');
-              highlightErrorElements(waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, "response value is NaN", sourceId[0].sourceId);
+              highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, "response value is NaN", sourceId[0].sourceId);
             }
           }).catch((e)=>{
             console.log(e);
             console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
             fillSidebarRightLog("HTTP GET FAILED!! - DataInputAssociation SENSOR: " + e);
-            highlightErrorElements(waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
+            highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
           });
         } else {
           console.log("Error in extensionsElement in IoT sensor Task");
           fillSidebarRightLog("Error in extensionsElement in IoT sensor Task");
-          highlightErrorElements(waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, "input extensionsElement", sourceId[0].sourceId);
+          highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, "input extensionsElement", sourceId[0].sourceId);
         }
       }
       inputRecursion(iotInputs.pop());
     }
 
     if(iotOutputs.length > 0 && iotInputs.length === 0) {
-      const outputRecursion = (input) => {
-        let businessObj = getBusinessObject(input);
+      const outputRecursion = (output) => {
+        let businessObj = getBusinessObject(output);
         let eventValUrl = businessObj.value;
 
         if(eventValUrl) {
@@ -272,6 +275,7 @@ listener.on('activity.wait', (waitObj) => {
             console.log('Executed call: ' + eventValUrl);
             fillSidebarRightLog("HTTP POST successfully completed");
             fillSidebarRightLog('Executed call: ' + eventValUrl);
+            highlightElement(output, "rgba(66, 180, 21, 0.7)");
             if(iotOutputs.length > 0) {
               outputRecursion(iotOutputs.pop());
             } else {
@@ -282,12 +286,12 @@ listener.on('activity.wait', (waitObj) => {
             console.log(e);
             console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
             fillSidebarRightLog("HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e);
-            highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
+            highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
           });
         } else {
           console.log("Error in extensionsElement in IoT actor Task");
           fillSidebarRightLog("Error in extensionsElement in IoT actor Task");
-          highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "extensionElement", sourceId[0].sourceId);
+          highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "extensionElement", sourceId[0].sourceId);
         }
       }
       outputRecursion(iotOutputs.pop());
@@ -310,6 +314,7 @@ listener.on('activity.wait', (waitObj) => {
               console.log('Name: ' + name + ', Value: ' + value);
               fillSidebarRightLog("HTTP GET successfully completed");
               fillSidebarRightLog('Name: ' + name + ', Value: ' + value);
+              highlightElement(input, "rgba(66, 180, 21, 0.7)");
               if(iotInputs.length > 0) {
                 inputRecursion(iotInputs.pop());
               } else {
@@ -318,22 +323,22 @@ listener.on('activity.wait', (waitObj) => {
             } else {
               console.log('response value is NaN');
               fillSidebarRightLog('response value is NaN');
-              highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "GET response value is NaN", sourceId[0].sourceId);
+              highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "GET response value is NaN", sourceId[0].sourceId);
             }
           }).catch((e)=>{
             console.log(e);
             console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
             fillSidebarRightLog("HTTP GET FAILED!! - DataInputAssociation SENSOR: "+e );
-            highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
+            highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
           });
         } else {
           console.log("Error in extensionsElement in IoT sensor Task");
           fillSidebarRightLog("Error in extensionsElement in IoT sensor Task");
-          highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "GET extensionElement", sourceId[0].sourceId);
+          highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "GET extensionElement", sourceId[0].sourceId);
         }
       }
-      const outputRecursion = (input) => {
-        let businessObj = getBusinessObject(input);
+      const outputRecursion = (output) => {
+        let businessObj = getBusinessObject(output);
         let eventValUrl = businessObj.value;
 
         if(eventValUrl) {
@@ -342,6 +347,7 @@ listener.on('activity.wait', (waitObj) => {
             console.log('Executed call: ' + eventValUrl);
             fillSidebarRightLog("HTTP POST successfully completed");
             fillSidebarRightLog('Executed call: ' + eventValUrl);
+            highlightElement(output, "rgba(66, 180, 21, 0.7)");
             if(iotOutputs.length > 0) {
               outputRecursion(iotOutputs.pop());
             } else {
@@ -352,12 +358,12 @@ listener.on('activity.wait', (waitObj) => {
             console.log(e);
             console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
             fillSidebarRightLog("HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e);
-            highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
+            highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
           });
         } else {
           console.log("Error in extensionsElement in IoT sensor Task");
           fillSidebarRightLog("Error in extensionsElement in IoT sensor Task");
-          highlightErrorElements(waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "POST extensionElement", sourceId[0].sourceId);
+          highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "POST extensionElement", sourceId[0].sourceId);
         }
       }
       inputRecursion(iotInputs.pop());
@@ -407,23 +413,16 @@ listener.on('activity.end', (element)=>{
   }
 })
 
-const highlightErrorElements = (name, id, time, timeStamp, type, errormsg, source) => {
+const highlightErrorElements = (iotArtifact, name, id, time, timeStamp, type, errormsg, source) => {
   engine.stop();
 
-  let notExecutedElements = bpmnViewer.get('elementRegistry').filter((elem)=> {
-    let dataobjctReference = is(elem, "bpmn:DataObjectReference") ? elem : null;
-    if(dataobjctReference) {
-      if(dataobjctReference.businessObject.type) {
-        return elem;
-      }
-    } else {
-      if(!executedTasksArr.includes(elem.id) && !is(elem, "bpmn:Process") && !is(elem, "bpmn:SequenceFlow") && !is(elem, "bpmn:DataInputAssociation") && !is(elem, "bpmn:DataStoreReference") ) {
-        return elem;
-      }
-    }
-  });
+  let element = bpmnViewer.get('elementRegistry').find(e => e.id === id);
 
-  highlightElementArr(notExecutedElements, "rgb(245,61,51)");
+  if(iotArtifact) {
+    let iotArtifactElement = bpmnViewer.get('elementRegistry').find(e => e.id === iotArtifact.id);
+    highlightElement(iotArtifactElement, "rgb(245,61,51)");
+  }
+  highlightElement(element, "rgb(245,61,51)");
   let convertedTimeStamp = timestampToDate(timeStamp);
   fillSidebar(errIcon, name, id, time, convertedTimeStamp, type, errormsg, source);
 }
