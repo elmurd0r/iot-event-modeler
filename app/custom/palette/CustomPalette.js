@@ -19,10 +19,7 @@ export default class CustomPalette {
     function createIotObj(iotType) {
       return function(event) {
         const businessObject = bpmnFactory.create('bpmn:DataObjectReference');
-
         businessObject.set('iot:type', iotType);
-
-        businessObject.iotType = iotType;
 
         const shape = elementFactory.createShape({
           type: 'bpmn:DataObjectReference',
@@ -36,10 +33,7 @@ export default class CustomPalette {
     function createIotStart(iotType) {
       return function(event) {
         const businessObject = bpmnFactory.create('bpmn:StartEvent');
-
         businessObject.set('iot:type', iotType);
-
-        businessObject.iotType = iotType;
 
         const shape = elementFactory.createShape({
           type: 'bpmn:StartEvent',
@@ -54,10 +48,7 @@ export default class CustomPalette {
     function createIoTCatchEvent(iotType) {
       return function(event) {
         const businessObject = bpmnFactory.create('bpmn:IntermediateCatchEvent');
-
         businessObject.set('iot:type', iotType);
-
-        businessObject.iotType = iotType;
 
         const shape = elementFactory.createShape({
           type: 'bpmn:IntermediateCatchEvent',
@@ -71,14 +62,11 @@ export default class CustomPalette {
 
     function createIoTThrowEvent(iotType) {
       return function(event) {
-        const businessObject = bpmnFactory.create('bpmn:IntermediateThrowEvent');
-
+        const businessObject = bpmnFactory.create('bpmn:IntermediateCatchEvent');
         businessObject.set('iot:type', iotType);
 
-        businessObject.iotType = iotType;
-
         const shape = elementFactory.createShape({
-          type: 'bpmn:IntermediateThrowEvent',
+          type: 'bpmn:IntermediateCatchEvent',
           businessObject: businessObject,
           eventDefinitionType: 'bpmn:MessageEventDefinition'
         });

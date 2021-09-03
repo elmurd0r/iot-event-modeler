@@ -73,11 +73,10 @@ listener.on('activity.wait', (waitObj) => {
   let taskArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:Task"));
   let startEventArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:StartEvent"));
   let catchEventArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:IntermediateCatchEvent"));
-  let throwEventArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:IntermediateThrowEvent"));
 
   let startEvent = startEventArr.find(startEvent => startEvent.id === waitObj.id);
-  let catchEvent = catchEventArr.find(catchEvent => catchEvent.id === waitObj.id);
-  let throwEvent = throwEventArr.find(throwEvent => throwEvent.id === waitObj.id);
+  let catchEvent = catchEventArr.find(catchEvent => catchEvent.id === waitObj.id && catchEvent?.businessObject.type === 'catch');
+  let throwEvent = catchEventArr.find(throwEvent => throwEvent.id === waitObj.id && throwEvent?.businessObject.type === 'throw');
   let task = taskArr.find(task => task.id === waitObj.id);
 
   if(startEvent || catchEvent) {
