@@ -13,6 +13,7 @@ import { isNil } from 'min-dash';
 const processModel = sessionStorage.getItem('xml') ? sessionStorage.getItem('xml') : '';
 const containerEl = document.getElementById('js-canvas');
 const runBtn = document.getElementById('runBtn');
+import {Timers} from "./Timer";
 
 let start_t;
 let end_t;
@@ -46,6 +47,7 @@ const listener = new EventEmitter();
 const engine = Engine({
   name: 'process model execution',
   source: processModel,
+  timers: Timers(),
   moddleOptions: {
     iot: iotExtension,
     camunda: camundaExtension
@@ -210,7 +212,7 @@ listener.on('activity.wait', (waitObj) => {
     }).filter(e => e !== undefined);
 
     if(iotInputs.length === 0 && iotOutputs.length === 0){
-      waitObj.signal();
+      //waitObj.signal();
     }
 
     console.log(iotInputs);
