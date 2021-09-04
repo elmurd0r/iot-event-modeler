@@ -58,6 +58,10 @@ listener.on('activity.timer', (api, execution) => {
   console.log(api.content.startedAt + api.content.timeout);
 });
 
+listener.on('activity.timeout', (api, execution) => {
+  // Hier kommen wir rein, wenn die Boundary-Event-Zeit abläuft
+  console.log("Tjah pech");
+});
 
 listener.on('activity.start', (start) => {
   start_t = new Date().getTime();
@@ -68,8 +72,12 @@ listener.on('activity.start', (start) => {
   fillSidebarRightLog(start.id);
 });
 
+
 listener.on('activity.wait', (waitObj) => {
-  //console.log(waitObj);
+
+  // Code um einen Boundary-Error zu "thrown"
+  waitObj.owner.emitFatal({id: 'SomeId', message: 'thrown in wait'}, {id: waitObj.id});
+
   let sourceId = waitObj.content.inbound;
 
   let taskArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:Task"));
