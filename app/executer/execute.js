@@ -74,10 +74,6 @@ listener.on('activity.start', (start) => {
 
 
 listener.on('activity.wait', (waitObj) => {
-
-  // Code um einen Boundary-Error zu "thrown"
-  waitObj.owner.emitFatal({id: 'SomeId', message: 'thrown in wait'}, {id: waitObj.id});
-
   let sourceId = waitObj.content.inbound;
 
   let taskArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:Task"));
@@ -95,64 +91,71 @@ listener.on('activity.wait', (waitObj) => {
       let name = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'key')?.value;
       let mathOp = businessObj.get("extensionElements")?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.name;
       let mathOpVal = businessObj.get("extensionElements")?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.value;
+      let timeout = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'timeout')?.value;
 
       if (name && mathOp && mathOpVal && !isNaN(parseFloat(mathOpVal))) {
         mathOpVal = parseFloat(mathOpVal);
         const axiosGet = () => {
-          axios.get(eventValue, {timeout: 5000}).then((resp) => {
-            let resVal = resp.data[name];
+          let noTimeoutOccured =  new Date().getTime() - start_t <= timeout * 1000;
+          if(!timeout || noTimeoutOccured) {
+            axios.get(eventValue, {timeout: 5000}).then((resp) => {
+              let resVal = resp.data[name];
 
-            if (!isNil(resVal) && !isNaN(parseFloat(resVal))) {
-              resVal = parseFloat(resVal);
-              switch (mathOp) {
-                case '<' :
-                  if (resVal < mathOpVal) {
-                    console.log(name + " reached state " + resp.data[name]);
-                    fillSidebarRightLog(name + " reached state " + resp.data[name]);
-                    waitObj.signal();
-                  } else {
-                    console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                    fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                    axiosGet();
-                  }
-                  break;
-                case '=' :
-                  if (resVal === mathOpVal) {
-                    console.log(name + " reached state " + resp.data[name]);
-                    fillSidebarRightLog(name + " reached state " + resp.data[name]);
-                    waitObj.signal();
-                  } else {
-                    console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                    fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                    axiosGet();
-                  }
-                  break;
-                case '>' :
-                  if (resVal > mathOpVal) {
-                    console.log(name + " reached state " + resp.data[name]);
-                    fillSidebarRightLog(name + " reached state " + resp.data[name]);
-                    waitObj.signal();
-                  } else {
-                    console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                    fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                    axiosGet();
-                  }
-                  break;
-                default:
-                  console.log("Default case stopped IoT start");
-                  fillSidebarRightLog("Default case stopped IoT start");
-                  engine.stop();
+              if (!isNil(resVal) && !isNaN(parseFloat(resVal))) {
+                resVal = parseFloat(resVal);
+                switch (mathOp) {
+                  case '<' :
+                    if (resVal < mathOpVal) {
+                      console.log(name + " reached state " + resp.data[name]);
+                      fillSidebarRightLog(name + " reached state " + resp.data[name]);
+                      waitObj.signal();
+                    } else {
+                      console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
+                      fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
+                      axiosGet();
+                    }
+                    break;
+                  case '=' :
+                    if (resVal === mathOpVal) {
+                      console.log(name + " reached state " + resp.data[name]);
+                      fillSidebarRightLog(name + " reached state " + resp.data[name]);
+                      waitObj.signal();
+                    } else {
+                      console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
+                      fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
+                      axiosGet();
+                    }
+                    break;
+                  case '>' :
+                    if (resVal > mathOpVal) {
+                      console.log(name + " reached state " + resp.data[name]);
+                      fillSidebarRightLog(name + " reached state " + resp.data[name]);
+                      waitObj.signal();
+                    } else {
+                      console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
+                      fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
+                      axiosGet();
+                    }
+                    break;
+                  default:
+                    console.log("Default case stopped IoT start");
+                    fillSidebarRightLog("Default case stopped IoT start");
+                    engine.stop();
+                }
+              } else {
+                console.log("Key not in response - IoT start");
+                fillSidebarRightLog("Key not in response - IoT start");
               }
-            } else {
-              console.log("Key not in response - IoT start");
-              fillSidebarRightLog("Key not in response - IoT start");
-            }
-          }).catch((e) => {
-            console.log(e);
-            console.log("Recursion axios error in input");
-            fillSidebarRightLog("Recursion axios error in input: " + e);
-            highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-");
-          });
+            }).catch((e) => {
+              console.log(e);
+              console.log("Recursion axios error in input");
+              fillSidebarRightLog("Recursion axios error in input: " + e);
+              highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-");
+            });
+          } else {
+            fillSidebarRightLog("Timeout occurred");
+            highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, "event/start timeout", "-");
+          }
         }
         axiosGet();
       } else {
@@ -421,6 +424,12 @@ listener.on('activity.end', (element)=>{
     executedTasksArr.push(...iotOutputs);
   }
 })
+
+const throwError = (api, id, msg) => {
+  // Code um einen Boundary-Error zu "thrown"
+  //api.owner.emitFatal({id: 'SomeId', message: 'thrown in wait'}, {id: waitObj.id});
+  api.owner.emitFatal({id: id, message: msg}, {id: api.id});
+}
 
 const highlightErrorElements = (iotArtifact, name, id, time, timeStamp, type, errormsg, source) => {
   engine.stop();
