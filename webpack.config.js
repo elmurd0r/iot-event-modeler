@@ -13,7 +13,8 @@ module.exports = {
   },
   entry: {
     'app': '/app/app.js',
-    'execute': '/app/executer/execute.js'
+    'execute': '/app/executer/execute.js',
+    'worker': '/app/executer/worker.js'
 },
   output: {
     path: __dirname + '/public',

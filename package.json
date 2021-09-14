@@ -53,6 +53,7 @@
     "svg64": "^1.1.0",
     "timers-browserify": "^2.0.12",
     "vm-browserify": "^1.1.2",
+    "workerpool": "^6.1.5",
     "xml2js": "^0.4.23",
     "xmlhttprequest": "^1.8.0"
   }

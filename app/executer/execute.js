@@ -3,6 +3,7 @@ import {is, getBusinessObject} from 'bpmn-js/lib/util/ModelUtil';
 const {EventEmitter} = require('events');
 const {Engine} = require('bpmn-engine');
 const axios = require('axios').default;
+const workerpool = require('workerpool');
 
 import {confirmIcon, errIcon} from "../svg/Icons";
 import customModule from '../custom/executer';
@@ -18,6 +19,8 @@ import {Timers} from "./Timer";
 let start_t;
 let end_t;
 let executedTasksArr = [];
+const pool = workerpool.pool('/worker.js');
+let timeout;
 
 // create modeler
 const bpmnViewer = new NavigatedViewer({
@@ -55,11 +58,13 @@ const engine = Engine({
 });
 
 listener.on('activity.timer', (api, execution) => {
+  timeout = api.content.timeout;
   console.log(api.content.startedAt + api.content.timeout);
 });
 
 listener.on('activity.timeout', (api, execution) => {
   // Hier kommen wir rein, wenn die Boundary-Event-Zeit abläuft
+  //pool.terminate({force:true});
   console.log("Tjah pech");
 });
 
@@ -207,6 +212,7 @@ listener.on('activity.wait', (waitObj) => {
   }
 
   if(task) {
+    const workerArr = [];
     let businessObj = getBusinessObject(task);
 
     let iotInputs = businessObj.get("dataInputAssociations")?.map(input => {
@@ -223,162 +229,125 @@ listener.on('activity.wait', (waitObj) => {
     }).filter(e => e !== undefined);
 
     if(iotInputs.length === 0 && iotOutputs.length === 0){
-      //waitObj.signal();
+      waitObj.signal();
     }
 
-    console.log(iotInputs);
-
     if(iotInputs.length > 0 && iotOutputs.length === 0) {
-      const inputRecursion = (input) => {
+      // run registered functions on the worker via exec
+      iotInputs.forEach(input => {
         let businessObj = getBusinessObject(input);
-        let eventValUrl = businessObj.value;
-        let name = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'key')?.value;
-        let envName = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'envName')?.value;
 
-        if(eventValUrl && name && envName) {
-          axios.get( eventValUrl, {timeout: 5000}).then((resp)=>{
-            let value = resp.data;
-            let keyArr = name.split('.');
-            keyArr.forEach(k => {
-              value = value[k];
-            });
-            if(!isNaN(parseFloat(value))) {
-              value = parseFloat(value);
-              waitObj.environment.variables[envName] = value;
-              console.log("HTTP GET successfully completed");
-              console.log('Name: ' + name + ', Value: ' + value);
-              fillSidebarRightLog("HTTP GET successfully completed");
-              fillSidebarRightLog('Name: ' + name + ', Value: ' + value);
-              highlightElement(input, "rgba(66, 180, 21, 0.7)");
-              if(iotInputs.length > 0) {
-                inputRecursion(iotInputs.pop());
-              } else {
-                waitObj.signal();
-                //end
+        workerArr.push(
+            pool.exec('mathLoopCall', [businessObj, start_t, timeout], {
+              on: payload => {
+                fillSidebarRightLog(payload.status);
               }
-            } else {
-              console.log('response value is NaN');
-              fillSidebarRightLog('response value is NaN');
-              highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, "response value is NaN", sourceId[0].sourceId);
+            }).then(result => {
+              console.log("Result:");
+              console.log(result);
+              if(result.envName && result.value) {
+                waitObj.environment.variables[result.envName] = result.value;
+              }
+              highlightElement(input, "rgba(66, 180, 21, 0.7)");
+              return result;
+            }).catch(e => {
+              console.log(e);
+              highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-");
+              throw e;
+            })
+        )
+      })
+      Promise.allSettled(workerArr).then((values)=>{
+            console.log(values);
+            let rejected = values.filter(val=>val.status === 'rejected');
+            if(rejected.length === 0) {
+                waitObj.signal();
             }
-          }).catch((e)=>{
-            console.log(e);
-            console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
-            fillSidebarRightLog("HTTP GET FAILED!! - DataInputAssociation SENSOR: " + e);
-            highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
-          });
-        } else {
-          console.log("Error in extensionsElement in IoT sensor Task");
-          fillSidebarRightLog("Error in extensionsElement in IoT sensor Task");
-          highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, "input extensionsElement", sourceId[0].sourceId);
-        }
-      }
-      inputRecursion(iotInputs.pop());
+      }).catch((e)=>console.log(e));
     }
 
     if(iotOutputs.length > 0 && iotInputs.length === 0) {
-      const outputRecursion = (output) => {
+      iotOutputs.forEach(output => {
         let businessObj = getBusinessObject(output);
-        let eventValUrl = businessObj.value;
 
-        if(eventValUrl) {
-          axios.post( eventValUrl, null, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
-            console.log("HTTP POST successfully completed");
-            console.log('Executed call: ' + eventValUrl);
-            fillSidebarRightLog("HTTP POST successfully completed");
-            fillSidebarRightLog('Executed call: ' + eventValUrl);
-            highlightElement(output, "rgba(66, 180, 21, 0.7)");
-            if(iotOutputs.length > 0) {
-              outputRecursion(iotOutputs.pop());
-            } else {
-              waitObj.signal();
-              //end
-            }
-          }).catch((e)=>{
-            console.log(e);
-            console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
-            fillSidebarRightLog("HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e);
-            highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
-          });
-        } else {
-          console.log("Error in extensionsElement in IoT actor Task");
-          fillSidebarRightLog("Error in extensionsElement in IoT actor Task");
-          highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "extensionElement", sourceId[0].sourceId);
+        workerArr.push(
+            pool.exec('outputCall', [businessObj], {
+              on: payload => {
+                fillSidebarRightLog(payload.status);
+              }
+            }).then(result => {
+              console.log("Result:");
+              console.log(result);
+              highlightElement(output, "rgba(66, 180, 21, 0.7)");
+              return result;
+            }).catch(e => {
+              console.log(e);
+              highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-");
+              throw e;
+            })
+        )
+      })
+      Promise.allSettled(workerArr).then((values)=>{
+        console.log(values);
+        let rejected = values.filter(val=>val.status === 'rejected');
+        if(rejected.length === 0) {
+          waitObj.signal();
         }
-      }
-      outputRecursion(iotOutputs.pop());
+      }).catch((e)=>console.log(e));
     }
 
     if (iotOutputs.length > 0 && iotInputs.length > 0) {
-      const inputRecursion = (input) => {
+      iotInputs.forEach(input => {
         let businessObj = getBusinessObject(input);
-        let eventValUrl = businessObj.value;
-        let name = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'key')?.value;
-        let envName = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'envName')?.value;
 
-        if(eventValUrl && name && envName) {
-          axios.get( eventValUrl, {timeout: 5000}).then((resp)=>{
-            let value = resp.data[name];
-            if(!isNaN(parseFloat(value))) {
-              value = parseFloat(value);
-              waitObj.environment.variables[envName] = value;
-              console.log("HTTP GET successfully completed");
-              console.log('Name: ' + name + ', Value: ' + value);
-              fillSidebarRightLog("HTTP GET successfully completed");
-              fillSidebarRightLog('Name: ' + name + ', Value: ' + value);
-              highlightElement(input, "rgba(66, 180, 21, 0.7)");
-              if(iotInputs.length > 0) {
-                inputRecursion(iotInputs.pop());
-              } else {
-                outputRecursion(iotOutputs.pop());
+        workerArr.push(
+            pool.exec('mathLoopCall', [businessObj, start_t, timeout], {
+              on: payload => {
+                fillSidebarRightLog(payload.status);
               }
-            } else {
-              console.log('response value is NaN');
-              fillSidebarRightLog('response value is NaN');
-              highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "GET response value is NaN", sourceId[0].sourceId);
-            }
-          }).catch((e)=>{
-            console.log(e);
-            console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
-            fillSidebarRightLog("HTTP GET FAILED!! - DataInputAssociation SENSOR: "+e );
-            highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
-          });
-        } else {
-          console.log("Error in extensionsElement in IoT sensor Task");
-          fillSidebarRightLog("Error in extensionsElement in IoT sensor Task");
-          highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "GET extensionElement", sourceId[0].sourceId);
-        }
-      }
-      const outputRecursion = (output) => {
+            }).then(result => {
+              console.log("Result:");
+              console.log(result);
+              if(result.envName && result.value) {
+                waitObj.environment.variables[result.envName] = result.value;
+              }
+              highlightElement(input, "rgba(66, 180, 21, 0.7)");
+              return result;
+            }).catch(e => {
+              console.log(e);
+              highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-");
+              throw e;
+            })
+        )
+      })
+      iotOutputs.forEach(output => {
         let businessObj = getBusinessObject(output);
-        let eventValUrl = businessObj.value;
 
-        if(eventValUrl) {
-          axios.post( eventValUrl, null, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
-            console.log("HTTP POST successfully completed");
-            console.log('Executed call: ' + eventValUrl);
-            fillSidebarRightLog("HTTP POST successfully completed");
-            fillSidebarRightLog('Executed call: ' + eventValUrl);
-            highlightElement(output, "rgba(66, 180, 21, 0.7)");
-            if(iotOutputs.length > 0) {
-              outputRecursion(iotOutputs.pop());
-            } else {
-              waitObj.signal();
-              //end
-            }
-          }).catch((e)=>{
-            console.log(e);
-            console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
-            fillSidebarRightLog("HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e);
-            highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
-          });
-        } else {
-          console.log("Error in extensionsElement in IoT sensor Task");
-          fillSidebarRightLog("Error in extensionsElement in IoT sensor Task");
-          highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "POST extensionElement", sourceId[0].sourceId);
+        workerArr.push(
+            pool.exec('outputCall', [businessObj], {
+              on: payload => {
+                fillSidebarRightLog(payload.status);
+              }
+            }).then(result => {
+              console.log("Result:");
+              console.log(result);
+              highlightElement(output, "rgba(66, 180, 21, 0.7)");
+              return result;
+            }).catch(e => {
+              console.log(e);
+              highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-");
+              throw e;
+            })
+        )
+      })
+
+      Promise.allSettled(workerArr).then((values)=>{
+        console.log(values);
+        let rejected = values.filter(val=>val.status === 'rejected');
+        if(rejected.length === 0) {
+          waitObj.signal();
         }
-      }
-      inputRecursion(iotInputs.pop());
+      }).catch((e)=>console.log(e));
     }
   }
 })
