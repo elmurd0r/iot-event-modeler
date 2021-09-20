@@ -125,7 +125,7 @@ const outputCall = (businessObj) => {
     return new Promise(((resolve, reject) => {
         let eventValUrl = businessObj.value;
         if(eventValUrl) {
-            axios.post( eventValUrl, null, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
+            axios.post( eventValUrl, {}, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
                 console.log("HTTP POST successfully completed");
                 console.log('Executed call: ' + eventValUrl);
                 workerpool.workerEmit({status: "HTTP POST successfully completed"});
