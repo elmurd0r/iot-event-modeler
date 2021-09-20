@@ -158,18 +158,18 @@ listener.on('activity.wait', (waitObj) => {
               console.log(e);
               console.log("Recursion axios error in input");
               fillSidebarRightLog("Recursion axios error in input: " + e);
-              highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-", boundaryEventType);
+              highlightErrorElements(null, waitObj, "Not executed", e, "-", boundaryEventType);
             });
           } else {
             fillSidebarRightLog("Timeout occurred");
-            highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, "event/start timeout", "-", boundaryEventType);
+            highlightErrorElements(null, waitObj, "Not executed", "event/start timeout", "-", boundaryEventType);
           }
         }
         axiosGet();
       } else {
         console.log("Error in extensionsElement in IoT start");
         fillSidebarRightLog("Error in extensionsElement in IoT start");
-        highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, "start extensionElement", '-', boundaryEventType);
+        highlightErrorElements(null, waitObj, "Not executed", "start extensionElement", '-', boundaryEventType);
       }
     }
 
@@ -205,12 +205,12 @@ listener.on('activity.wait', (waitObj) => {
         console.log(e);
         console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
         fillSidebarRightLog("HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e);
-        highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId,boundaryEventType);
+        highlightErrorElements(null, waitObj, "Not executed" , e, sourceId[0].sourceId,boundaryEventType);
       });
     } else {
       console.log("Error in extensionsElement in IoT intermediate actor event");
       fillSidebarRightLog("Error in extensionsElement in IoT intermediate actor event");
-      highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "extensionElement", sourceId[0].sourceId, boundaryEventType);
+      highlightErrorElements(null, waitObj, "Not executed" , "extensionElement", sourceId[0].sourceId, boundaryEventType);
     }
   }
 
@@ -255,7 +255,7 @@ listener.on('activity.wait', (waitObj) => {
               return result;
             }).catch(e => {
               console.log(e);
-              highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-", boundaryEventType);
+              highlightErrorElements(input, waitObj, "Not executed", e, "-", boundaryEventType);
               throw e;
             })
         )
@@ -285,7 +285,7 @@ listener.on('activity.wait', (waitObj) => {
               return result;
             }).catch(e => {
               console.log(e);
-              highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-", boundaryEventType);
+              highlightErrorElements(output, waitObj, "Not executed", e, "-", boundaryEventType);
               throw e;
             })
         )
@@ -318,7 +318,7 @@ listener.on('activity.wait', (waitObj) => {
               return result;
             }).catch(e => {
               console.log(e);
-              highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-", boundaryEventType);
+              highlightErrorElements(input, waitObj, "Not executed", e, "-", boundaryEventType);
               throw e;
             })
         )
@@ -338,7 +338,7 @@ listener.on('activity.wait', (waitObj) => {
               return result;
             }).catch(e => {
               console.log(e);
-              highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-", boundaryEventType);
+              highlightErrorElements(output, waitObj, "Not executed", e, "-", boundaryEventType);
               throw e;
             })
         )
@@ -403,7 +403,7 @@ const throwError = (api, id, msg) => {
   api.owner.emitFatal({id: id, message: msg}, {id: api.id});
 }
 
-const highlightErrorElements = (iotArtifact, name, id, time, timeStamp, type, errormsg, source, boundary) => {
+const highlightErrorElements = (iotArtifact, waitObj, time, errormsg, source, boundary) => {
   if(boundary.length === 0) {
     engine.stop();
   }
@@ -416,7 +416,7 @@ const highlightErrorElements = (iotArtifact, name, id, time, timeStamp, type, er
   }
   highlightElement(element, "rgb(245,61,51)");
   let convertedTimeStamp = timestampToDate(timeStamp);
-  fillSidebar(errIcon, name, id, time, convertedTimeStamp, type, errormsg, source);
+  fillSidebar(errIcon, waitObj.name, waitObj.id, time, convertedTimeStamp, waitObj.type, errormsg, source);
 }
 
 const timestampToDate = (timestamp) => {
