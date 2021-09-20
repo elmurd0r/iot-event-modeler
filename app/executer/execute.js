@@ -84,6 +84,9 @@ listener.on('activity.wait', (waitObj) => {
   let taskArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:Task"));
   let startEventArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:StartEvent"));
   let catchEventArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:IntermediateCatchEvent"));
+  let boundaryEventArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:BoundaryEvent"));
+  let boundaryEvent = boundaryEventArr.filter(boundaryEvent => boundaryEvent.businessObject.attachedToRef.id === waitObj.id);
+  let boundaryEventType = boundaryEvent? boundaryEvent.map(event => event.businessObject.eventDefinitions[0]['$type']) : [];
 
   let startEvent = startEventArr.find(startEvent => startEvent.id === waitObj.id);
   let catchEvent = catchEventArr.find(catchEvent => catchEvent.id === waitObj.id && catchEvent?.businessObject.type === 'catch');
@@ -155,18 +158,18 @@ listener.on('activity.wait', (waitObj) => {
               console.log(e);
               console.log("Recursion axios error in input");
               fillSidebarRightLog("Recursion axios error in input: " + e);
-              highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-");
+              highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-", boundaryEventType);
             });
           } else {
             fillSidebarRightLog("Timeout occurred");
-            highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, "event/start timeout", "-");
+            highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, "event/start timeout", "-", boundaryEventType);
           }
         }
         axiosGet();
       } else {
         console.log("Error in extensionsElement in IoT start");
         fillSidebarRightLog("Error in extensionsElement in IoT start");
-        highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, "start extensionElement", '-');
+        highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed" ,waitObj.messageProperties.timestamp, waitObj.type, "start extensionElement", '-', boundaryEventType);
       }
     }
 
@@ -202,12 +205,12 @@ listener.on('activity.wait', (waitObj) => {
         console.log(e);
         console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
         fillSidebarRightLog("HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e);
-        highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId);
+        highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, e, sourceId[0].sourceId,boundaryEventType);
       });
     } else {
       console.log("Error in extensionsElement in IoT intermediate actor event");
       fillSidebarRightLog("Error in extensionsElement in IoT intermediate actor event");
-      highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "extensionElement", sourceId[0].sourceId);
+      highlightErrorElements(null, waitObj.name, waitObj.id, "Not executed" , waitObj.messageProperties.timestamp, waitObj.type, "extensionElement", sourceId[0].sourceId, boundaryEventType);
     }
   }
 
@@ -252,7 +255,7 @@ listener.on('activity.wait', (waitObj) => {
               return result;
             }).catch(e => {
               console.log(e);
-              highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-");
+              highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-", boundaryEventType);
               throw e;
             })
         )
@@ -282,7 +285,7 @@ listener.on('activity.wait', (waitObj) => {
               return result;
             }).catch(e => {
               console.log(e);
-              highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-");
+              highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-", boundaryEventType);
               throw e;
             })
         )
@@ -315,7 +318,7 @@ listener.on('activity.wait', (waitObj) => {
               return result;
             }).catch(e => {
               console.log(e);
-              highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-");
+              highlightErrorElements(input, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-", boundaryEventType);
               throw e;
             })
         )
@@ -335,7 +338,7 @@ listener.on('activity.wait', (waitObj) => {
               return result;
             }).catch(e => {
               console.log(e);
-              highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-");
+              highlightErrorElements(output, waitObj.name, waitObj.id, "Not executed", waitObj.messageProperties.timestamp, waitObj.type, e, "-", boundaryEventType);
               throw e;
             })
         )
@@ -400,8 +403,10 @@ const throwError = (api, id, msg) => {
   api.owner.emitFatal({id: id, message: msg}, {id: api.id});
 }
 
-const highlightErrorElements = (iotArtifact, name, id, time, timeStamp, type, errormsg, source) => {
-  engine.stop();
+const highlightErrorElements = (iotArtifact, name, id, time, timeStamp, type, errormsg, source, boundary) => {
+  if(boundary.length === 0) {
+    engine.stop();
+  }
 
   let element = bpmnViewer.get('elementRegistry').find(e => e.id === id);
 
