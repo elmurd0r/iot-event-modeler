@@ -6,9 +6,7 @@ const mathLoopCall = (businessObj, start_t, timeout) => {
     console.log(businessObj);
     return new Promise((resolve, reject) => {
         let eventValue = businessObj.value;
-
         let name = businessObj.extensionElements?.values[0]?.values?.find(elem => elem.name === 'key')?.value;
-        let envName = businessObj.extensionElements?.values[0]?.values?.find(elem => elem.name === 'envName')?.value;
         let mathOp = businessObj.extensionElements?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.name;
         let mathOpVal = businessObj.extensionElements?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.value;
 
@@ -86,8 +84,8 @@ const mathLoopCall = (businessObj, start_t, timeout) => {
                 reject(new Error(businessObj.id));
             }
         }
-        if(envName && eventValue && name && !mathOp && !mathOpVal){
-                if(eventValue && name && envName) {
+        if(eventValue && name && !mathOp && !mathOpVal){
+                if(eventValue && name) {
                     axios.get( eventValue, {timeout: 5000}).then((resp)=>{
                         let value = resp.data;
                         let keyArr = name.split('.');
@@ -100,7 +98,7 @@ const mathLoopCall = (businessObj, start_t, timeout) => {
                             console.log('Name: ' + name + ', Value: ' + value);
                             workerpool.workerEmit({status: "HTTP GET successfully completed"});
                             workerpool.workerEmit({status: 'Name: ' + name + ', Value: ' + value});
-                            resolve({envName: envName, value: value});
+                            resolve({value: value});
                         } else {
                             console.log('response value is NaN');
                             workerpool.workerEmit({status: 'response value is NaN'});

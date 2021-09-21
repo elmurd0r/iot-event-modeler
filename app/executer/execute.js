@@ -248,8 +248,8 @@ listener.on('activity.wait', (waitObj) => {
             }).then(result => {
               console.log("Result:");
               console.log(result);
-              if(result.envName && result.value) {
-                waitObj.environment.variables[result.envName] = result.value;
+              if(result.value) {
+                waitObj.environment.variables[input.id] = result.value;
               }
               highlightElement(input, "rgba(66, 180, 21, 0.7)");
               return result;
@@ -518,14 +518,7 @@ runBtn.addEventListener('click', (event)=>{
   document.getElementById("mySidebarLog").style.display = "block";
   resetView();
 
-  engine.execute({
-    listener,
-    variables: {
-      input: 21
-    }
-  }, (err) => {
-    if (err) throw err;
-  });
+  engine.execute({listener}).catch(e=>console.log(e));
 })
 
 
