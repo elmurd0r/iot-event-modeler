@@ -23,7 +23,7 @@ body, html {
 .properties-panel-parent {
   border-left: 1px solid #ccc;
   overflow: auto;
-  width: 30%;
+  width: 50%;
 }
 
 .theader {
@@ -55,6 +55,19 @@ body, html {
   min-height: 100%;
 }
 
+.bpp-table-row > label.bpp-table-row-columns-4,
+.bpp-table-row > input.bpp-table-row-columns-4 {
+  width: 25%;
+  box-sizing: border-box;
+}
+.bpp-table-row > label.bpp-table-row-columns-4.bpp-table-row-removable,
+.bpp-table-row > input.bpp-table-row-columns-4.bpp-table-row-removable {
+  width: calc(25% - 8px);
+}
+.bpp-table-row > label.bpp-table-row-columns-4:not(:first-child),
+.bpp-table-row > input.bpp-table-row-columns-4:not(:first-child) {
+  border-left: none;
+}
 
 .btn-container {
   bottom: 20px;

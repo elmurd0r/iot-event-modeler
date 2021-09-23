@@ -5,10 +5,13 @@ import {
     is
 } from 'bpmn-js/lib/util/ModelUtil';
 import {isNil} from "min-dash";
+import properties from "./CustomIoTProperties";
+import elementHelper from "bpmn-js-properties-panel/lib/helper/ElementHelper";
+import cmdHelper from "bpmn-js-properties-panel/lib/helper/CmdHelper";
 
 
 
-export default function(group, element, translate) {
+export default function(group, element, bpmnFactory, translate) {
 
     // Only return an entry, if the currently selected
     // element is a start event.
@@ -21,6 +24,29 @@ export default function(group, element, translate) {
             label : 'Value',
             modelProperty : 'value'
         }));
+
+        let propertiesEntry = properties(element, bpmnFactory, {
+            id: 'IoTproperties',
+            modelProperties: [ 'url', 'key', 'mathOP', 'value' ],
+            labels: [ translate('Url'), translate('Key'), translate('MathOP (<, =, >)'), translate('Value') ],
+
+            getParent: function(element, node, bo) {
+                return bo.extensionElements;
+            },
+
+            createParent: function(element, bo) {
+                let parent = elementHelper.createElement('bpmn:ExtensionElements', { values: [] }, bo, bpmnFactory);
+                let cmd = cmdHelper.updateBusinessObject(element, bo, { extensionElements: parent });
+                return {
+                    cmd: cmd,
+                    parent: parent
+                };
+            }
+        }, translate);
+
+        if (propertiesEntry) {
+            group.entries.push(propertiesEntry);
+        }
 
         // Hinzufügen einer checkBox
         /* group.entries.push(entryFactory.checkbox(translate, {

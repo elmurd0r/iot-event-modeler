@@ -6,7 +6,7 @@ let LOW_PRIORITY = 500;
 
 // Create the custom magic tab.
 // The properties are organized in groups.
-function createIotTabGroups(element, translate) {
+function createIotTabGroups(element, bpmnFactory, elementRegistry, translate) {
 
     // Create a group called "Black Magic".
     let iotGroup = {
@@ -16,15 +16,14 @@ function createIotTabGroups(element, translate) {
     };
 
     // Add the spell props to the black magic group.
-    spellProps(iotGroup, element, translate);
+    spellProps(iotGroup, element, bpmnFactory, translate);
 
     return [
         iotGroup
     ];
 }
 
-export default function IotPropertiesProvider(propertiesPanel, translate) {
-
+export default function IotPropertiesProvider(bpmnFactory, elementRegistry, propertiesPanel, translate) {
     // Register our custom magic properties provider.
     // Use a lower priority to ensure it is loaded after the basic BPMN properties.
     propertiesPanel.registerProvider(LOW_PRIORITY, this);
@@ -37,7 +36,7 @@ export default function IotPropertiesProvider(propertiesPanel, translate) {
             let iotTab = {
                 id: 'iot',
                 label: 'IoT',
-                groups: createIotTabGroups(element, translate)
+                groups: createIotTabGroups(element, bpmnFactory, elementRegistry, translate)
             };
 
             entries.push(iotTab);
@@ -49,4 +48,4 @@ export default function IotPropertiesProvider(propertiesPanel, translate) {
 }
 
 
-IotPropertiesProvider.$inject = [ 'propertiesPanel', 'translate' ]
+IotPropertiesProvider.$inject = [ 'bpmnFactory', 'elementRegistry', 'propertiesPanel', 'translate' ]
