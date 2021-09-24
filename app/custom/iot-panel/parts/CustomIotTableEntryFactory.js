@@ -157,7 +157,6 @@ module.exports = function(translate, options) {
     var elements = function(element, node) {
         return pick(getElements(element, node), modelProperties);
     };
-    console.log(options);
 
     var html = domify((canAdd ?
             '<div class="bpp-table-add-row" ' + (canBeShown ? 'data-show="show"' : '') + '>' +
