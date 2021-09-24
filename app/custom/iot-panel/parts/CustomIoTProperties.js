@@ -3,7 +3,7 @@
 var getBusinessObject = require('bpmn-js/lib/util/ModelUtil').getBusinessObject,
     is = require('bpmn-js/lib/util/ModelUtil').is;
 
-var factory = require('bpmn-js-properties-panel/lib/factory/EntryFactory');
+var factory = require('./CustomIotEntryFactory');
 
 var elementHelper = require('bpmn-js-properties-panel/lib/helper/ElementHelper'),
     extensionElementsHelper = require('bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper'),
@@ -85,8 +85,7 @@ function isExtensionElements(element) {
  * @param  {function} options.getParent Gets the parent business object
  * @param  {function} options.show Indicate when the entry will be shown, should return boolean
  */
-module.exports = function(element, bpmnFactory, options, translate) {
-
+module.exports = function(iotType, element, bpmnFactory, options, translate) {
     var getParent = options.getParent;
 
     var modelProperties = options.modelProperties,
@@ -101,7 +100,11 @@ module.exports = function(element, bpmnFactory, options, translate) {
     if (!bo) {
         return;
     }
-
+    if(iotType === 'sensor' || iotType === 'actor' || iotType === 'start' || iotType === 'catch' || iotType === 'throw') {
+        if(bo.extensionElements?.values.some((e)=>e['$type'] === 'iot:Properties')) {
+            options.disableAddRow = true;
+        }
+    }
     assign(options, {
         addLabel: translate('Add Property'),
         getElements: function(element, node) {
@@ -109,46 +112,49 @@ module.exports = function(element, bpmnFactory, options, translate) {
             return getPropertyValues(parent);
         },
         addElement: function(element, node) {
-            var commands = [],
-                parent = getParent(element, node, bo);
+                var commands = [],
+                    parent = getParent(element, node, bo);
 
-            if (!parent && typeof createParent === 'function') {
-                var result = createParent(element, bo);
-                parent = result.parent;
-                commands.push(result.cmd);
-            }
-
-            var properties = getPropertiesElement(parent);
-            if (!properties) {
-                properties = elementHelper.createElement('iot:Properties', {}, parent, bpmnFactory);
-
-                if (!isExtensionElements(parent)) {
-                    commands.push(cmdHelper.updateBusinessObject(element, parent, { 'properties': properties }));
-                } else {
-                    commands.push(cmdHelper.addAndRemoveElementsFromList(
-                        element,
-                        parent,
-                        'values',
-                        'extensionElements',
-                        [ properties ],
-                        []
-                    ));
+                if (!parent && typeof createParent === 'function') {
+                    var result = createParent(element, bo);
+                    parent = result.parent;
+                    commands.push(result.cmd);
                 }
-            }
 
-            var propertyProps = {};
-            forEach(modelProperties, function(prop) {
-                propertyProps[prop] = undefined;
-            });
+                var properties = getPropertiesElement(parent);
+                if (!properties) {
+                    properties = elementHelper.createElement('iot:Properties', {}, parent, bpmnFactory);
 
-            // create id if necessary
-            if (modelProperties.indexOf('id') >= 0) {
-                propertyProps.id = generatePropertyId();
-            }
+                    if (!isExtensionElements(parent)) {
+                        commands.push(cmdHelper.updateBusinessObject(element, parent, { 'properties': properties }));
+                    } else {
+                        commands.push(cmdHelper.addAndRemoveElementsFromList(
+                            element,
+                            parent,
+                            'values',
+                            'extensionElements',
+                            [ properties ],
+                            []
+                        ));
+                    }
+                }
 
-            var property = elementHelper.createElement('iot:Property', propertyProps, properties, bpmnFactory);
-            commands.push(cmdHelper.addElementsTolist(element, properties, 'values', [ property ]));
+                var propertyProps = {};
+                forEach(modelProperties, function(prop) {
+                    propertyProps[prop] = undefined;
+                });
 
+                // create id if necessary
+                if (modelProperties.indexOf('id') >= 0) {
+                    propertyProps.id = generatePropertyId();
+                }
+
+                var property = elementHelper.createElement('iot:Property', propertyProps, properties, bpmnFactory);
+                commands.push(cmdHelper.addElementsTolist(element, properties, 'values', [ property ]));
+
+                if(iotType === 'sensor' || iotType === 'actor' || iotType === 'start' || iotType === 'catch' || iotType === 'throw') {
+                    document.querySelector("div [data-entry='IoTproperties'] .add").disabled = true;
+                }
             return commands;
         },
         updateElement: function(element, value, node, idx) {
@@ -182,6 +188,9 @@ module.exports = function(element, bpmnFactory, options, translate) {
             }
         },
         removeElement: function(element, node, idx) {
+            if(iotType === 'sensor' || iotType === 'actor' || iotType === 'start' || iotType === 'catch' || iotType === 'throw') {
+                document.querySelector("div [data-entry='IoTproperties'] .add").disabled = false;
+            }
             var commands = [],
                 parent = getParent(element, node, bo),
                 properties = getPropertiesElement(parent),

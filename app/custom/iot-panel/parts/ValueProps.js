@@ -17,6 +17,21 @@ export default function(group, element, bpmnFactory, translate) {
     // element is a start event.
     const iotType = getIotType(element);
 
+    let modelProps, labels;
+
+    if(iotType === 'sensor' || iotType === 'sensor-sub' || iotType === 'start' || iotType === 'catch') {
+        modelProps = [ 'url', 'key', 'mathOP', 'value' ];
+        labels = [ translate('Url'), translate('Key'), translate('MathOP (<, =, >)'), translate('Value') ];
+        if( iotType === 'start' || iotType === 'catch') {
+            modelProps.push('timeout');
+            labels.push('timeout');
+        }
+    }
+    if(iotType === 'actor' || iotType === 'actor-sub' || iotType === 'throw') {
+        modelProps = [ 'url' ];
+        labels = [ translate('Url')];
+    }
+
     if ((is(element, 'bpmn:DataObjectReference') || is(element, 'bpmn:StartEvent') || is(element, 'bpmn:IntermediateCatchEvent') || is(element, 'bpmn:IntermediateThrowEvent')) && !isNil(iotType)) {
         group.entries.push(entryFactory.textField(translate, {
             id : 'value',
@@ -25,10 +40,10 @@ export default function(group, element, bpmnFactory, translate) {
             modelProperty : 'value'
         }));
 
-        let propertiesEntry = properties(element, bpmnFactory, {
+        let propertiesEntry = properties(iotType, element, bpmnFactory, {
             id: 'IoTproperties',
-            modelProperties: [ 'url', 'key', 'mathOP', 'value' ],
-            labels: [ translate('Url'), translate('Key'), translate('MathOP (<, =, >)'), translate('Value') ],
+            modelProperties: modelProps,
+            labels: labels,
 
             getParent: function(element, node, bo) {
                 return bo.extensionElements;

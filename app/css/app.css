@@ -69,6 +69,20 @@ body, html {
   border-left: none;
 }
 
+.bpp-table-row > label.bpp-table-row-columns-5,
+.bpp-table-row > input.bpp-table-row-columns-5 {
+  width: 20%;
+  box-sizing: border-box;
+}
+.bpp-table-row > label.bpp-table-row-columns-5.bpp-table-row-removable,
+.bpp-table-row > input.bpp-table-row-columns-5.bpp-table-row-removable {
+  width: calc(20% - 8px);
+}
+.bpp-table-row > label.bpp-table-row-columns-5:not(:first-child),
+.bpp-table-row > input.bpp-table-row-columns-5:not(:first-child) {
+  border-left: none;
+}
+
 .btn-container {
   bottom: 20px;
   left: 20px;
