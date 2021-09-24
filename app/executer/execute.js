@@ -101,6 +101,13 @@ listener.on('activity.wait', (waitObj) => {
       let mathOpVal = businessObj.get("extensionElements")?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.value;
       let timeout = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'timeout')?.value;
 
+      // NEUE ELEMENTE:
+      let url = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].url;
+      let key = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].key;
+      let mathOP = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].mathOP;
+      let value = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].value;
+      let timeoutNeu = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].timeout;
+
       if (name && mathOp && mathOpVal && !isNaN(parseFloat(mathOpVal))) {
         mathOpVal = parseFloat(mathOpVal);
         const axiosGet = () => {
