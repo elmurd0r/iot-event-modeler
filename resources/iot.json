@@ -125,6 +125,11 @@
           "name": "url",
           "type": "String",
           "isAttr": true
+        },
+        {
+          "name": "timeout",
+          "type": "String",
+          "isAttr": true
         }
       ]
     }
