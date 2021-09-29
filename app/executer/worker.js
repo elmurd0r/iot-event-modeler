@@ -5,10 +5,16 @@ const {isNil} = require("min-dash");
 const mathLoopCall = (businessObj, start_t, timeout) => {
     console.log(businessObj);
     return new Promise((resolve, reject) => {
-        let eventValue = businessObj.value;
-        let name = businessObj.extensionElements?.values[0]?.values?.find(elem => elem.name === 'key')?.value;
-        let mathOp = businessObj.extensionElements?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.name;
-        let mathOpVal = businessObj.extensionElements?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.value;
+        //let eventValue = businessObj.value;
+        //let name = businessObj.extensionElements?.values[0]?.values?.find(elem => elem.name === 'key')?.value;
+        //let mathOp = businessObj.extensionElements?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.name;
+        //let mathOpVal = businessObj.extensionElements?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.value;
+        console.log("TIMEOUT:" + timeout);
+
+        let eventValue = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].url;
+        let name = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].key;
+        let mathOp = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].mathOP;
+        let mathOpVal = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].value;
 
         if (eventValue && name && mathOp && mathOpVal && !isNaN(parseFloat(mathOpVal))) {
             mathOpVal = parseFloat(mathOpVal);
@@ -121,7 +127,8 @@ const mathLoopCall = (businessObj, start_t, timeout) => {
 
 const outputCall = (businessObj) => {
     return new Promise(((resolve, reject) => {
-        let eventValUrl = businessObj.value;
+        //let eventValUrl = businessObj.value;
+        let eventValUrl = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].url;
         if(eventValUrl) {
             axios.post( eventValUrl, {}, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
                 console.log("HTTP POST successfully completed");
