@@ -96,16 +96,17 @@ listener.on('activity.wait', (waitObj) => {
   if(startEvent || catchEvent) {
     let event = startEvent ? startEvent : catchEvent;
     const mathLoopCall = (businessObj, eventValue) => {
+      let extensionElements = businessObj.get("extensionElements")?.values;
       //let name = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'key')?.value;
       //let mathOp = businessObj.get("extensionElements")?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.name;
       //let mathOpVal = businessObj.get("extensionElements")?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.value;
       //let timeout = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'timeout')?.value;
 
       // NEUE ELEMENTE:
-      let name = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].key;
-      let mathOp = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].mathOP;
-      let mathOpVal = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].value;
-      let timeout = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].timeout;
+      let name = extensionElements.filter(element => element['$type'] === 'iot:Properties')[0].values[0].key;
+      let mathOp = extensionElements.filter(element => element['$type'] === 'iot:Properties')[0].values[0].mathOP;
+      let mathOpVal = extensionElements.filter(element => element['$type'] === 'iot:Properties')[0].values[0].value;
+      let timeout = extensionElements.filter(element => element['$type'] === 'iot:Properties')[0].values[0].timeout;
 
       if (name && mathOp && mathOpVal && !isNaN(parseFloat(mathOpVal))) {
         mathOpVal = parseFloat(mathOpVal);
