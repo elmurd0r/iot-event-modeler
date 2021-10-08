@@ -18,8 +18,12 @@ export default function(group, element, bpmnFactory, translate) {
     const iotType = getIotType(element);
 
     let modelProps, labels;
+    if(iotType === 'sensor' || iotType === 'sensor-sub') {
+        modelProps = [ 'url', 'key'];
+        labels = [ translate('Url'), translate('Key')];
+    }
 
-    if(iotType === 'sensor' || iotType === 'sensor-sub' || iotType === 'start' || iotType === 'catch' || iotType === 'artefact-catch') {
+    if(iotType === 'start' || iotType === 'catch' || iotType === 'artefact-catch' || iotType === 'artefact-catch-sub') {
         modelProps = [ 'url', 'key', 'mathOP', 'value' ];
         labels = [ translate('Url'), translate('Key'), translate('MathOP (<, =, >)'), translate('Value') ];
         if( iotType === 'start' || iotType === 'catch') {

@@ -100,7 +100,7 @@ module.exports = function(iotType, element, bpmnFactory, options, translate) {
     if (!bo) {
         return;
     }
-    if(iotType === 'sensor' || iotType === 'actor' || iotType === 'start' || iotType === 'catch' || iotType === 'throw') {
+    if(iotType === 'sensor' || iotType === 'actor' || iotType === 'start' || iotType === 'catch' || iotType === 'throw' || iotType === 'artefact-catch') {
         if(bo.extensionElements?.values.some((e)=>e['$type'] === 'iot:Properties')) {
             options.disableAddRow = true;
         }
@@ -152,7 +152,7 @@ module.exports = function(iotType, element, bpmnFactory, options, translate) {
                 var property = elementHelper.createElement('iot:Property', propertyProps, properties, bpmnFactory);
                 commands.push(cmdHelper.addElementsTolist(element, properties, 'values', [ property ]));
 
-                if(iotType === 'sensor' || iotType === 'actor' || iotType === 'start' || iotType === 'catch' || iotType === 'throw') {
+                if(iotType === 'sensor' || iotType === 'actor' || iotType === 'start' || iotType === 'catch' || iotType === 'throw' || iotType === 'artefact-catch') {
                     document.querySelector("div [data-entry='IoTproperties'] .add").disabled = true;
                 }
             return commands;
@@ -188,7 +188,7 @@ module.exports = function(iotType, element, bpmnFactory, options, translate) {
             }
         },
         removeElement: function(element, node, idx) {
-            if(iotType === 'sensor' || iotType === 'actor' || iotType === 'start' || iotType === 'catch' || iotType === 'throw') {
+            if(iotType === 'sensor' || iotType === 'actor' || iotType === 'start' || iotType === 'catch' || iotType === 'throw' || iotType === 'artefact-catch') {
                 document.querySelector("div [data-entry='IoTproperties'] .add").disabled = false;
             }
             var commands = [],

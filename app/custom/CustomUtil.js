@@ -21,12 +21,6 @@ export const getEncodedSvg = (iotType, color) => {
                 imageHref = color === 'RED' ? SVGEncoded.actorSubSVGEncodedRed : SVGEncoded.actorSubSVGEncodedGreen;
             }
             break;
-        case 'obj':
-            imageHref = SVGEncoded.artefaktObjSVGEncoded;
-            if(color) {
-                imageHref = color === 'RED' ? SVGEncoded.artefaktObjSVGEncodedRed : SVGEncoded.artefaktObjSVGEncodedGreen;
-            }
-            break;
         case 'sensor-sub':
             imageHref = SVGEncoded.sensorSubSVGEncoded;
             if(color) {
@@ -49,6 +43,12 @@ export const getEncodedSvg = (iotType, color) => {
             imageHref = SVGEncoded.sensorCatchSVGEncoded;
             if(color) {
                 imageHref = color === 'RED' ? SVGEncoded.sensorCatchSVGEncodedRed : SVGEncoded.sensorCatchSVGEncodedGreen;
+            }
+            break;
+        case 'artefact-catch-sub':
+            imageHref = SVGEncoded.sensorCatchSVGEncodedSub;
+            if(color) {
+                imageHref = color === 'RED' ? SVGEncoded.sensorCatchSVGEncodedSubRed : SVGEncoded.sensorCatchSVGEncodedSubGreen;
             }
             break;
         case 'sensor':

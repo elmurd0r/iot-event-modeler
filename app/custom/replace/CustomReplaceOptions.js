@@ -612,13 +612,13 @@ export var IOT_REFERENCE = [
         }
     },
     {
-        label: 'IoT Object',
-        actionName: 'replace-with-iot-obj',
+        label: 'IoT Artefact Catch Sub',
+        actionName: 'replace-with-iot-artefact-catch-sub',
         className: 'iot-element',
-        iot: 'obj',
+        iot: 'artefact-catch-sub',
         target: {
             type: 'bpmn:DataObjectReference',
-            'iot:type': 'obj'
+            'iot:type': 'artefact-catch-sub'
         }
     },
     {
