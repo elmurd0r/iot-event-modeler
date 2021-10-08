@@ -116,16 +116,6 @@ export default class CustomPalette {
           click: createIotObj("actor-sub")
         }
       },
-      'create.iot-obj': {
-        group: 'iot',
-        className: 'iot-obj',
-        title: translate('Create IoT Object'),
-        iot: 'obj',
-        action: {
-          dragstart: createIotObj("obj"),
-          click: createIotObj("obj")
-        }
-      },
       'create.iot-start': {
         group: 'iot',
         className: 'iot-start',
@@ -154,6 +144,16 @@ export default class CustomPalette {
         action: {
           dragstart: createIoTThrowEvent("throw"),
           click: createIoTThrowEvent("throw")
+        }
+      },
+      'create.iot-artefact-catch': {
+        group: 'iot',
+        className: 'iot-artefact-catch',
+        title: translate('Create IoT Artefact Catch'),
+        iot: 'artefact-catch',
+        action: {
+          dragstart: createIotObj("artefact-catch"),
+          click: createIotObj("artefact-catch")
         }
       }
     };

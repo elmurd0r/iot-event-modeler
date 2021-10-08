@@ -19,7 +19,7 @@ export default function(group, element, bpmnFactory, translate) {
 
     let modelProps, labels;
 
-    if(iotType === 'sensor' || iotType === 'sensor-sub' || iotType === 'start' || iotType === 'catch') {
+    if(iotType === 'sensor' || iotType === 'sensor-sub' || iotType === 'start' || iotType === 'catch' || iotType === 'artefact-catch') {
         modelProps = [ 'url', 'key', 'mathOP', 'value' ];
         labels = [ translate('Url'), translate('Key'), translate('MathOP (<, =, >)'), translate('Value') ];
         if( iotType === 'start' || iotType === 'catch') {
