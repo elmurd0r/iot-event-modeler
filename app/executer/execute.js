@@ -251,7 +251,7 @@ listener.on('activity.wait', (waitObj) => {
         let execArray = [];
         let values = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
         values.forEach(value => {
-          if (value.url && value.key) {
+          if (value.url && value.key && value.name) {
             let execElement = pool.exec('sensorCallGroup', [value.url, value.key, businessObj.id], {
               on: payload => {
                 fillSidebarRightLog(payload.status);
@@ -260,7 +260,7 @@ listener.on('activity.wait', (waitObj) => {
               console.log("Result:");
               console.log(result);
               if (result.value) {
-                waitObj.environment.variables[input.id] = result.value;
+                waitObj.environment.variables[input.id] = {...waitObj.environment.variables[input.id], [value.name] : result.value };
               }
               highlightElement(input, "rgba(66, 180, 21, 0.7)");
               return result;
@@ -310,7 +310,7 @@ listener.on('activity.wait', (waitObj) => {
         let execArray = [];
         let values = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
         values.forEach(value => {
-          if (value.url && value.key) {
+          if (value.url && value.key && value.name) {
             let execElement = pool.exec('sensorCatchArtefactGroup', [value, businessObj.id, start_t, timeout], {
               on: payload => {
                 fillSidebarRightLog(payload.status);
@@ -318,8 +318,8 @@ listener.on('activity.wait', (waitObj) => {
             }).then(result => {
               console.log("Result:");
               console.log(result);
-              if (result.value) {
-                waitObj.environment.variables[input.id] = result.value;
+              if (result) {
+                waitObj.environment.variables[input.id] = {...waitObj.environment.variables[input.id], [value.name] : result };
               }
               return result;
             }).catch(e => {

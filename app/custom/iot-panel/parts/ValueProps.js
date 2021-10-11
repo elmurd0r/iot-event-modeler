@@ -18,18 +18,26 @@ export default function(group, element, bpmnFactory, translate) {
     const iotType = getIotType(element);
 
     let modelProps, labels;
-    if(iotType === 'sensor' || iotType === 'sensor-sub') {
+    if(iotType === 'sensor') {
         modelProps = [ 'url', 'key'];
         labels = [ translate('Url'), translate('Key')];
     }
+    if(iotType === 'sensor-sub') {
+        modelProps = ['url', 'key', 'name'];
+        labels = [ translate('Url'), translate('Key'), translate('Name')];
+    }
 
-    if(iotType === 'start' || iotType === 'catch' || iotType === 'artefact-catch' || iotType === 'artefact-catch-sub') {
+    if(iotType === 'start' || iotType === 'catch' || iotType === 'artefact-catch') {
         modelProps = [ 'url', 'key', 'mathOP', 'value' ];
         labels = [ translate('Url'), translate('Key'), translate('MathOP (<, =, >)'), translate('Value') ];
         if( iotType === 'start' || iotType === 'catch') {
             modelProps.push('timeout');
             labels.push('timeout');
         }
+    }
+    if(iotType === 'artefact-catch-sub') {
+        modelProps = [ 'url', 'key', 'mathOP', 'value', 'name' ];
+        labels = [ translate('Url'), translate('Key'), translate('MathOP (<, =, >)'), translate('Value'), translate('Name') ];
     }
     if(iotType === 'actor' || iotType === 'actor-sub' || iotType === 'throw') {
         modelProps = [ 'url' ];

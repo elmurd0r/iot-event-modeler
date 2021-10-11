@@ -3,7 +3,6 @@ const {default: axios} = require("axios");
 const {isNil} = require("min-dash");
 
 
-
 const sensorCall = (businessObj) => {
     return new Promise((resolve, reject) => {
 
@@ -304,36 +303,10 @@ const sensorCatchArtefactGroup = (value, id, start_t, timeout) => {
 }
 
 
-const outputCall = (businessObj) => {
-    return new Promise(((resolve, reject) => {
-        //let eventValUrl = businessObj.value;
-        let eventValUrl = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].url;
-        if(eventValUrl) {
-            axios.post( eventValUrl, {}, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
-                console.log("HTTP POST successfully completed");
-                console.log('Executed call: ' + eventValUrl);
-                workerpool.workerEmit({status: "HTTP POST successfully completed"});
-                workerpool.workerEmit({status: 'Executed call: ' + eventValUrl});
-                resolve();
-            }).catch((e)=>{
-                console.log(e);
-                console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
-                workerpool.workerEmit({status: "HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e});
-                reject(new Error(businessObj.id));
-            });
-        } else {
-            console.log("Error in extensionsElement in IoT actor Task");
-            workerpool.workerEmit({status: "Error in extensionsElement in IoT actor Task"});
-            reject(new Error(businessObj.id));
-        }
-    }))
-}
-
 
 // create a worker and register public functions
 workerpool.worker({
     sensorCatchArtefact: sensorCatchArtefact,
-    outputCall: outputCall,
     sensorCall: sensorCall,
     sensorCallGroup: sensorCallGroup,
     actorCall: actorCall,
