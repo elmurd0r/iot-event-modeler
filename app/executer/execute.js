@@ -226,7 +226,6 @@ listener.on('activity.wait', (waitObj) => {
     iotInputs.forEach(input => {
       let businessObj = getBusinessObject(input);
 
-
       if (businessObj.type === 'sensor') {
         workerArr.push(
             pool.exec('sensorCall', [businessObj], {
@@ -284,6 +283,64 @@ listener.on('activity.wait', (waitObj) => {
             highlightErrorElements(input, waitObj, "Not executed", "ActorGroup error", "-", boundaryEventType);
           }
         });
+      }
+      if(businessObj.type === 'artefact-catch') {
+        workerArr.push(
+            pool.exec('sensorCatchArtefact', [businessObj, start_t, timeout], {
+              on: payload => {
+                fillSidebarRightLog(payload.status);
+              }
+            }).then(result => {
+              console.log("Result:");
+              console.log(result);
+              if (result.value) {
+                waitObj.environment.variables[input.id] = result.value;
+              }
+              highlightElement(input, "rgba(66, 180, 21, 0.7)");
+              return result;
+            }).catch(e => {
+              console.log(e);
+              highlightErrorElements(input, waitObj, "Not executed", e, "-", boundaryEventType);
+              throw e;
+            })
+        )
+
+      }
+      if(businessObj.type === 'artefact-catch-sub') {
+        let execArray = [];
+        let values = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
+        values.forEach(value => {
+          if (value.url && value.key) {
+            let execElement = pool.exec('sensorCatchArtefactGroup', [value, businessObj.id, start_t, timeout], {
+              on: payload => {
+                fillSidebarRightLog(payload.status);
+              }
+            }).then(result => {
+              console.log("Result:");
+              console.log(result);
+              if (result.value) {
+                waitObj.environment.variables[input.id] = result.value;
+              }
+              return result;
+            }).catch(e => {
+              console.log(e);
+              throw e;
+            })
+            execArray.push(execElement);
+            workerArr.push(execElement)
+          } else {
+            console.log("SensorGroup: Key or URL incorrect / doesn't exist");
+          }
+        })
+        Promise.allSettled(execArray).then((values) => {
+          let rejected = values.filter(val => val.status === 'rejected');
+          if (rejected.length === 0) {
+            highlightElement(input, "rgba(66, 180, 21, 0.7)");
+          } else {
+            highlightErrorElements(input, waitObj, "Not executed", "Sensor Catch Artefact Group error", "-", boundaryEventType);
+          }
+        });
+
       }
     })
   }
