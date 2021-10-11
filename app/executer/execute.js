@@ -222,7 +222,7 @@ listener.on('activity.wait', (waitObj) => {
     }
   }
 
-  function extractedInputs(iotInputs, workerArr) {
+  const extractedInputs = (iotInputs, workerArr) => {
     iotInputs.forEach(input => {
       let businessObj = getBusinessObject(input);
 
@@ -288,7 +288,7 @@ listener.on('activity.wait', (waitObj) => {
     })
   }
 
-  function extractedOutputs(iotOutputs, workerArr) {
+  const extractedOutputs = (iotOutputs, workerArr) => {
     iotOutputs.forEach(output => {
       let businessObj = getBusinessObject(output);
 
@@ -341,7 +341,7 @@ listener.on('activity.wait', (waitObj) => {
     })
   }
 
-  function extractedPromise(workerArr) {
+  const extractedPromise = (workerArr) => {
     Promise.allSettled(workerArr).then((values) => {
       console.log(values);
       let rejected = values.filter(val => val.status === 'rejected');
