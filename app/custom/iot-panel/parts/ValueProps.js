@@ -39,12 +39,12 @@ export default function(group, element, bpmnFactory, translate) {
         modelProps = [ 'url', 'key', 'mathOP', 'value', 'name' ];
         labels = [ translate('Url'), translate('Key'), translate('MathOP (<, =, >)'), translate('Value'), translate('Name') ];
     }
-    if(iotType === 'actor' || iotType === 'actor-sub' || iotType === 'throw') {
+    if(iotType === 'actor' || iotType === 'actor-sub' || iotType === 'throw' || iotType === 'end') {
         modelProps = [ 'url' ];
         labels = [ translate('Url')];
     }
 
-    if ((is(element, 'bpmn:DataObjectReference') || is(element, 'bpmn:StartEvent') || is(element, 'bpmn:IntermediateCatchEvent') || is(element, 'bpmn:IntermediateThrowEvent')) && !isNil(iotType)) {
+    if ((is(element, 'bpmn:DataObjectReference') || is(element, 'bpmn:StartEvent') || is(element, 'bpmn:IntermediateCatchEvent') || is(element, 'bpmn:IntermediateThrowEvent')) && !isNil(iotType) || is(element, 'bpmn:EndEvent')) {
         /* group.entries.push(entryFactory.textField(translate, {
             id : 'value',
             description : 'Set value of Data Object',

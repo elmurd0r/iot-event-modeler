@@ -455,15 +455,46 @@ listener.on('activity.end', (element)=>{
   console.log("EXECUTION TIME: "+ time);
   fillSidebarRightLog("EXECUTION TIME: " + time + " ms");
 
+
+  let endEventArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:EndEvent"));
+  let endEvent = endEventArr.find(endEvent => endEvent.id === element.id);
   let currentElement = bpmnViewer.get('elementRegistry').find((elem)=>elem.id === element.id);
   let timeStamp = timestampToDate(element.messageProperties.timestamp);
-
-  highlightElement(currentElement, "rgba(66, 180, 21, 0.7)");
-  addOverlays(currentElement, time);
-  // -----------------
+  let businessObj = getBusinessObject(endEvent) ? getBusinessObject(endEvent) : null;
   let obj = element.content.inbound;
-  fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type, "-", obj ? obj[0].sourceId : '-');
 
+  if(endEvent && businessObj?.type === 'end') {
+    const workerArr = [];
+    workerArr.push(
+      pool.exec('actorCall', [businessObj], {
+        on: payload => {
+          fillSidebarRightLog(payload.status);
+        }
+      }).then(result => {
+        let end_t_1 = new Date().getTime();
+        let _time = end_t_1 - start_t;
+        console.log("Result:");
+        console.log(result);
+        highlightElement(currentElement, "rgba(66, 180, 21, 0.7)");
+        addOverlays(currentElement, _time);
+        fillSidebar(confirmIcon, element.name, element.id, _time, timeStamp, 'bpmn:IoTEndEvent', "-", obj ? obj[0].sourceId : '-');
+        return result;
+      }).catch(e => {
+        let end_t_1 = new Date().getTime();
+        let _time = end_t_1 - start_t;
+        highlightErrorElements(null, element, "Not executed", e, "-", []);
+        addOverlays(currentElement, _time);
+        console.log(e);
+        throw e;
+      })
+    )
+  } else {
+    highlightElement(currentElement, "rgba(66, 180, 21, 0.7)");
+    addOverlays(currentElement, time);
+    fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type, "-", obj ? obj[0].sourceId : '-');
+  }
+
+  // -----------------
   executedTasksArr.push(element.id);
 
   let taskArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:Task"));
