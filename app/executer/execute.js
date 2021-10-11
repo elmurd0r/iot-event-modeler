@@ -222,6 +222,135 @@ listener.on('activity.wait', (waitObj) => {
     }
   }
 
+  function extractedInputs(iotInputs, workerArr) {
+    iotInputs.forEach(input => {
+      let businessObj = getBusinessObject(input);
+
+
+      if (businessObj.type === 'sensor') {
+        workerArr.push(
+            pool.exec('sensorCall', [businessObj], {
+              on: payload => {
+                fillSidebarRightLog(payload.status);
+              }
+            }).then(result => {
+              console.log("Result:");
+              console.log(result);
+              if (result.value) {
+                waitObj.environment.variables[input.id] = result.value;
+              }
+              highlightElement(input, "rgba(66, 180, 21, 0.7)");
+              return result;
+            }).catch(e => {
+              console.log(e);
+              highlightErrorElements(input, waitObj, "Not executed", e, "-", boundaryEventType);
+              throw e;
+            })
+        )
+      }
+      if (businessObj.type === 'sensor-sub') {
+        let execArray = [];
+        let values = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
+        values.forEach(value => {
+          if (value.url && value.key) {
+            let execElement = pool.exec('sensorCallGroup', [value.url, value.key, businessObj.id], {
+              on: payload => {
+                fillSidebarRightLog(payload.status);
+              }
+            }).then(result => {
+              console.log("Result:");
+              console.log(result);
+              if (result.value) {
+                waitObj.environment.variables[input.id] = result.value;
+              }
+              highlightElement(input, "rgba(66, 180, 21, 0.7)");
+              return result;
+            }).catch(e => {
+              console.log(e);
+              highlightErrorElements(input, waitObj, "Not executed", e, "-", boundaryEventType);
+              throw e;
+            })
+            execArray.push(execElement);
+            workerArr.push(execElement)
+          } else {
+            console.log("SensorGroup: Key or URL incorrect / doesn't exist");
+          }
+        })
+        Promise.allSettled(execArray).then((values) => {
+          let rejected = values.filter(val => val.status === 'rejected');
+          if (rejected.length === 0) {
+            highlightElement(input, "rgba(66, 180, 21, 0.7)");
+          } else {
+            highlightErrorElements(input, waitObj, "Not executed", "ActorGroup error", "-", boundaryEventType);
+          }
+        });
+      }
+    })
+  }
+
+  function extractedOutputs(iotOutputs, workerArr) {
+    iotOutputs.forEach(output => {
+      let businessObj = getBusinessObject(output);
+
+      if (businessObj.type === 'actor') {
+        workerArr.push(
+            pool.exec('actorCall', [businessObj], {
+              on: payload => {
+                fillSidebarRightLog(payload.status);
+              }
+            }).then(result => {
+              console.log("Result:");
+              console.log(result);
+              highlightElement(output, "rgba(66, 180, 21, 0.7)");
+              return result;
+            }).catch(e => {
+              highlightErrorElements(output, waitObj, "Not executed", e, "-", boundaryEventType);
+              console.log(e);
+              throw e;
+            })
+        )
+      }
+      if (businessObj.type === 'actor-sub') {
+        let execArray = [];
+        let values = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
+        values.forEach(value => {
+          let execElement = pool.exec('actorCallGroup', [value.url, businessObj.id], {
+            on: payload => {
+              fillSidebarRightLog(payload.status);
+            }
+          }).then(result => {
+            console.log("Result:");
+            console.log(result);
+            return result;
+          }).catch(e => {
+            console.log(e);
+            throw e;
+          })
+          execArray.push(execElement);
+          workerArr.push(execElement);
+        })
+        Promise.allSettled(execArray).then((values) => {
+          let rejected = values.filter(val => val.status === 'rejected');
+          if (rejected.length === 0) {
+            highlightElement(output, "rgba(66, 180, 21, 0.7)");
+          } else {
+            highlightErrorElements(output, waitObj, "Not executed", "ActorGroup error", "-", boundaryEventType);
+          }
+        });
+      }
+    })
+  }
+
+  function extractedPromise(workerArr) {
+    Promise.allSettled(workerArr).then((values) => {
+      console.log(values);
+      let rejected = values.filter(val => val.status === 'rejected');
+      if (rejected.length === 0) {
+        waitObj.signal();
+      }
+    }).catch((e) => console.log(e));
+  }
+
   if(task) {
     const workerArr = [];
     let businessObj = getBusinessObject(task);
@@ -242,196 +371,21 @@ listener.on('activity.wait', (waitObj) => {
     if(iotInputs.length === 0 && iotOutputs.length === 0){
       waitObj.signal();
     }
-
     if(iotInputs.length > 0 && iotOutputs.length === 0) {
       // run registered functions on the worker via exec
-      iotInputs.forEach(input => {
-        let businessObj = getBusinessObject(input);
-
-
-        if(businessObj.type === 'sensor') {
-          workerArr.push(
-              pool.exec('sensorCall', [businessObj], {
-                on: payload => {
-                  fillSidebarRightLog(payload.status);
-                }
-              }).then(result => {
-                console.log("Result:");
-                console.log(result);
-                if(result.value) {
-                  waitObj.environment.variables[input.id] = result.value;
-                }
-                highlightElement(input, "rgba(66, 180, 21, 0.7)");
-                return result;
-              }).catch(e => {
-                console.log(e);
-                highlightErrorElements(input, waitObj, "Not executed", e, "-", boundaryEventType);
-                throw e;
-              })
-          )
-        }
-        if(businessObj.type === 'sensor-sub') {
-          let execArray = [];
-          let values = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
-          values.forEach(value => {
-            if(value.url && value.key) {
-              let execElement = pool.exec('sensorCallGroup', [value.url, value.key, businessObj.id], {
-                on: payload => {
-                  fillSidebarRightLog(payload.status);
-                }
-              }).then(result => {
-                console.log("Result:");
-                console.log(result);
-                if(result.value) {
-                  waitObj.environment.variables[input.id] = result.value;
-                }
-                highlightElement(input, "rgba(66, 180, 21, 0.7)");
-                return result;
-              }).catch(e => {
-                console.log(e);
-                highlightErrorElements(input, waitObj, "Not executed", e, "-", boundaryEventType);
-                throw e;
-              })
-              execArray.push(execElement);
-              workerArr.push(execElement)
-            }
-            else {
-              console.log("SensorGroup: Key or URL incorrect / doesn't exist");
-            }
-          })
-          Promise.allSettled(execArray).then((values) => {
-            let rejected = values.filter(val=>val.status === 'rejected');
-            if(rejected.length === 0) {
-              highlightElement(input, "rgba(66, 180, 21, 0.7)");
-            } else {
-              highlightErrorElements(input, waitObj, "Not executed", "ActorGroup error", "-", boundaryEventType);
-            }
-          });
-        }
-      })
-      Promise.allSettled(workerArr).then((values)=>{
-            console.log(values);
-            let rejected = values.filter(val=>val.status === 'rejected');
-            if(rejected.length === 0) {
-                waitObj.signal();
-            }
-      }).catch((e)=>console.log(e));
+      extractedInputs(iotInputs, workerArr);
+      extractedPromise(workerArr);
     }
 
     if(iotOutputs.length > 0 && iotInputs.length === 0) {
-      iotOutputs.forEach(output => {
-        let businessObj = getBusinessObject(output);
-
-        if(businessObj.type === 'actor') {
-          workerArr.push(
-              pool.exec('actorCall', [businessObj], {
-                on: payload => {
-                  fillSidebarRightLog(payload.status);
-                }
-              }).then(result => {
-                console.log("Result:");
-                console.log(result);
-                highlightElement(output, "rgba(66, 180, 21, 0.7)");
-                return result;
-              }).catch(e => {
-                highlightErrorElements(output, waitObj, "Not executed", e, "-", boundaryEventType);
-                console.log(e);
-                throw e;
-              })
-          )
-        }
-        if (businessObj.type === 'actor-sub') {
-          let execArray = [];
-          let values = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
-          values.forEach(value => {
-            let execElement = pool.exec('actorCallGroup', [value.url, businessObj.id], {
-              on: payload => {
-                fillSidebarRightLog(payload.status);
-              }
-            }).then(result => {
-              console.log("Result:");
-              console.log(result);
-              return result;
-            }).catch(e => {
-              console.log(e);
-              throw e;
-            })
-            execArray.push(execElement);
-            workerArr.push(execElement);
-          })
-          Promise.allSettled(execArray).then((values) => {
-            let rejected = values.filter(val=>val.status === 'rejected');
-            if(rejected.length === 0) {
-              highlightElement(output, "rgba(66, 180, 21, 0.7)");
-            } else {
-              highlightErrorElements(output, waitObj, "Not executed", "ActorGroup error", "-", boundaryEventType);
-            }
-          });
-        }
-      })
-
-      Promise.allSettled(workerArr).then((values)=>{
-        console.log(values);
-        let rejected = values.filter(val=>val.status === 'rejected');
-        if(rejected.length === 0) {
-          waitObj.signal();
-        } else {
-        }
-      }).catch((e)=>console.log(e));
+      extractedOutputs(iotOutputs, workerArr);
+      extractedPromise(workerArr);
     }
 
     if (iotOutputs.length > 0 && iotInputs.length > 0) {
-      iotInputs.forEach(input => {
-        let businessObj = getBusinessObject(input);
-
-        workerArr.push(
-            pool.exec('mathLoopCall', [businessObj, start_t, timeout], {
-              on: payload => {
-                fillSidebarRightLog(payload.status);
-              }
-            }).then(result => {
-              console.log("Result:");
-              console.log(result);
-              if(result.envName && result.value) {
-                waitObj.environment.variables[result.envName] = result.value;
-              }
-              highlightElement(input, "rgba(66, 180, 21, 0.7)");
-              return result;
-            }).catch(e => {
-              console.log(e);
-              highlightErrorElements(input, waitObj, "Not executed", e, "-", boundaryEventType);
-              throw e;
-            })
-        )
-      })
-      iotOutputs.forEach(output => {
-        let businessObj = getBusinessObject(output);
-
-        workerArr.push(
-            pool.exec('outputCall', [businessObj], {
-              on: payload => {
-                fillSidebarRightLog(payload.status);
-              }
-            }).then(result => {
-              console.log("Result:");
-              console.log(result);
-              highlightElement(output, "rgba(66, 180, 21, 0.7)");
-              return result;
-            }).catch(e => {
-              console.log(e);
-              highlightErrorElements(output, waitObj, "Not executed", e, "-", boundaryEventType);
-              throw e;
-            })
-        )
-      })
-
-      Promise.allSettled(workerArr).then((values)=>{
-        console.log(values);
-        let rejected = values.filter(val=>val.status === 'rejected');
-        if(rejected.length === 0) {
-          waitObj.signal();
-        }
-      }).catch((e)=>console.log(e));
+      extractedInputs(iotInputs, workerArr);
+      extractedOutputs(iotOutputs, workerArr);
+      extractedPromise(workerArr);
     }
   }
 })
