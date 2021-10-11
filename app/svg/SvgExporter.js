@@ -14,7 +14,7 @@ import endSVG from "../svg/default/IoT_Artefakt_Endereignis.svg";
 //RED
 import startSVGRed from "../svg/red/IoT_Artefakt_Startereignis_Rot.svg";
 import actorSVGRed from "../svg/red/Artefakt_Empfangend_Rot.svg";
-import actorSubSVGRed from "./default/Artefakt_Empfangend_Sub.svg";
+import actorSubSVGRed from "./red/Artefakt_Empfangend_Sub_Rot.svg";
 import sensorSVGRed from "../svg/red/Artefakt_Sendend_Rot.svg";
 import sensorSubSVGRed from "./red/Artefakt_Sendend_Sub_Rot.svg";
 import catchEventRed from "../svg/red/IoT_Artefakt_Intermediate_Catch_Event_Rot.svg";
@@ -25,7 +25,7 @@ import endSVGRed from "../svg/red/IoT_Artefakt_Endereignis_Rot.svg";
 //GREEN
 import startSVGGreen from "../svg/green/IoT_Artefakt_Startereignis_Gruen.svg";
 import actorSVGGreen from "../svg/green/Artefakt_Empfangend_Gruen.svg";
-import actorSubSVGGreen from "./default/Artefakt_Empfangend_Sub.svg";
+import actorSubSVGGreen from "./green/Artefakt_Empfangend_Sub_Gruen.svg";
 import sensorSVGGreen from "../svg/green/Artefakt_Sendend_Gruen.svg";
 import sensorSubSVGGreen from "./green/Artefakt_Sendend_Sub_Gruen.svg";
 import catchEventGreen from "../svg/green/IoT_Artefakt_Intermediate_Catch_Event_Gruen.svg";

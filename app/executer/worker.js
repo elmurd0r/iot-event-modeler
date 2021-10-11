@@ -80,6 +80,55 @@ const sensorCallGroup = (url, key, id) => {
 }
 
 
+const actorCall = (businessObj) => {
+    return new Promise(((resolve, reject) => {
+        let eventValUrl = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].url;
+        if(eventValUrl) {
+            axios.post( eventValUrl, {}, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
+                console.log("HTTP POST successfully completed");
+                console.log('Executed call: ' + eventValUrl);
+                workerpool.workerEmit({status: "HTTP POST successfully completed"});
+                workerpool.workerEmit({status: 'Executed call: ' + eventValUrl});
+                resolve();
+            }).catch((e)=>{
+                console.log(e);
+                console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
+                workerpool.workerEmit({status: "HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e});
+                reject(new Error(businessObj.id));
+            });
+        } else {
+            console.log("Error in extensionsElement in IoT actor Task");
+            workerpool.workerEmit({status: "Error in extensionsElement in IoT actor Task"});
+            reject(new Error(businessObj.id));
+        }
+    }))
+}
+
+
+const actorCallGroup = (url, id) => {
+    return new Promise(((resolve, reject) => {
+        if(url) {
+            axios.post( url, {}, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
+                console.log("HTTP POST successfully completed");
+                console.log('Executed call: ' + url);
+                workerpool.workerEmit({status: "HTTP POST successfully completed"});
+                workerpool.workerEmit({status: 'Executed call: ' + url});
+                resolve();
+            }).catch((e)=>{
+                console.log(e);
+                console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
+                workerpool.workerEmit({status: "HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e});
+                reject(new Error(id));
+            });
+        } else {
+            console.log("Error in extensionsElement in IoT actor Task");
+            workerpool.workerEmit({status: "Error in extensionsElement in IoT actor Task"});
+            reject(new Error(id));
+        }
+    }))
+}
+
+
 
 
 const mathLoopCall = (businessObj, start_t, timeout) => {
@@ -232,5 +281,7 @@ workerpool.worker({
     mathLoopCall: mathLoopCall,
     outputCall: outputCall,
     sensorCall: sensorCall,
-    sensorCallGroup: sensorCallGroup
+    sensorCallGroup: sensorCallGroup,
+    actorCall: actorCall,
+    actorCallGroup: actorCallGroup
 });

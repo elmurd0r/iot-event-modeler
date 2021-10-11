@@ -297,7 +297,6 @@ listener.on('activity.wait', (waitObj) => {
             else {
               console.log("SensorGroup: Key or URL incorrect / doesn't exist");
             }
-
           })
         }
       })
@@ -314,28 +313,60 @@ listener.on('activity.wait', (waitObj) => {
       iotOutputs.forEach(output => {
         let businessObj = getBusinessObject(output);
 
-        workerArr.push(
-            pool.exec('outputCall', [businessObj], {
+        if(businessObj.type === 'actor') {
+          workerArr.push(
+              pool.exec('actorCall', [businessObj], {
+                on: payload => {
+                  fillSidebarRightLog(payload.status);
+                }
+              }).then(result => {
+                console.log("Result:");
+                console.log(result);
+                highlightElement(output, "rgba(66, 180, 21, 0.7)");
+                return result;
+              }).catch(e => {
+                highlightErrorElements(output, waitObj, "Not executed", e, "-", boundaryEventType);
+                console.log(e);
+                throw e;
+              })
+          )
+        }
+        if (businessObj.type === 'actor-sub') {
+          let execArray = [];
+          let values = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
+          values.forEach(value => {
+            let execElement = pool.exec('actorCallGroup', [value.url, businessObj.id], {
               on: payload => {
                 fillSidebarRightLog(payload.status);
               }
             }).then(result => {
               console.log("Result:");
               console.log(result);
-              highlightElement(output, "rgba(66, 180, 21, 0.7)");
               return result;
             }).catch(e => {
               console.log(e);
-              highlightErrorElements(output, waitObj, "Not executed", e, "-", boundaryEventType);
               throw e;
             })
-        )
+            execArray.push(execElement);
+            workerArr.push(execElement);
+          })
+          Promise.allSettled(execArray).then((values) => {
+            let rejected = values.filter(val=>val.status === 'rejected');
+            if(rejected.length === 0) {
+              highlightElement(output, "rgba(66, 180, 21, 0.7)");
+            } else {
+              highlightErrorElements(output, waitObj, "Not executed", "ActorGroup error", "-", boundaryEventType);
+            }
+          });
+        }
       })
+
       Promise.allSettled(workerArr).then((values)=>{
         console.log(values);
         let rejected = values.filter(val=>val.status === 'rejected');
         if(rejected.length === 0) {
           waitObj.signal();
+        } else {
         }
       }).catch((e)=>console.log(e));
     }
