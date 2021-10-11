@@ -203,7 +203,7 @@ listener.on('activity.wait', (waitObj) => {
     let eventValUrl = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].url;
 
     if(eventValUrl) {
-      axios.post( eventValUrl, null, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
+      axios.post( eventValUrl, {}, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
         console.log("HTTP POST successfully completed");
         console.log('Executed call: ' + eventValUrl);
         fillSidebarRightLog("HTTP POST successfully completed");
@@ -416,14 +416,14 @@ const highlightErrorElements = (iotArtifact, waitObj, time, errormsg, source, bo
     engine.stop();
   }
 
-  let element = bpmnViewer.get('elementRegistry').find(e => e.id === id);
+  let element = bpmnViewer.get('elementRegistry').find(e => e.id === waitObj.id);
 
   if(iotArtifact) {
     let iotArtifactElement = bpmnViewer.get('elementRegistry').find(e => e.id === iotArtifact.id);
     highlightElement(iotArtifactElement, "rgb(245,61,51)");
   }
   highlightElement(element, "rgb(245,61,51)");
-  let convertedTimeStamp = timestampToDate(timeStamp);
+  let convertedTimeStamp = timestampToDate(waitObj.messageProperties.timestamp);
   fillSidebar(errIcon, waitObj.name, waitObj.id, time, convertedTimeStamp, waitObj.type, errormsg, source);
 }
 

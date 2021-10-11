@@ -117,7 +117,7 @@ export var INTERMEDIATE_EVENT = [
         className: 'iot-element',
         iot: 'throw',
         target: {
-            type: 'bpmn:IntermediateThrowEvent',
+            type: 'bpmn:IntermediateCatchEvent',
             eventDefinitionType: 'bpmn:MessageEventDefinition',
             'iot:type': 'throw'
         }
