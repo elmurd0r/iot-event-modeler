@@ -51,6 +51,12 @@ export const getEncodedSvg = (iotType, color) => {
                 imageHref = color === 'RED' ? SVGEncoded.sensorCatchSVGEncodedSubRed : SVGEncoded.sensorCatchSVGEncodedSubGreen;
             }
             break;
+        case 'end':
+            imageHref = SVGEncoded.endSVGEncoded;
+            if(color) {
+                imageHref = color === 'RED' ? SVGEncoded.endSVGEncodedRed : SVGEncoded.endSVGEncodedGeen;
+            }
+            break;
         case 'sensor':
         default:
             imageHref = SVGEncoded.sensorSVGEncoded;

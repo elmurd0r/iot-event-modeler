@@ -244,7 +244,19 @@ export var INTERMEDIATE_EVENT = [
     }
 ];
 
+
 export var END_EVENT = [
+    {
+        label: 'IoT End Event',
+        actionName: 'replace-with-iot-end',
+        className: 'iot-element',
+        iot: 'end',
+        target: {
+            type: 'bpmn:EndEvent',
+            eventDefinitionType: 'bpmn:MessageEventDefinition',
+            'iot:type': 'end'
+        }
+    },
     {
         label: 'Start Event',
         actionName: 'replace-with-none-start',

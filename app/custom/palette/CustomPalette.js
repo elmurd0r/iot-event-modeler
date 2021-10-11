@@ -45,6 +45,21 @@ export default class CustomPalette {
       };
     }
 
+    function createIotEnd(iotType) {
+      return function(event) {
+        const businessObject = bpmnFactory.create('bpmn:EndEvent');
+        businessObject.set('iot:type', iotType);
+
+        const shape = elementFactory.createShape({
+          type: 'bpmn:EndEvent',
+          businessObject: businessObject,
+          eventDefinitionType: 'bpmn:MessageEventDefinition'
+        });
+
+        create.start(event, shape);
+      };
+    }
+
     function createIoTCatchEvent(iotType) {
       return function(event) {
         const businessObject = bpmnFactory.create('bpmn:IntermediateCatchEvent');
@@ -164,6 +179,16 @@ export default class CustomPalette {
         action: {
           dragstart: createIotObj("artefact-catch-sub"),
           click: createIotObj("artefact-catch-sub")
+        }
+      },
+      'create.iot-end': {
+        group: 'iot',
+        className: 'iot-end',
+        title: translate('Create IoT End'),
+        iot: 'end',
+        action: {
+          dragstart: createIotEnd("end"),
+          click: createIotEnd("end")
         }
       }
     };
