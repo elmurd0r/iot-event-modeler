@@ -13,10 +13,6 @@
       ],
       "properties": [
         {
-          "name": "value",
-          "isAttr": true,
-          "type": "String"
-        },{
           "name": "type",
           "isAttr": true,
           "type": "String"
@@ -30,10 +26,6 @@
       ],
       "properties": [
         {
-          "name": "value",
-          "isAttr": true,
-          "type": "String"
-        },{
           "name": "type",
           "isAttr": true,
           "type": "String"
@@ -60,10 +52,6 @@
       ],
       "properties": [
         {
-          "name": "value",
-          "isAttr": true,
-          "type": "String"
-        },{
           "name": "type",
           "isAttr": true,
           "type": "String"
@@ -77,10 +65,6 @@
       ],
       "properties": [
         {
-          "name": "value",
-          "isAttr": true,
-          "type": "String"
-        },{
           "name": "type",
           "isAttr": true,
           "type": "String"
