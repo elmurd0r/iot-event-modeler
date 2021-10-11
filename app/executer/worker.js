@@ -2,13 +2,89 @@ const workerpool = require('workerpool');
 const {default: axios} = require("axios");
 const {isNil} = require("min-dash");
 
+
+
+const sensorCall = (businessObj) => {
+    return new Promise((resolve, reject) => {
+
+        let url = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].url;
+        let key = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].key;
+
+        if(url && key) {
+            axios.get( url, {timeout: 5000}).then((resp)=>{
+                let value = resp.data;
+                let keyArr = key.split('.');
+                keyArr.forEach(k => {
+                    value = value[k];
+                });
+                if(!isNaN(parseFloat(value))) {
+                    value = parseFloat(value);
+                    console.log("HTTP GET successfully completed");
+                    console.log('Name: ' + key + ', Value: ' + value);
+                    workerpool.workerEmit({status: "HTTP GET successfully completed"});
+                    workerpool.workerEmit({status: 'Name: ' + key + ', Value: ' + value});
+                    resolve({value: value});
+                } else {
+                    console.log('response value is NaN');
+                    workerpool.workerEmit({status: 'response value is NaN'});
+                    reject(new Error(businessObj.id));
+                }
+            }).catch((e)=>{
+                console.log(e);
+                console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
+                workerpool.workerEmit({status: "HTTP GET FAILED!! - DataInputAssociation SENSOR: " + e});
+                reject(new Error(businessObj.id));
+            });
+        } else {
+            console.log("Error in extensionsElement in IoT sensor Task");
+            workerpool.workerEmit({status: "Error in extensionsElement in IoT sensor Task"});
+            reject(new Error(businessObj.id));
+        }
+    })
+}
+
+
+const sensorCallGroup = (url, key, id) => {
+    return new Promise((resolve, reject) => {
+        if(url && key) {
+            axios.get( url, {timeout: 5000}).then((resp)=>{
+                let value = resp.data;
+                let keyArr = key.split('.');
+                keyArr.forEach(k => {
+                    value = value[k];
+                });
+                if(!isNaN(parseFloat(value))) {
+                    value = parseFloat(value);
+                    console.log("HTTP GET successfully completed");
+                    console.log('Name: ' + key + ', Value: ' + value);
+                    workerpool.workerEmit({status: "HTTP GET successfully completed"});
+                    workerpool.workerEmit({status: 'Name: ' + key + ', Value: ' + value});
+                    resolve({value: value});
+                } else {
+                    console.log('response value is NaN');
+                    workerpool.workerEmit({status: 'response value is NaN'});
+                    reject(new Error(id));
+                }
+            }).catch((e)=>{
+                console.log(e);
+                console.log("HTTP GET FAILED!! - DataInputAssociation SENSOR");
+                workerpool.workerEmit({status: "HTTP GET FAILED!! - DataInputAssociation SENSOR: " + e});
+                reject(new Error(id));
+            });
+        } else {
+            console.log("Error in extensionsElement in IoT sensor Task");
+            workerpool.workerEmit({status: "Error in extensionsElement in IoT sensor Task"});
+            reject(new Error(id));
+        }
+    })
+}
+
+
+
+
 const mathLoopCall = (businessObj, start_t, timeout) => {
     console.log(businessObj);
     return new Promise((resolve, reject) => {
-        //let eventValue = businessObj.value;
-        //let name = businessObj.extensionElements?.values[0]?.values?.find(elem => elem.name === 'key')?.value;
-        //let mathOp = businessObj.extensionElements?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.name;
-        //let mathOpVal = businessObj.extensionElements?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.value;
         console.log("TIMEOUT:" + timeout);
 
         let eventValue = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].url;
@@ -154,5 +230,7 @@ const outputCall = (businessObj) => {
 // create a worker and register public functions
 workerpool.worker({
     mathLoopCall: mathLoopCall,
-    outputCall: outputCall
+    outputCall: outputCall,
+    sensorCall: sensorCall,
+    sensorCallGroup: sensorCallGroup
 });

@@ -228,13 +228,13 @@ listener.on('activity.wait', (waitObj) => {
 
     let iotInputs = businessObj.get("dataInputAssociations")?.map(input => {
       if (input.sourceRef[0].type) {
-        return  bpmnViewer.get('elementRegistry').find(element => element.id === input.sourceRef[0].id);
+        return bpmnViewer.get('elementRegistry').find(element => element.id === input.sourceRef[0].id);
         //return input.sourceRef[0];
       }
     }).filter(e => e !== undefined);
     let iotOutputs = businessObj.get("dataOutputAssociations")?.map(input => {
       if(input.targetRef.type) {
-        return  bpmnViewer.get('elementRegistry').find(element => element.id === input.targetRef.id);
+        return bpmnViewer.get('elementRegistry').find(element => element.id === input.targetRef.id);
         //return input.targetRef;
       }
     }).filter(e => e !== undefined);
@@ -248,25 +248,58 @@ listener.on('activity.wait', (waitObj) => {
       iotInputs.forEach(input => {
         let businessObj = getBusinessObject(input);
 
-        workerArr.push(
-            pool.exec('mathLoopCall', [businessObj, start_t, timeout], {
-              on: payload => {
-                fillSidebarRightLog(payload.status);
-              }
-            }).then(result => {
-              console.log("Result:");
-              console.log(result);
-              if(result.value) {
-                waitObj.environment.variables[input.id] = result.value;
-              }
-              highlightElement(input, "rgba(66, 180, 21, 0.7)");
-              return result;
-            }).catch(e => {
-              console.log(e);
-              highlightErrorElements(input, waitObj, "Not executed", e, "-", boundaryEventType);
-              throw e;
-            })
-        )
+
+        if(businessObj.type === 'sensor') {
+          workerArr.push(
+              pool.exec('sensorCall', [businessObj], {
+                on: payload => {
+                  fillSidebarRightLog(payload.status);
+                }
+              }).then(result => {
+                console.log("Result:");
+                console.log(result);
+                if(result.value) {
+                  waitObj.environment.variables[input.id] = result.value;
+                }
+                highlightElement(input, "rgba(66, 180, 21, 0.7)");
+                return result;
+              }).catch(e => {
+                console.log(e);
+                highlightErrorElements(input, waitObj, "Not executed", e, "-", boundaryEventType);
+                throw e;
+              })
+          )
+        }
+        if(businessObj.type === 'sensor-sub') {
+          let values = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
+          values.forEach(value => {
+            if(value.url && value.key) {
+              workerArr.push(
+                  pool.exec('sensorCallGroup', [value.url, value.key, businessObj.id], {
+                    on: payload => {
+                      fillSidebarRightLog(payload.status);
+                    }
+                  }).then(result => {
+                    console.log("Result:");
+                    console.log(result);
+                    if(result.value) {
+                      waitObj.environment.variables[input.id] = result.value;
+                    }
+                    highlightElement(input, "rgba(66, 180, 21, 0.7)");
+                    return result;
+                  }).catch(e => {
+                    console.log(e);
+                    highlightErrorElements(input, waitObj, "Not executed", e, "-", boundaryEventType);
+                    throw e;
+                  })
+              )
+            }
+            else {
+              console.log("SensorGroup: Key or URL incorrect / doesn't exist");
+            }
+
+          })
+        }
       })
       Promise.allSettled(workerArr).then((values)=>{
             console.log(values);
