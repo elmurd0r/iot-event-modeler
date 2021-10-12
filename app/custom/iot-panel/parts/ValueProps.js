@@ -44,7 +44,7 @@ export default function(group, element, bpmnFactory, translate) {
         labels = [ translate('Url')];
     }
 
-    if ((is(element, 'bpmn:DataObjectReference') || is(element, 'bpmn:StartEvent') || is(element, 'bpmn:IntermediateCatchEvent') || is(element, 'bpmn:IntermediateThrowEvent')) && !isNil(iotType) || is(element, 'bpmn:EndEvent')) {
+    if ((is(element, 'bpmn:DataObjectReference') || is(element, 'bpmn:StartEvent') || is(element, 'bpmn:IntermediateCatchEvent') || is(element, 'bpmn:IntermediateThrowEvent')) && !isNil(iotType) || is(element, 'bpmn:EndEvent') && !isNil(iotType)) {
         /* group.entries.push(entryFactory.textField(translate, {
             id : 'value',
             description : 'Set value of Data Object',

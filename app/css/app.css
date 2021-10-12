@@ -89,6 +89,41 @@ body, html {
   position: absolute;
 }
 
+.djs-palette {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  padding-bottom: 10px;
+
+  box-sizing: border-box;
+  width: 48px;
+}
+
+.djs-palette .entry,
+.djs-palette .djs-palette-toggle {
+  color: var(--palette-entry-color);
+  font-size: 37px;
+
+  text-align: center;
+}
+
+.djs-palette.two-column.open {
+  width: 94px;
+}
+
+.iot-palette-element > img{
+  width: 34px!important;
+}
+
+#hidePanelButton {
+  position: absolute;
+  top: 50%;
+  right: calc(100vw/3 - 35px);
+  -webkit-transform: rotate(270deg);
+  -moz-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+}
 
 /* overlay */
 

@@ -188,3 +188,17 @@ if (!window.FileList || !window.FileReader) {
 if(processModel) {
   openDiagram(processModel);
 }
+
+
+document.getElementById('hidePanelButton').addEventListener('click', () => {
+  let propertiesPanel = document.getElementById('js-properties-panel');
+  let hidePanelButton = document.getElementById('hidePanelButton');
+
+  if(propertiesPanel.style.display === 'none') {
+    propertiesPanel.style.display = "block";
+    hidePanelButton.style.right = "calc(100vw/3 - 35px)";
+  } else {
+    propertiesPanel.style.display = "none";
+    hidePanelButton.style.right = "-30px";
+  }
+})
