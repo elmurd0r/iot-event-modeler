@@ -6,9 +6,11 @@ import CustomBpmnReplace from "./replace/CustomBpmnReplace";
 import CustomReplaceMenuProvider from "./replace/CustomReplaceMenuProvider";
 import CustomPopupMenu from "./replace/CustomPopupMenu";
 import CustomRealPalette from "./palette/CustomRealPalette";
+import CustomIotArtefactRules from './rules/CustomIotArtefactRules'
 
 export default {
-  __init__: [ 'customContextPad', 'customPalette', 'customRenderer', 'resizeTask', 'replaceMenuProvider', 'bpmnReplace', 'popupMenu', 'palette'],
+  __init__: ['CustomIotArtefactRules', 'customContextPad', 'customPalette', 'customRenderer', 'resizeTask', 'replaceMenuProvider', 'bpmnReplace', 'popupMenu', 'palette'],
+  CustomIotArtefactRules: ['type', CustomIotArtefactRules],
   customContextPad: [ 'type', CustomContextPad ],
   customPalette: [ 'type', CustomPalette ],
   customRenderer: [ 'type', CustomRenderer ],
