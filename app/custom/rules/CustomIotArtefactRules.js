@@ -38,9 +38,27 @@ CustomIotArtefactRules.prototype.init = function() {
     }
     // priority is important
     this.addRule('connection.create', 1500, (context) => {
+        if(context.source.businessObject.type === 'decision-group' || context.target.businessObject.type === 'decision-group') {
+            if(context.target.type === 'bpmn:Task') {
+                return {
+                    type: 'bpmn:DataInputAssociation'
+                };
+            }
+            return false;
+        }
+
         return handleAssociation(context);
     });
 
+    this.addRule('shape.create', 1500, (context) => {
+        console.log(context);
+        if(context.target.businessObject.type === 'decision-group') {
+            if(context.shape.businessObject.type && (context.shape.type === 'bpmn:DataObjectReference' || context.shape.type === 'bpmn:SubProcess')) {
+                return true;
+            }
+            return false;
+        }
+    });
 
     this.addRule('connection.reconnect', 1500, (context) => {
         return handleAssociation(context);

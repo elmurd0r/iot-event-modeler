@@ -15,6 +15,7 @@ const processModel = sessionStorage.getItem('xml') ? sessionStorage.getItem('xml
 const containerEl = document.getElementById('js-canvas');
 const runBtn = document.getElementById('runBtn');
 import {Timers} from "./Timer";
+import {TreeNode} from "./TreeNode";
 import {
   convertInputToBooleanOrKeepType,
   convertInputToFloatOrKeepType,
@@ -268,6 +269,7 @@ listener.on('activity.wait', (waitObj) => {
       }
       if (businessObj.type === 'sensor-sub') {
         let execArray = [];
+        waitObj.environment.variables[currentDecisionID] = {};
         let values = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
         values.forEach(value => {
           if (value.url && value.key && value.name) {
@@ -279,7 +281,7 @@ listener.on('activity.wait', (waitObj) => {
               console.log("Result:");
               console.log(result);
               if (result.value) {
-                waitObj.environment.variables[input.id] = {...waitObj.environment.variables[input.id], [value.name] : result.value };
+                waitObj.environment.variables[currentDecisionID][input.id] = {...waitObj.environment.variables[currentDecisionID][input.id], [value.name] : result.value };
               }
               highlightElement(input, "rgba(66, 180, 21, 0.7)");
               return result;
@@ -436,6 +438,73 @@ listener.on('activity.wait', (waitObj) => {
     })
   }
 
+  const extractedDecision = (iotInputs, workerArr, currentDecisionID) => {
+    iotInputs.forEach(input => {
+      let businessObj = getBusinessObject(input);
+
+      if (businessObj.type === 'sensor') {
+        workerArr.push(
+            pool.exec('sensorCall', [businessObj], {
+              on: payload => {
+                fillSidebarRightLog(payload.status);
+              }
+            }).then(result => {
+              console.log("Result:");
+              console.log(result);
+              if (result.value) {
+                waitObj.environment.variables[currentDecisionID] = {...waitObj.environment.variables[currentDecisionID], [input.id] : result.value };
+              }
+              console.log(waitObj.environment.variables)
+              highlightElement(input, "rgba(66, 180, 21, 0.7)");
+              //return result;
+            }).catch(e => {
+              console.log(e);
+              highlightErrorElements(input, waitObj, "Not executed", e, "-", boundaryEventType);
+              throw e;
+            })
+        )
+      }
+      if (businessObj.type === 'sensor-sub') {
+        let execArray = [];
+        waitObj.environment.variables[currentDecisionID] = {};
+        let values = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
+        values.forEach(value => {
+          if (value.url && value.key && value.name) {
+            let execElement = pool.exec('sensorCallGroup', [value.url, value.key, businessObj.id], {
+              on: payload => {
+                fillSidebarRightLog(payload.status);
+              }
+            }).then(result => {
+              console.log("Result:");
+              console.log(result);
+              if (result.value) {
+                waitObj.environment.variables[input.id] = {...waitObj.environment.variables[input.id], [value.name] : result.value };
+              }
+              highlightElement(input, "rgba(66, 180, 21, 0.7)");
+              return result;
+            }).catch(e => {
+              console.log(e);
+              highlightErrorElements(input, waitObj, "Not executed", e, "-", boundaryEventType);
+              throw e;
+            })
+            execArray.push(execElement);
+            workerArr.push(execElement);
+          } else {
+            console.log("SensorGroup: Key or URL incorrect / doesn't exist");
+          }
+        })
+        Promise.allSettled(execArray).then((values) => {
+          let rejected = values.filter(val => val.status === 'rejected');
+          if (rejected.length === 0) {
+            highlightElement(input, "rgba(66, 180, 21, 0.7)");
+          } else {
+            highlightErrorElements(input, waitObj, "Not executed", "ActorGroup error", "-", boundaryEventType);
+          }
+        });
+      }
+    })
+  }
+
   const extractedPromise = (workerArr) => {
     Promise.allSettled(workerArr).then((values) => {
       console.log(values);
@@ -446,24 +515,120 @@ listener.on('activity.wait', (waitObj) => {
     }).catch((e) => console.log(e));
   }
 
+  const evalDecision = (currentShape) => {
+    console.log(currentShape);
+    debugger
+    let values = currentShape.businessObject.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
+    values.forEach(value => {
+      if (value.name && value.condition) {
+        let regex = /[a-zA-Z0-9_\-]*[.][a-zA-Z0-9_\-]*/gm;
+        let stringForRegex = value.condition;
+        let parsedVariableArray = stringForRegex.match(regex);
+
+        let replacedArray = parsedVariableArray.map((str) => {
+          let partElement = "";
+          let keyArr = str.split('.');
+          keyArr.forEach(k => {
+            partElement += "['"+k+"']";
+          });
+          return "waitObj['environment']['variables']"+partElement;
+        })
+
+        replacedArray.forEach((match, groupIndex) => {
+          stringForRegex = stringForRegex.replace( /[a-zA-Z0-9_\-]*[.][a-zA-Z0-9_\-]*/, match);
+        })
+        console.log(waitObj.environment.variables);
+        console.log(eval(stringForRegex));
+        waitObj.environment.variables[currentShape.id] = {...waitObj.environment.variables[currentShape.id], [value.name] : eval(stringForRegex) };
+      }
+    })
+    return waitObj.environment.variables[currentShape.id];
+  }
+
+  const getTreeResult = (treeNode) => {
+    let childrenPromises = [];
+    const workerArrDecision = [];
+
+    const extractedDecisionSeatteldPromise = () => {
+      return Promise.allSettled(workerArrDecision).then((values) => {
+        let rejected = values.filter(val => val.status === 'rejected');
+        if (rejected.length === 0) {
+          //successful
+          let decisionResult = evalDecision(treeNode.value);
+          addOverlaysDecision(treeNode.value, decisionResult);
+          highlightElement(treeNode.value, "rgba(66, 180, 21, 0.7)");
+          return new Promise(resolve => resolve("succsess"));
+        } else {
+          //fail
+          highlightErrorElements(treeNode.value, waitObj, "Not executed", "error", "-", []);
+          return new Promise((resolve, reject) => reject(new Error(id)));
+        }
+      })
+    }
+
+    let iotInputs = treeNode.value.children.map(input => {
+      if (input.businessObject.type === 'sensor' || input.businessObject.type === 'sensor-sub') {
+        return bpmnViewer.get('elementRegistry').find(element => element.id === input.id);
+      }
+    }).filter(e => e !== undefined);
+    console.log(iotInputs);
+
+
+    if(treeNode.descendants.length > 0) {
+      treeNode.descendants.forEach(x => {
+        childrenPromises.push(getTreeResult(x));
+      })
+      return Promise.allSettled(childrenPromises).then((values) => {
+        let rejected = values.filter(val => val.status === 'rejected');
+
+        if (rejected.length === 0) {
+          extractedDecision(iotInputs, workerArrDecision, treeNode.value.id);
+          return extractedDecisionSeatteldPromise();
+        } else {
+          //fail
+          console.log("FAIL");
+          return new Promise((resolve,reject) => reject(new Error(id)));
+        }
+      });
+    } else {
+      extractedDecision(iotInputs, workerArrDecision, treeNode.value.id);
+    }
+    return extractedDecisionSeatteldPromise();
+  }
+
+
   if(task) {
     const workerArr = [];
     let businessObj = getBusinessObject(task);
 
-    let iotInputs = businessObj.get("dataInputAssociations")?.map(input => {
-      if (input.sourceRef[0].type) {
+    let iotDecisionGroup = businessObj.get("dataInputAssociations")?.map(input => {
+      if (input.sourceRef[0].type && input.sourceRef[0].type === 'decision-group') {
         return bpmnViewer.get('elementRegistry').find(element => element.id === input.sourceRef[0].id);
-        //return input.sourceRef[0];
+      }
+    }).filter(e => e !== undefined);
+    let iotInputs = businessObj.get("dataInputAssociations")?.map(input => {
+      if (input.sourceRef[0].type && input.sourceRef[0].type !== 'decision-group') {
+        return bpmnViewer.get('elementRegistry').find(element => element.id === input.sourceRef[0].id);
       }
     }).filter(e => e !== undefined);
     let iotOutputs = businessObj.get("dataOutputAssociations")?.map(input => {
       if(input.targetRef.type) {
         return bpmnViewer.get('elementRegistry').find(element => element.id === input.targetRef.id);
-        //return input.targetRef;
       }
     }).filter(e => e !== undefined);
 
-    if(iotInputs.length === 0 && iotOutputs.length === 0){
+    if(iotDecisionGroup.length > 0) {
+      let x = createTree(iotDecisionGroup[0]);
+      //console.log(x);
+
+      getTreeResult(x).then((val) => {
+        waitObj.signal();
+      }).catch(xy => {
+        engine.stop();
+      });
+    }
+
+    if(iotInputs.length === 0 && iotOutputs.length === 0 && iotDecisionGroup.length === 0){
       waitObj.signal();
     }
     if(iotInputs.length > 0 && iotOutputs.length === 0) {
@@ -485,6 +650,18 @@ listener.on('activity.wait', (waitObj) => {
   }
 })
 
+const createTree = (shape) => {
+  let mainNode = new TreeNode(shape);
+
+  if(shape.children.length > 0) {
+    shape.children.forEach(childNode => {
+      if(childNode.type === 'bpmn:SubProcess') {
+        mainNode.descendants.push(createTree(childNode));
+      }
+    })
+  }
+  return mainNode;
+}
 
 listener.on('activity.end', (element)=>{
   end_t = new Date().getTime();
@@ -494,14 +671,12 @@ listener.on('activity.end', (element)=>{
   fillSidebarRightLog("EXECUTION TIME: " + time + " ms");
 
 
-  let endEventArr = bpmnViewer.get('elementRegistry').filter(element => is(element, "bpmn:EndEvent"));
-  let endEvent = endEventArr.find(endEvent => endEvent.id === element.id);
   let currentElement = bpmnViewer.get('elementRegistry').find((elem)=>elem.id === element.id);
+  let businessObj = getBusinessObject(currentElement) ? getBusinessObject(currentElement) : null;
   let timeStamp = timestampToDate(element.messageProperties.timestamp);
-  let businessObj = getBusinessObject(endEvent) ? getBusinessObject(endEvent) : null;
   let obj = element.content.inbound;
 
-  if(endEvent && businessObj?.type === 'end') {
+  if(businessObj?.type === 'end') {
     const workerArr = [];
     workerArr.push(
       pool.exec('actorCall', [businessObj], {
@@ -527,9 +702,11 @@ listener.on('activity.end', (element)=>{
       })
     )
   } else {
-    highlightElement(currentElement, "rgba(66, 180, 21, 0.7)");
-    addOverlays(currentElement, time);
-    fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type, "-", obj ? obj[0].sourceId : '-');
+    if(businessObj?.type !== 'decision-group') {
+      highlightElement(currentElement, "rgba(66, 180, 21, 0.7)");
+      addOverlays(currentElement, time);
+      fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type, "-", obj ? obj[0].sourceId : '-');
+    }
   }
 
   // -----------------
@@ -640,6 +817,29 @@ function fillSidebar(state, name, id, time, timeStamp,type, errormsg, source) {
   errorMsgCell.innerHTML = errormsg;
 }
 
+const addOverlaysDecision = (elem, states) => {
+  let values = elem.businessObject.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
+  let valuesName = values.map(val => val.name);
+  let spanStates="";
+
+  for (const [key, value] of Object.entries(states)) {
+    if(typeof value == "object") {
+      for (const [_key, _value] of Object.entries(value)) {
+        spanStates = spanStates + `<li class="list-group-item ${valuesName.includes(_key) ? 'item-active' : ''}">${key + '.' + _key}: ${_value}</li>`;
+      }
+    } else {
+      spanStates = spanStates + `<li class="list-group-item ${valuesName.includes(key) ? 'item-active' : ''}">${key}: ${value}</li>`;
+    }
+
+  }
+  overlays.add(elem, {
+    html: `<div class="decision-overlay">Decision<ul class="tooltiptext">${spanStates}</ul></div>`,
+    position: {
+      left: 0,
+      top:0
+    }
+  });
+};
 
 const addOverlays = (elem, time) => {
   overlays.add(elem, {

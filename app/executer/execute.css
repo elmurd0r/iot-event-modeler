@@ -164,6 +164,40 @@ a.btn:hover {
     top: 0;
 }
 
+/*DECISION OVERLAY */
+
+.decision-overlay .tooltiptext {
+    visibility: hidden;
+    white-space: nowrap;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.item-active {
+    background-color: rgba(255, 242, 0, 0.89);
+}
+
+
+.decision-overlay:hover .tooltiptext {
+    visibility: visible;
+}
+.decision-overlay {
+    background-color: rgba(255, 242, 0, 0.89);
+    color: Black;
+    border-radius: 5px;
+    font-family: Arial;
+    font-size: 12px;
+    padding: 5px;
+    text-align: center;
+    width: 120%;
+}
+
 /* The button used to open the sidebar */
 .openbtn {
     font-size: 20px;

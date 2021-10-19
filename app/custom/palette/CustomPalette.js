@@ -16,6 +16,21 @@ export default class CustomPalette {
       translate
     } = this;
 
+    function createDecision(decisionType) {
+      return function(event) {
+        const businessObject = bpmnFactory.create('bpmn:SubProcess');
+        businessObject.set('type', decisionType);
+
+        const shape = elementFactory.createShape({
+          type: 'bpmn:SubProcess',
+          businessObject: businessObject,
+          isExpanded: true
+        });
+        create.start(event, shape);
+      };
+    }
+
+
     function createIotObj(iotType) {
       return function(event) {
         const businessObject = bpmnFactory.create('bpmn:DataObjectReference');
@@ -190,6 +205,16 @@ export default class CustomPalette {
           dragstart: createIotObj("artefact-catch-sub"),
           click: createIotObj("artefact-catch-sub")
         }
+      },
+        'create.iot-decision-group': {
+          group: 'iot',
+          className: 'bpmn-icon-subprocess-expanded',
+          title: translate('Create IoT Decision Group'),
+          iot: 'decision-group',
+          action: {
+            dragstart: createDecision("decision-group"),
+            click: createDecision("decision-group"),
+          }
       },
       'create.iot-obj': {
         group: 'iot',

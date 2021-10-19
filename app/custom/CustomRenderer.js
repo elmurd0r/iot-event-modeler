@@ -43,7 +43,7 @@ export default class CustomRenderer extends BaseRenderer {
   drawShape(parentNode, element) {
     const shape = this.bpmnRenderer.drawShape(parentNode, element);
     const iotType = this.getIotType(element);
-    if (!isNil(iotType)) {
+    if (!isNil(iotType) && iotType !== 'decision-group') {
 
       let imageHref, color;
 

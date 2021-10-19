@@ -236,7 +236,7 @@ CustomRealPalette.prototype._update = function() {
 
 
         var html;
-        if(entry.iot) {
+        if(entry.iot && entry.iot !== 'decision-group') {
             html =  ('<div class="entry" draggable="true"><img style="width: 25px" src="'+ getEncodedSvg(entry.iot, null) +'"></div>');
         } else {
             html = entry.html || (
