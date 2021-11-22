@@ -7,7 +7,7 @@
     "build": "webpack --mode production",
     "build:watch": "webpack --watch",
     "dev": "run-p build:watch serve",
-    "serve": "sirv public --dev",
+    "serve": "sirv public --dev --port 5555",
     "start": "run-s build serve"
   },
   "repository": {
