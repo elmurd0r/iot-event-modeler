@@ -11,6 +11,7 @@ import throwEvent from "../svg/default/IoT_Artefakt_Intermediate_Throw_Event.svg
 import sensorCatchArtefact from "../svg/default/IoT_Artefakt_Sendend_Catch.svg";
 import sensorCatchArtefactSub from "../svg/default/IoT_Artefakt_Sendend_Catch_Sub.svg";
 import endSVG from "../svg/default/IoT_Artefakt_Endereignis.svg";
+import artifactObj from "../svg/default/artifact_obj.svg";
 //RED
 import startSVGRed from "../svg/red/IoT_Artefakt_Startereignis_Rot.svg";
 import actorSVGRed from "../svg/red/Artefakt_Empfangend_Rot.svg";
@@ -46,6 +47,7 @@ export const throwEventEncoded = svg64(throwEvent);
 export const sensorCatchSVGEncoded = svg64(sensorCatchArtefact);
 export const sensorCatchSVGEncodedSub = svg64(sensorCatchArtefactSub);
 export const endSVGEncoded = svg64(endSVG);
+export const objSVGEncoded = svg64(artifactObj);
 //RED
 export const startSVGEncodedRed = svg64(startSVGRed);
 export const actorSVGEncodedRed = svg64(actorSVGRed);

@@ -190,6 +190,16 @@ export default class CustomPalette {
           dragstart: createIotObj("artefact-catch-sub"),
           click: createIotObj("artefact-catch-sub")
         }
+      },
+      'create.iot-obj': {
+        group: 'iot',
+        className: 'iot-artefact-obj iot-palette-element',
+        title: translate('Create IoT Artifact Object'),
+        iot: 'obj',
+        action: {
+          dragstart: createIotObj("obj"),
+          click: createIotObj("obj")
+        }
       }
     };
   }
