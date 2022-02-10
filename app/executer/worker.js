@@ -1,6 +1,7 @@
 const workerpool = require('workerpool');
 const {default: axios} = require("axios");
 const {isNil} = require("min-dash");
+import {convertInputToBooleanOrKeepType, convertInputToFloatOrKeepType, getResponseByAttributeAccessor} from './ExecuteHelper'
 
 
 const sensorCall = (businessObj) => {
@@ -10,14 +11,13 @@ const sensorCall = (businessObj) => {
         let key = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].key;
 
         if(url && key) {
-            axios.get( url, {timeout: 5000}).then((resp)=>{
+            axios.get( url ).then((resp)=>{
                 let value = resp.data;
                 let keyArr = key.split('.');
                 keyArr.forEach(k => {
                     value = value[k];
                 });
-                if(!isNaN(parseFloat(value))) {
-                    value = parseFloat(value);
+                if(!isNil(value)) {
                     console.log("HTTP GET successfully completed");
                     console.log('Name: ' + key + ', Value: ' + value);
                     workerpool.workerEmit({status: "HTTP GET successfully completed"});
@@ -25,7 +25,7 @@ const sensorCall = (businessObj) => {
                     resolve({value: value});
                 } else {
                     console.log('response value is NaN');
-                    workerpool.workerEmit({status: 'response value is NaN'});
+                    workerpool.workerEmit({status: 'response value is Nil'});
                     reject(new Error(businessObj.id));
                 }
             }).catch((e)=>{
@@ -46,13 +46,13 @@ const sensorCall = (businessObj) => {
 const sensorCallGroup = (url, key, id) => {
     return new Promise((resolve, reject) => {
         if(url && key) {
-            axios.get( url, {timeout: 5000}).then((resp)=>{
+            axios.get( url ).then((resp)=>{
                 let value = resp.data;
                 let keyArr = key.split('.');
                 keyArr.forEach(k => {
                     value = value[k];
                 });
-                if(!isNaN(parseFloat(value))) {
+                if(!isNil(value)) {
                     value = parseFloat(value);
                     console.log("HTTP GET successfully completed");
                     console.log('Name: ' + key + ', Value: ' + value);
@@ -61,7 +61,7 @@ const sensorCallGroup = (url, key, id) => {
                     resolve({value: value});
                 } else {
                     console.log('response value is NaN');
-                    workerpool.workerEmit({status: 'response value is NaN'});
+                    workerpool.workerEmit({status: 'response value is Nil'});
                     reject(new Error(id));
                 }
             }).catch((e)=>{
@@ -83,7 +83,7 @@ const actorCall = (businessObj) => {
     return new Promise(((resolve, reject) => {
         let eventValUrl = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].url;
         if(eventValUrl) {
-            axios.post( eventValUrl, {}, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
+            axios.post( eventValUrl, {}, { headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
                 console.log("HTTP POST successfully completed");
                 console.log('Executed call: ' + eventValUrl);
                 workerpool.workerEmit({status: "HTTP POST successfully completed"});
@@ -107,7 +107,7 @@ const actorCall = (businessObj) => {
 const actorCallGroup = (url, id) => {
     return new Promise(((resolve, reject) => {
         if(url) {
-            axios.post( url, {}, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
+            axios.post( url, {}, { headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
                 console.log("HTTP POST successfully completed");
                 console.log('Executed call: ' + url);
                 workerpool.workerEmit({status: "HTTP POST successfully completed"});
@@ -137,79 +137,76 @@ const sensorCatchArtefact = (businessObj, start_t, timeout) => {
         let mathOp = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].mathOP;
         let mathOpVal = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].value;
 
-        if (eventValue && name && mathOp && mathOpVal && !isNaN(parseFloat(mathOpVal))) {
-            mathOpVal = parseFloat(mathOpVal);
-            if(eventValue && name && mathOp && mathOpVal){
-                const axiosGet = () => {
-                    let noTimeoutOccured =  new Date().getTime() - start_t <= timeout;
-                    if(!timeout || noTimeoutOccured) {
-                        axios.get(eventValue, {timeout: 5000}).then((resp) => {
-                            let resVal = resp.data[name];
-
-                            if (!isNil(resVal) && !isNaN(parseFloat(resVal))) {
-                                resVal = parseFloat(resVal);
-                                switch (mathOp) {
-                                    case '<' :
-                                        if (resVal < mathOpVal) {
-                                            console.log(name + " reached state " + resp.data[name]);
-                                            workerpool.workerEmit({status: name + " reached state " + resp.data[name]});
-                                            resolve(resp.data[name]);
-                                        } else {
-                                            console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                                            //fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                                            workerpool.workerEmit({status: "WAIT UNTIL " + name + " with state " + resp.data[name] + " reached"});
-                                            axiosGet();
-                                        }
-                                        break;
-                                    case '=' :
-                                        if (resVal === mathOpVal) {
-                                            console.log(name + " reached state " + resp.data[name]);
-                                            workerpool.workerEmit({status: name + " reached state " + resp.data[name]});
-                                            resolve(resp.data[name]);
-                                        } else {
-                                            console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                                            workerpool.workerEmit({status: "WAIT UNTIL " + name + " with state " + resp.data[name] + " reached"});
-                                            axiosGet();
-                                        }
-                                        break;
-                                    case '>' :
-                                        if (resVal > mathOpVal) {
-                                            console.log(name + " reached state " + resp.data[name]);
-                                            workerpool.workerEmit({status: name + " reached state " + resp.data[name]});
-                                            resolve(resp.data[name]);
-                                        } else {
-                                            console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                                            workerpool.workerEmit({status: "WAIT UNTIL " + name + " with state " + resp.data[name] + " reached"});
-                                            axiosGet();
-                                        }
-                                        break;
-                                    default:
-                                        console.log("Default case stopped IoT start");
-                                        workerpool.workerEmit({status: "Default case stopped IoT start"});
-                                        reject(new Error(businessObj.id));
-                                }
-                            } else {
-                                console.log("Key not in response - IoT start");
-                                workerpool.workerEmit({status: "Key not in response - IoT start"});
+        if(eventValue && name && mathOp && mathOpVal){
+            mathOpVal = convertInputToFloatOrKeepType(mathOpVal);
+            const axiosGet = () => {
+                let noTimeoutOccured =  new Date().getTime() - start_t <= timeout;
+                if(!timeout || noTimeoutOccured) {
+                    axios.get(eventValue).then((resp) => {
+                        let resVal = getResponseByAttributeAccessor(resp.data, name)
+                        if (!isNil(resVal)) {
+                            switch (mathOp) {
+                                case '<' :
+                                    if (parseFloat(resVal) < mathOpVal) {
+                                        console.log(name + " reached state " + resVal);
+                                        workerpool.workerEmit({status: name + " reached state " + resVal});
+                                        resolve(resVal);
+                                    } else {
+                                        console.log("WAIT UNTIL " + name + " with state " + resVal + " reached");
+                                        //fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resVal + " reached");
+                                        workerpool.workerEmit({status: "WAIT UNTIL " + name + " with state " + resVal + " reached"});
+                                        axiosGet();
+                                    }
+                                    break;
+                                case '=' :
+                                    mathOpVal = convertInputToBooleanOrKeepType(mathOpVal)
+                                    if (resVal === mathOpVal) {
+                                        console.log(name + " reached state " + resVal);
+                                        workerpool.workerEmit({status: name + " reached state " + resVal});
+                                        resolve(resVal);
+                                    } else {
+                                        console.log("WAIT UNTIL " + name + " with state " + resVal + " reached");
+                                        workerpool.workerEmit({status: "WAIT UNTIL " + name + " with state " + resVal + " reached"});
+                                        axiosGet();
+                                    }
+                                    break;
+                                case '>' :
+                                    if (parseFloat(resVal) > mathOpVal) {
+                                        console.log(name + " reached state " + resVal);
+                                        workerpool.workerEmit({status: name + " reached state " + resVal});
+                                        resolve(resVal);
+                                    } else {
+                                        console.log("WAIT UNTIL " + name + " with state " + resVal + " reached");
+                                        workerpool.workerEmit({status: "WAIT UNTIL " + name + " with state " + resVal + " reached"});
+                                        axiosGet();
+                                    }
+                                    break;
+                                default:
+                                    console.log("Default case stopped IoT start");
+                                    workerpool.workerEmit({status: "Default case stopped IoT start"});
+                                    reject(new Error(businessObj.id));
                             }
-                        }).catch((e) => {
-                            console.log(e);
-                            console.log("Recursion axios error in input");
-                            workerpool.workerEmit({status: "Recursion axios error in input: " + e});
-                            reject(new Error(businessObj.id));
-                        });
-                    } else {
-                        workerpool.workerEmit({status: "Timeout occurred"});
+                        } else {
+                            console.log("Key not in response - IoT start");
+                            workerpool.workerEmit({status: "Key not in response - IoT start"});
+                        }
+                    }).catch((e) => {
+                        console.log(e);
+                        console.log("Recursion axios error in input");
+                        workerpool.workerEmit({status: "Recursion axios error in input: " + e});
                         reject(new Error(businessObj.id));
-                    }
+                    });
+                } else {
+                    workerpool.workerEmit({status: "Timeout occurred"});
+                    reject(new Error(businessObj.id));
                 }
-                axiosGet();
             }
-            else {
-                console.log("Error in extensionsElement in IoT start");
-                workerpool.workerEmit({status: "Error in extensionsElement in IoT start"});
-                reject(new Error(businessObj.id));
-            }
+            axiosGet();
+        }
+        else {
+            console.log("Error in extensionsElement in IoT start");
+            workerpool.workerEmit({status: "Error in extensionsElement in IoT start"});
+            reject(new Error(businessObj.id));
         }
     })
 }
@@ -225,79 +222,76 @@ const sensorCatchArtefactGroup = (value, id, start_t, timeout) => {
         let mathOp = value.mathOP;
         let mathOpVal = value.value;
 
-        if (eventValue && name && mathOp && mathOpVal && !isNaN(parseFloat(mathOpVal))) {
-            mathOpVal = parseFloat(mathOpVal);
-            if(eventValue && name && mathOp && mathOpVal){
-                const axiosGet = () => {
-                    let noTimeoutOccured =  new Date().getTime() - start_t <= timeout;
-                    if(!timeout || noTimeoutOccured) {
-                        axios.get(eventValue, {timeout: 5000}).then((resp) => {
-                            let resVal = resp.data[name];
-
-                            if (!isNil(resVal) && !isNaN(parseFloat(resVal))) {
-                                resVal = parseFloat(resVal);
-                                switch (mathOp) {
-                                    case '<' :
-                                        if (resVal < mathOpVal) {
-                                            console.log(name + " reached state " + resp.data[name]);
-                                            workerpool.workerEmit({status: name + " reached state " + resp.data[name]});
-                                            resolve(resp.data[name]);
-                                        } else {
-                                            console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                                            //fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                                            workerpool.workerEmit({status: "WAIT UNTIL " + name + " with state " + resp.data[name] + " reached"});
-                                            axiosGet();
-                                        }
-                                        break;
-                                    case '=' :
-                                        if (resVal === mathOpVal) {
-                                            console.log(name + " reached state " + resp.data[name]);
-                                            workerpool.workerEmit({status: name + " reached state " + resp.data[name]});
-                                            resolve(resp.data[name]);
-                                        } else {
-                                            console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                                            workerpool.workerEmit({status: "WAIT UNTIL " + name + " with state " + resp.data[name] + " reached"});
-                                            axiosGet();
-                                        }
-                                        break;
-                                    case '>' :
-                                        if (resVal > mathOpVal) {
-                                            console.log(name + " reached state " + resp.data[name]);
-                                            workerpool.workerEmit({status: name + " reached state " + resp.data[name]});
-                                            resolve(resp.data[name]);
-                                        } else {
-                                            console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                                            workerpool.workerEmit({status: "WAIT UNTIL " + name + " with state " + resp.data[name] + " reached"});
-                                            axiosGet();
-                                        }
-                                        break;
-                                    default:
-                                        console.log("Default case stopped IoT start");
-                                        workerpool.workerEmit({status: "Default case stopped IoT start"});
-                                        reject(new Error(id));
-                                }
-                            } else {
-                                console.log("Key not in response - IoT start");
-                                workerpool.workerEmit({status: "Key not in response - IoT start"});
+        if (eventValue && name && mathOp && mathOpVal) {
+            mathOpVal = convertInputToFloatOrKeepType(mathOpVal);
+            const axiosGet = () => {
+                let noTimeoutOccured =  new Date().getTime() - start_t <= timeout;
+                if(!timeout || noTimeoutOccured) {
+                    axios.get(eventValue).then((resp) => {
+                        let resVal = getResponseByAttributeAccessor(resp.data, name)
+                        if (!isNil(resVal)) {
+                            switch (mathOp) {
+                                case '<' :
+                                    if (parseFloat(resVal) < mathOpVal) {
+                                        console.log(name + " reached state " + resVal);
+                                        workerpool.workerEmit({status: name + " reached state " + resVal});
+                                        resolve(resVal);
+                                    } else {
+                                        console.log("WAIT UNTIL " + name + " with state " + resVal + " reached");
+                                        //fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resVal + " reached");
+                                        workerpool.workerEmit({status: "WAIT UNTIL " + name + " with state " + resVal + " reached"});
+                                        axiosGet();
+                                    }
+                                    break;
+                                case '=' :
+                                    mathOpVal = convertInputToBooleanOrKeepType(mathOpVal)
+                                    if (resVal === mathOpVal) {
+                                        console.log(name + " reached state " + resVal);
+                                        workerpool.workerEmit({status: name + " reached state " + resVal});
+                                        resolve(resVal);
+                                    } else {
+                                        console.log("WAIT UNTIL " + name + " with state " + resVal + " reached");
+                                        workerpool.workerEmit({status: "WAIT UNTIL " + name + " with state " + resVal + " reached"});
+                                        axiosGet();
+                                    }
+                                    break;
+                                case '>' :
+                                    if (parseFloat(resVal) > mathOpVal) {
+                                        console.log(name + " reached state " + resVal);
+                                        workerpool.workerEmit({status: name + " reached state " + resVal});
+                                        resolve(resVal);
+                                    } else {
+                                        console.log("WAIT UNTIL " + name + " with state " + resVal + " reached");
+                                        workerpool.workerEmit({status: "WAIT UNTIL " + name + " with state " + resVal + " reached"});
+                                        axiosGet();
+                                    }
+                                    break;
+                                default:
+                                    console.log("Default case stopped IoT start");
+                                    workerpool.workerEmit({status: "Default case stopped IoT start"});
+                                    reject(new Error(id));
                             }
-                        }).catch((e) => {
-                            console.log(e);
-                            console.log("Recursion axios error in input");
-                            workerpool.workerEmit({status: "Recursion axios error in input: " + e});
-                            reject(new Error(id));
-                        });
-                    } else {
-                        workerpool.workerEmit({status: "Timeout occurred"});
+                        } else {
+                            console.log("Key not in response - IoT start");
+                            workerpool.workerEmit({status: "Key not in response - IoT start"});
+                        }
+                    }).catch((e) => {
+                        console.log(e);
+                        console.log("Recursion axios error in input");
+                        workerpool.workerEmit({status: "Recursion axios error in input: " + e});
                         reject(new Error(id));
-                    }
+                    });
+                } else {
+                    workerpool.workerEmit({status: "Timeout occurred"});
+                    reject(new Error(id));
                 }
-                axiosGet();
             }
-            else {
-                console.log("Error in extensionsElement in IoT start");
-                workerpool.workerEmit({status: "Error in extensionsElement in IoT start"});
-                reject(new Error(id));
-            }
+            axiosGet();
+        }
+        else {
+            console.log("Error in extensionsElement in IoT start");
+            workerpool.workerEmit({status: "Error in extensionsElement in IoT start"});
+            reject(new Error(id));
         }
     })
 }
