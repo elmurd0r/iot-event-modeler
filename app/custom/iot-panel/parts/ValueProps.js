@@ -40,8 +40,8 @@ export default function(group, element, bpmnFactory, translate) {
         labels = [ translate('Url'), translate('Key'), translate('<, =, >'), translate('Value'), translate('Name'), translate('Method') ];
     }
     if(iotType === 'actor' || iotType === 'actor-sub' || iotType === 'throw' || iotType === 'end') {
-        modelProps = [ 'url', 'method' ];
-        labels = [ translate('Url'), translate('Method')];
+        modelProps = [ 'url', 'key', 'method'  ];
+        labels = [ translate('Url'), translate('Key'), translate('Method')];
     }
 
     if ((is(element, 'bpmn:DataObjectReference') || is(element, 'bpmn:StartEvent') || is(element, 'bpmn:IntermediateCatchEvent') || is(element, 'bpmn:IntermediateThrowEvent')) && !isNil(iotType) || is(element, 'bpmn:EndEvent') && !isNil(iotType)) {
