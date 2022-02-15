@@ -83,20 +83,6 @@ body, html {
   border-left: none;
 }
 
-.bpp-table-row > label.bpp-table-row-columns-6,
-.bpp-table-row > input.bpp-table-row-columns-6 {
-  width: 16.666%;
-  box-sizing: border-box;
-}
-.bpp-table-row > label.bpp-table-row-columns-6.bpp-table-row-removable,
-.bpp-table-row > input.bpp-table-row-columns-6.bpp-table-row-removable {
-  width: calc(16.666% - 8px);
-}
-.bpp-table-row > label.bpp-table-row-columns-6:not(:first-child),
-.bpp-table-row > input.bpp-table-row-columns-6:not(:first-child) {
-  border-left: none;
-}
-
 .btn-container {
   bottom: 20px;
   left: 20px;

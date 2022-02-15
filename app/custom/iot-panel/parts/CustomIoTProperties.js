@@ -106,7 +106,7 @@ module.exports = function(iotType, element, bpmnFactory, options, translate) {
         }
     }
     assign(options, {
-        addLabel: translate('Add condition'),
+        addLabel: translate('Add Property'),
         getElements: function(element, node) {
             var parent = getParent(element, node, bo);
             return getPropertyValues(parent);

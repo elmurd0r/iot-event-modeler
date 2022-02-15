@@ -11,7 +11,7 @@ function createIotTabGroups(element, bpmnFactory, elementRegistry, translate) {
     // Create a group called "Black Magic".
     let iotGroup = {
         id: 'iot-group',
-        label: 'IoT Decision Group',
+        label: 'IoT Group',
         entries: []
     };
 
