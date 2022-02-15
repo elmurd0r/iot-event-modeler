@@ -15,6 +15,11 @@ const processModel = sessionStorage.getItem('xml') ? sessionStorage.getItem('xml
 const containerEl = document.getElementById('js-canvas');
 const runBtn = document.getElementById('runBtn');
 import {Timers} from "./Timer";
+import {
+  convertInputToBooleanOrKeepType,
+  convertInputToFloatOrKeepType,
+  getResponseByAttributeAccessor
+} from "./ExecuteHelper";
 
 let start_t;
 let end_t;
@@ -108,47 +113,46 @@ listener.on('activity.wait', (waitObj) => {
       let mathOpVal = extensionElements.filter(element => element['$type'] === 'iot:Properties')[0].values[0].value;
       let timeout = extensionElements.filter(element => element['$type'] === 'iot:Properties')[0].values[0].timeout;
 
-      if (name && mathOp && mathOpVal && !isNaN(parseFloat(mathOpVal))) {
-        mathOpVal = parseFloat(mathOpVal);
+      if (name && mathOp && mathOpVal && mathOpVal) {
+        mathOpVal = convertInputToFloatOrKeepType(mathOpVal);
         const axiosGet = () => {
           let noTimeoutOccured =  new Date().getTime() - start_t <= timeout * 1000;
           if(!timeout || noTimeoutOccured) {
-            axios.get(eventValue, {timeout: 5000}).then((resp) => {
-              let resVal = resp.data[name];
-
-              if (!isNil(resVal) && !isNaN(parseFloat(resVal))) {
-                resVal = parseFloat(resVal);
+            axios.get(eventValue).then((resp) => {
+              let resVal = getResponseByAttributeAccessor(resp.data, name);
+              if (!isNil(resVal)) {
                 switch (mathOp) {
                   case '<' :
-                    if (resVal < mathOpVal) {
-                      console.log(name + " reached state " + resp.data[name]);
-                      fillSidebarRightLog(name + " reached state " + resp.data[name]);
+                    if (parseFloat(resVal) < mathOpVal) {
+                      console.log(name + " reached state " + resVal);
+                      fillSidebarRightLog(name + " reached state " + resVal);
                       waitObj.signal();
                     } else {
-                      console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                      fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
+                      console.log("WAIT UNTIL " + name + " with state " + resVal + " reached");
+                      fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resVal + " reached");
                       axiosGet();
                     }
                     break;
                   case '=' :
+                    mathOpVal = convertInputToBooleanOrKeepType(mathOpVal)
                     if (resVal === mathOpVal) {
-                      console.log(name + " reached state " + resp.data[name]);
-                      fillSidebarRightLog(name + " reached state " + resp.data[name]);
+                      console.log(name + " reached state " + resVal);
+                      fillSidebarRightLog(name + " reached state " + resVal);
                       waitObj.signal();
                     } else {
-                      console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                      fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
+                      console.log("WAIT UNTIL " + name + " with state " + resVal + " reached");
+                      fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resVal + " reached");
                       axiosGet();
                     }
                     break;
                   case '>' :
-                    if (resVal > mathOpVal) {
-                      console.log(name + " reached state " + resp.data[name]);
-                      fillSidebarRightLog(name + " reached state " + resp.data[name]);
+                    if (parseFloat(resVal) > mathOpVal) {
+                      console.log(name + " reached state " + resVal);
+                      fillSidebarRightLog(name + " reached state " + resVal);
                       waitObj.signal();
                     } else {
-                      console.log("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
-                      fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resp.data[name] + " reached");
+                      console.log("WAIT UNTIL " + name + " with state " + resVal + " reached");
+                      fillSidebarRightLog("WAIT UNTIL " + name + " with state " + resVal + " reached");
                       axiosGet();
                     }
                     break;
@@ -203,7 +207,7 @@ listener.on('activity.wait', (waitObj) => {
     let eventValUrl = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].url;
 
     if(eventValUrl) {
-      axios.post( eventValUrl, {}, {timeout: 5000, headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
+      axios.post( eventValUrl, {}, { headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
         console.log("HTTP POST successfully completed");
         console.log('Executed call: ' + eventValUrl);
         fillSidebarRightLog("HTTP POST successfully completed");
