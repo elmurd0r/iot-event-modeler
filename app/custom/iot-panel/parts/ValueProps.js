@@ -19,57 +19,45 @@ export default function(group, element, bpmnFactory, translate) {
 
     let modelProps, labels;
     if(iotType === 'sensor') {
-        modelProps = [ 'url', 'key'];
-        labels = [ translate('Url'), translate('Key')];
+        modelProps = [ 'url', 'key', 'method'];
+        labels = [ translate('Url'), translate('Key'), translate('Method')];
     }
     if(iotType === 'sensor-sub') {
-        modelProps = ['url', 'key', 'name'];
-        labels = [ translate('Url'), translate('Key'), translate('Name')];
+        modelProps = ['url', 'key', 'name', 'method'];
+        labels = [ translate('Url'), translate('Key'), translate('Name'), translate('Method')];
     }
 
     if(iotType === 'start' || iotType === 'catch' || iotType === 'artefact-catch') {
-        modelProps = [ 'url', 'key', 'mathOP', 'value' ];
-        labels = [ translate('Url'), translate('Key'), translate('MathOP (<, =, >)'), translate('Value') ];
+        modelProps = [ 'url', 'key', 'mathOP', 'value', 'method' ];
+        labels = [ translate('Url'), translate('Key'), translate('<, =, >'), translate('Value'), translate('Method') ];
         if( iotType === 'start' || iotType === 'catch') {
             modelProps.push('timeout');
             labels.push('timeout');
         }
     }
     if(iotType === 'artefact-catch-sub') {
-        modelProps = [ 'url', 'key', 'mathOP', 'value', 'name' ];
-        labels = [ translate('Url'), translate('Key'), translate('MathOP (<, =, >)'), translate('Value'), translate('Name') ];
+        modelProps = [ 'url', 'key', 'mathOP', 'value', 'name', 'method' ];
+        labels = [ translate('Url'), translate('Key'), translate('<, =, >'), translate('Value'), translate('Name'), translate('Method') ];
     }
     if(iotType === 'actor' || iotType === 'actor-sub' || iotType === 'throw' || iotType === 'end') {
-        modelProps = [ 'url' ];
-        labels = [ translate('Url')];
-    }
-
-    if(iotType === 'obj') {
-        //TODO: implement correct way, this is temporary to prevent errors.
-        modelProps = ['url'];
-        labels = [ translate('Url')];
+        modelProps = [ 'url', 'method' ];
+        labels = [ translate('Url'), translate('Method')];
     }
 
     if ((is(element, 'bpmn:DataObjectReference') || is(element, 'bpmn:StartEvent') || is(element, 'bpmn:IntermediateCatchEvent') || is(element, 'bpmn:IntermediateThrowEvent')) && !isNil(iotType) || is(element, 'bpmn:EndEvent') && !isNil(iotType)) {
-        /* group.entries.push(entryFactory.textField(translate, {
-            id : 'value',
-            description : 'Set value of Data Object',
-            label : 'Value',
-            modelProperty : 'value'
-        })); */
 
         let propertiesEntry = properties(iotType, element, bpmnFactory, {
             id: 'IoTproperties',
             modelProperties: modelProps,
             labels: labels,
 
-            getParent: function(element, node, bo) {
+            getParent: function (element, node, bo) {
                 return bo.extensionElements;
             },
 
-            createParent: function(element, bo) {
-                let parent = elementHelper.createElement('bpmn:ExtensionElements', { values: [] }, bo, bpmnFactory);
-                let cmd = cmdHelper.updateBusinessObject(element, bo, { extensionElements: parent });
+            createParent: function (element, bo) {
+                let parent = elementHelper.createElement('bpmn:ExtensionElements', {values: []}, bo, bpmnFactory);
+                let cmd = cmdHelper.updateBusinessObject(element, bo, {extensionElements: parent});
                 return {
                     cmd: cmd,
                     parent: parent
@@ -80,6 +68,42 @@ export default function(group, element, bpmnFactory, translate) {
         if (propertiesEntry) {
             group.entries.push(propertiesEntry);
         }
+    }
+
+    // --------------------------------------------------------------------
+    // Decision-Group area
+
+    if(iotType === 'decision-group') {
+        modelProps = [ 'condition', 'name'];
+        labels = [ translate('Condition'), translate('Name')];
+    }
+
+    if ((is(element, 'bpmn:SubProcess')) && !isNil(iotType)) {
+        let propertiesEntry = properties(iotType, element, bpmnFactory, {
+            id: 'IoTproperties',
+            modelProperties: modelProps,
+            labels: labels,
+
+            getParent: function (element, node, bo) {
+                return bo.extensionElements;
+            },
+
+            createParent: function (element, bo) {
+                let parent = elementHelper.createElement('bpmn:ExtensionElements', {values: []}, bo, bpmnFactory);
+                let cmd = cmdHelper.updateBusinessObject(element, bo, {extensionElements: parent});
+                return {
+                    cmd: cmd,
+                    parent: parent
+                };
+            }
+        }, translate);
+
+        if (propertiesEntry) {
+            group.entries.push(propertiesEntry);
+        }
+
+    }
+
 
         // Hinzufügen einer checkBox
         /* group.entries.push(entryFactory.checkbox(translate, {
@@ -214,7 +238,6 @@ export default function(group, element, bpmnFactory, translate) {
             //labels: ['Decision', 'Result'],
         }));
         */
-    }
 }
 
 function getIotType(element) {
