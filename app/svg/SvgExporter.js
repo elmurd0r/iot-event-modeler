@@ -23,6 +23,7 @@ import throwEventRed from "../svg/red/IoT_Artefakt_Intermediate_Throw_Event_Rot.
 import sensorCatchArtefactRed from "../svg/red/IoT_Artefakt_Sendend_Catch_Rot.svg";
 import sensorCatchArtefactSubRed from "../svg/red/IoT_Artefakt_Sendend_Catch_Sub_Rot.svg";
 import endSVGRed from "../svg/red/IoT_Artefakt_Endereignis_Rot.svg";
+import artifactObjRed from "../svg/red/Artefakt_Obj_Rot.svg"
 //GREEN
 import startSVGGreen from "../svg/green/IoT_Artefakt_Startereignis_Gruen.svg";
 import actorSVGGreen from "../svg/green/Artefakt_Empfangend_Gruen.svg";
@@ -34,6 +35,7 @@ import throwEventGreen from "../svg/green/IoT_Artefakt_Intermediate_Throw_Event_
 import sensorCatchArtefactGreen from "../svg/green/IoT_Artefakt_Sendend_Catch_Gruen.svg";
 import sensorCatchArtefactSubGreen from "../svg/green/IoT_Artefakt_Sendend_Catch_Sub_Gruen.svg";
 import endSVGGreen from "../svg/green/IoT_Artefakt_Endereignis_Gruen.svg";
+import artifactObjGreen from "../svg/green/Artefakt_Obj_Gruen.svg"
 
 //Base 64 encode SVG files
 //default
@@ -59,6 +61,7 @@ export const throwEventEncodedRed = svg64(throwEventRed);
 export const sensorCatchSVGEncodedRed = svg64(sensorCatchArtefactRed);
 export const sensorCatchSVGEncodedSubRed = svg64(sensorCatchArtefactSubRed);
 export const endSVGEncodedRed = svg64(endSVGRed);
+export const objRedSVGEncoded = svg64(artifactObjRed)
 //GREEN
 export const startSVGEncodedGreen = svg64(startSVGGreen);
 export const actorSVGEncodedGreen = svg64(actorSVGGreen);
@@ -70,4 +73,5 @@ export const throwEventEncodedGreen = svg64(throwEventGreen);
 export const sensorCatchSVGEncodedGreen = svg64(sensorCatchArtefactGreen);
 export const sensorCatchSVGEncodedSubGreen = svg64(sensorCatchArtefactSubGreen);
 export const endSVGEncodedGeen = svg64(endSVGGreen);
+export const objGreenSVGEncoded = svg64(artifactObjGreen)
 
