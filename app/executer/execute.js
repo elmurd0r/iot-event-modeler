@@ -399,6 +399,25 @@ listener.on('activity.wait', (waitObj) => {
           }
         });
       }
+      //TODO: handle obj the right way. Currently it acts as an actor
+      if (businessObj.type === 'obj') {
+        workerArr.push(
+            pool.exec('actorCall', [businessObj], {
+              on: payload => {
+                fillSidebarRightLog(payload.status);
+              }
+            }).then(result => {
+              console.log("Result:");
+              console.log(result);
+              highlightElement(output, "rgba(66, 180, 21, 0.7)");
+              return result;
+            }).catch(e => {
+              highlightErrorElements(output, waitObj, "Not executed", e, "-", boundaryEventType);
+              console.log(e);
+              throw e;
+            })
+        )
+      }
     })
   }
 
