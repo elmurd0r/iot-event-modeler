@@ -205,20 +205,35 @@ listener.on('activity.wait', (waitObj) => {
   if(throwEvent) {
     let businessObj = getBusinessObject(throwEvent);
     let eventValUrl = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].url;
-
+    let method = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].method;
     if(eventValUrl) {
-      axios.post( eventValUrl, {}, { headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
-        console.log("HTTP POST successfully completed");
-        console.log('Executed call: ' + eventValUrl);
-        fillSidebarRightLog("HTTP POST successfully completed");
-        fillSidebarRightLog('Executed call: ' + eventValUrl);
-        waitObj.signal();
-      }).catch((e)=>{
-        console.log(e);
-        console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
-        fillSidebarRightLog("HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e);
-        highlightErrorElements(null, waitObj, "Not executed" , e, sourceId[0].sourceId,boundaryEventType);
-      });
+      if(method === 'GET') {
+        axios.get( eventValUrl).then((resp)=>{
+          console.log("HTTP GET successfully completed");
+          console.log('Executed call: ' + eventValUrl);
+          fillSidebarRightLog("HTTP GET successfully completed");
+          fillSidebarRightLog('Executed GET: ' + eventValUrl);
+          waitObj.signal();
+        }).catch((e)=>{
+          console.log(e);
+          console.log("HTTP GET FAILED!! - DataOutputAssociation ACTOR");
+          fillSidebarRightLog("HTTP GET FAILED!! - DataOutputAssociation ACTOR: "+e);
+          highlightErrorElements(null, waitObj, "Not executed" , e, sourceId[0].sourceId,boundaryEventType);
+        });
+      } else {
+        axios.post( eventValUrl, {}, { headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
+          console.log("HTTP POST successfully completed");
+          console.log('Executed call: ' + eventValUrl);
+          fillSidebarRightLog("HTTP POST successfully completed");
+          fillSidebarRightLog('Executed call: ' + eventValUrl);
+          waitObj.signal();
+        }).catch((e)=>{
+          console.log(e);
+          console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
+          fillSidebarRightLog("HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e);
+          highlightErrorElements(null, waitObj, "Not executed" , e, sourceId[0].sourceId,boundaryEventType);
+        });
+      }
     } else {
       console.log("Error in extensionsElement in IoT intermediate actor event");
       fillSidebarRightLog("Error in extensionsElement in IoT intermediate actor event");
@@ -375,7 +390,7 @@ listener.on('activity.wait', (waitObj) => {
         let execArray = [];
         let values = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
         values.forEach(value => {
-          let execElement = pool.exec('actorCallGroup', [value.url, businessObj.id], {
+          let execElement = pool.exec('actorCallGroup', [value.url, value.method, businessObj.id], {
             on: payload => {
               fillSidebarRightLog(payload.status);
             }

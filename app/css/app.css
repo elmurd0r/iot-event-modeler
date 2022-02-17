@@ -83,6 +83,57 @@ body, html {
   border-left: none;
 }
 
+/*SELECT*/
+/* 2 col */
+.bpp-table-row > select.bpp-table-row-columns-2 {
+  width: 50%;
+  box-sizing: border-box;
+}
+.bpp-table-row > select.bpp-table-row-columns-2.bpp-table-row-removable {
+  width: calc(50% - 12px);
+}
+.bpp-table-row > select.bpp-table-row-columns-2:not(:first-child) {
+  border-left: none;
+}
+/* 3 col */
+.bpp-table-row > select.bpp-table-row-columns-3 {
+  width: 33%;
+  box-sizing: border-box;
+}
+.bpp-table-row > select.bpp-table-row-columns-3.bpp-table-row-removable {
+  width: calc(33% - 12px);
+}
+.bpp-table-row > select.bpp-table-row-columns-3:not(:first-child) {
+  border-left: none;
+}
+/* 4 col */
+.bpp-table-row > select.bpp-table-row-columns-4 {
+  width: 25%;
+  box-sizing: border-box;
+}
+.bpp-table-row > select.bpp-table-row-columns-4.bpp-table-row-removable {
+  width: calc(25% - 12px);
+}
+.bpp-table-row > select.bpp-table-row-columns-4:not(:first-child) {
+  border-left: none;
+}
+/* 5 col */
+.bpp-table-row > select.bpp-table-row-columns-5 {
+  width: 20%;
+  box-sizing: border-box;
+}
+.bpp-table-row > select.bpp-table-row-columns-5.bpp-table-row-removable {
+  width: calc(20% - 12px);
+}
+.bpp-table-row > select.bpp-table-row-columns-5:not(:first-child) {
+  border-left: none;
+}
+/* Positioning of remove btn at iot panel */
+.bpp-table-row > select,
+.bpp-table-row > .action-button {
+  float: left;
+}
+
 .btn-container {
   bottom: 20px;
   left: 20px;

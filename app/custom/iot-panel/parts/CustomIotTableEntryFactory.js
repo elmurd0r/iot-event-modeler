@@ -36,11 +36,22 @@ function createInputTemplate(properties, canRemove) {
     var columns = properties.length;
     var template = '';
     forEach(properties, function(prop, idx) {
-        template += '<input class="bpp-table-row-columns-' + columns + ' ' +
-            (canRemove ? 'bpp-table-row-removable' : '') + '" ' +
-            'id="camunda-table-row-cell-input-value-' + idx + '"' +
-            'type="text" ' +
-            'name="' + escapeHTML(prop) + '" />';
+        //Dropdown when method appears otherwise input
+        if (prop === 'method') {
+            template += '<select class="iot-method bpp-table-row-columns-' + columns + ' ' +
+                (canRemove ? 'bpp-table-row-removable' : '') + '" ' +
+                'id="camunda-table-row-cell-input-value-' + idx + '"' +
+                'name="' + escapeHTML(prop) + '" >' +
+                    '<option value="GET">GET </option>' +
+                    '<option value="POST">POST</option>' +
+                '</select>';
+        } else {
+            template += '<input class="bpp-table-row-columns-' + columns + ' ' +
+                (canRemove ? 'bpp-table-row-removable' : '') + '" ' +
+                'id="camunda-table-row-cell-input-value-' + idx + '"' +
+                'type="text" ' +
+                'name="' + escapeHTML(prop) + '" />';
+        }
     });
     return template;
 }
@@ -175,6 +186,14 @@ module.exports = function(translate, options) {
         html.appendChild(entryFieldDescription(translate, description, { show: 'showTable' }));
     }
 
+    //Custom set Method Drowdown value
+    const setMethodDropdownValue = (elems) => {
+        let a = document.getElementsByClassName("iot-method");
+        if (a[0] && elems[0].method) {
+            a[0].value = elems[0].method
+        }
+    }
+
     var factory = {
         id: id,
         html: html,
@@ -290,6 +309,8 @@ module.exports = function(translate, options) {
         showTable: function(element, entryNode, node, scopeNode) {
             entryNode = getEntryNode(entryNode);
             var elems = elements(element, entryNode);
+            //custom call to set correct dropdown value
+            setMethodDropdownValue(elems);
             return elems && elems.length && (!canBeShown || show(element, entryNode, node, scopeNode));
         },
 

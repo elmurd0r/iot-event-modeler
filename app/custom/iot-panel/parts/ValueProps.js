@@ -40,8 +40,8 @@ export default function(group, element, bpmnFactory, translate) {
         labels = [ translate('Url'), translate('Key'), translate('MathOP (<, =, >)'), translate('Value'), translate('Name') ];
     }
     if(iotType === 'actor' || iotType === 'actor-sub' || iotType === 'throw' || iotType === 'end') {
-        modelProps = [ 'url' ];
-        labels = [ translate('Url')];
+        modelProps = [ 'url', 'method' ];
+        labels = [ translate('Url'), translate('Method')];
     }
 
     if(iotType === 'obj') {

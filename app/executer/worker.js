@@ -82,19 +82,35 @@ const sensorCallGroup = (url, key, id) => {
 const actorCall = (businessObj) => {
     return new Promise(((resolve, reject) => {
         let eventValUrl = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].url;
+        let method = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].method;
         if(eventValUrl) {
-            axios.post( eventValUrl, {}, { headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
-                console.log("HTTP POST successfully completed");
-                console.log('Executed call: ' + eventValUrl);
-                workerpool.workerEmit({status: "HTTP POST successfully completed"});
-                workerpool.workerEmit({status: 'Executed call: ' + eventValUrl});
-                resolve();
-            }).catch((e)=>{
-                console.log(e);
-                console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
-                workerpool.workerEmit({status: "HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e});
-                reject(new Error(businessObj.id));
-            });
+            if(method === 'GET') {
+                axios.get( eventValUrl).then((resp)=>{
+                    console.log("HTTP GET successfully completed");
+                    console.log('Executed call: ' + eventValUrl);
+                    workerpool.workerEmit({status: "HTTP GET successfully completed"});
+                    workerpool.workerEmit({status: 'Executed call: ' + eventValUrl});
+                    resolve();
+                }).catch((e)=>{
+                    console.log(e);
+                    console.log("HTTP GET FAILED!! - DataOutputAssociation ACTOR");
+                    workerpool.workerEmit({status: "HTTP GET FAILED!! - DataOutputAssociation ACTOR: "+e});
+                    reject(new Error(businessObj.id));
+                });
+            } else {
+                axios.post( eventValUrl, {}, { headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
+                    console.log("HTTP POST successfully completed");
+                    console.log('Executed call: ' + eventValUrl);
+                    workerpool.workerEmit({status: "HTTP POST successfully completed"});
+                    workerpool.workerEmit({status: 'Executed call: ' + eventValUrl});
+                    resolve();
+                }).catch((e)=>{
+                    console.log(e);
+                    console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
+                    workerpool.workerEmit({status: "HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e});
+                    reject(new Error(businessObj.id));
+                });
+            }
         } else {
             console.log("Error in extensionsElement in IoT actor Task");
             workerpool.workerEmit({status: "Error in extensionsElement in IoT actor Task"});
@@ -104,21 +120,36 @@ const actorCall = (businessObj) => {
 }
 
 
-const actorCallGroup = (url, id) => {
+const actorCallGroup = (url, method, id) => {
     return new Promise(((resolve, reject) => {
         if(url) {
-            axios.post( url, {}, { headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
-                console.log("HTTP POST successfully completed");
-                console.log('Executed call: ' + url);
-                workerpool.workerEmit({status: "HTTP POST successfully completed"});
-                workerpool.workerEmit({status: 'Executed call: ' + url});
-                resolve();
-            }).catch((e)=>{
-                console.log(e);
-                console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
-                workerpool.workerEmit({status: "HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e});
-                reject(new Error(id));
-            });
+            if(method === 'GET') {
+                axios.get( url ).then((resp)=>{
+                    console.log("HTTP GET successfully completed");
+                    console.log('Executed call: ' + url);
+                    workerpool.workerEmit({status: "HTTP GET successfully completed"});
+                    workerpool.workerEmit({status: 'Executed call: ' + url});
+                    resolve();
+                }).catch((e)=>{
+                    console.log(e);
+                    console.log("HTTP GET FAILED!! - DataOutputAssociation ACTOR");
+                    workerpool.workerEmit({status: "HTTP GET FAILED!! - DataOutputAssociation ACTOR: "+e});
+                    reject(new Error(id));
+                });
+            } else {
+                axios.post( url, {}, { headers: {'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'}}).then((resp)=>{
+                    console.log("HTTP POST successfully completed");
+                    console.log('Executed call: ' + url);
+                    workerpool.workerEmit({status: "HTTP POST successfully completed"});
+                    workerpool.workerEmit({status: 'Executed call: ' + url});
+                    resolve();
+                }).catch((e)=>{
+                    console.log(e);
+                    console.log("HTTP POST FAILED!! - DataOutputAssociation ACTOR");
+                    workerpool.workerEmit({status: "HTTP POST FAILED!! - DataOutputAssociation ACTOR: "+e});
+                    reject(new Error(id));
+                });
+            }
         } else {
             console.log("Error in extensionsElement in IoT actor Task");
             workerpool.workerEmit({status: "Error in extensionsElement in IoT actor Task"});
