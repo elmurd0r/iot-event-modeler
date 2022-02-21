@@ -454,7 +454,6 @@ listener.on('activity.wait', (waitObj) => {
               if (result.value) {
                 waitObj.environment.variables[currentDecisionID] = {...waitObj.environment.variables[currentDecisionID], [input.id] : result.value };
               }
-              console.log(waitObj.environment.variables)
               highlightElement(input, "rgba(66, 180, 21, 0.7)");
               //return result;
             }).catch(e => {
@@ -516,8 +515,6 @@ listener.on('activity.wait', (waitObj) => {
   }
 
   const evalDecision = (currentShape) => {
-    console.log(currentShape);
-    debugger
     let values = currentShape.businessObject.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
     values.forEach(value => {
       if (value.name && value.condition) {
@@ -537,11 +534,10 @@ listener.on('activity.wait', (waitObj) => {
         replacedArray.forEach((match, groupIndex) => {
           stringForRegex = stringForRegex.replace( /[a-zA-Z0-9_\-]*[.][a-zA-Z0-9_\-]*/, match);
         })
-        console.log(waitObj.environment.variables);
-        console.log(eval(stringForRegex));
         waitObj.environment.variables[currentShape.id] = {...waitObj.environment.variables[currentShape.id], [value.name] : eval(stringForRegex) };
       }
     })
+    console.log(waitObj.environment.variables)
     return waitObj.environment.variables[currentShape.id];
   }
 
@@ -556,7 +552,8 @@ listener.on('activity.wait', (waitObj) => {
           //successful
           let decisionResult = evalDecision(treeNode.value);
           addOverlaysDecision(treeNode.value, decisionResult);
-          highlightElement(treeNode.value, "rgba(66, 180, 21, 0.7)");
+          addOverlaysResult(treeNode.value, decisionResult);
+          highlightElement(treeNode.value, "rgba(66, 180, 21, 1.0)");
           return new Promise(resolve => resolve("succsess"));
         } else {
           //fail
@@ -719,14 +716,14 @@ listener.on('activity.end', (element)=>{
     let iotInputs = businessObj.get("dataInputAssociations")?.map(input => {
       if (input.sourceRef[0].type) {
         let elementToColor = bpmnViewer.get('elementRegistry').find(element => element.id === input.sourceRef[0].id);
-        highlightElement(elementToColor, "rgba(66, 180, 21, 0.7)");
+        highlightElement(elementToColor, "rgba(66, 180, 21, 1.0)");
         return input.sourceRef[0].id;
       }
     });
     let iotOutputs = businessObj.get("dataOutputAssociations")?.map(input => {
       if(input.targetRef.type) {
         let elementToColor = bpmnViewer.get('elementRegistry').find(element => element.id === input.targetRef.id);
-        highlightElement(elementToColor, "rgba(66, 180, 21, 0.7)");
+        highlightElement(elementToColor, "rgba(66, 180, 21, 1.0)");
         return input.targetRef.id;
       }
     });
@@ -817,6 +814,55 @@ function fillSidebar(state, name, id, time, timeStamp,type, errormsg, source) {
   errorMsgCell.innerHTML = errormsg;
 }
 
+const addOverlaysResult = (elem, states) => {
+  let values = elem.businessObject.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
+  let valuesName = values.map(val => val.name);
+  let spanStates="";
+
+  for (const [key, value] of Object.entries(states)) {
+    if(typeof value == "object") {
+      for (const [_key, _value] of Object.entries(value)) {
+        spanStates = spanStates + `<li class="list-group-item ${valuesName.includes(_key) ? 'item-active' : ''}">${key + '.' + _key}: ${_value}</li>`;
+      }
+    } else {
+      if(!key.includes("label") && valuesName.includes(key)) {
+        let x = values.find(val => val.name === key);
+        spanStates = spanStates + `<li class="list-group-item ${valuesName.includes(key) ? (value ? 'item-success' : 'item-error') : ''}">${key}: ${value}</li>`;
+      }
+    }
+  }
+
+  let decisionLog = document.getElementById("decisionLog");
+  decisionLog.innerHTML += '<ul id="res-'+elem.id+'" style="display: none" class="ttooltiptext">'+ spanStates + '</ul>';
+  let resOverlay = document.createElement('div');
+  resOverlay.className = "result-overlay";
+  resOverlay.innerText = "Results";
+
+  resOverlay.addEventListener('mouseover', (event)=>{
+    console.log(decisionLog.children);
+    for (let i = 0; i < decisionLog.children.length; i++) {
+      decisionLog.children[i].style.display = "none";
+    }
+    document.getElementById("res-"+elem.id).style.display = "block";
+  });
+
+  resOverlay.addEventListener('mouseleave', (event)=>{
+    console.log(decisionLog.children);
+    for (let i = 0; i < decisionLog.children.length; i++) {
+      decisionLog.children[i].style.display = "none";
+    }
+  });
+
+  overlays.add(elem, {
+    html: resOverlay,
+    position: {
+      right: 55,
+      top: 0
+    }
+  });
+}
+
+
 const addOverlaysDecision = (elem, states) => {
   let values = elem.businessObject.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
   let valuesName = values.map(val => val.name);
@@ -828,12 +874,14 @@ const addOverlaysDecision = (elem, states) => {
         spanStates = spanStates + `<li class="list-group-item ${valuesName.includes(_key) ? 'item-active' : ''}">${key + '.' + _key}: ${_value}</li>`;
       }
     } else {
-      spanStates = spanStates + `<li class="list-group-item ${valuesName.includes(key) ? 'item-active' : ''}">${key}: ${value}</li>`;
+      if(!key.includes("label")) {
+        let x = values.find(val => val.name === key);
+        spanStates = spanStates + `<li class="list-group-item ${valuesName.includes(key) ? (value ? 'item-success' : 'item-error') : ''}">${x?.condition ? x.condition + '<b> => </b>' : ''}  ${key}: ${value}</li>`;
+      }
     }
-
   }
   overlays.add(elem, {
-    html: `<div class="decision-overlay">Decision<ul class="tooltiptext">${spanStates}</ul></div>`,
+    html: decOverlay,
     position: {
       left: 0,
       top:0

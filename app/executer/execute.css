@@ -179,21 +179,37 @@ a.btn:hover {
     z-index: 1;
 }
 
-.item-active {
-    background-color: rgba(255, 242, 0, 0.89);
+.item-error {
+    background-color: rgba(2245,61,51, 0.89);
+}
+
+.item-success {
+    background-color: rgba(66, 180, 21, 0.89);
 }
 
 
 .decision-overlay:hover .tooltiptext {
     visibility: visible;
 }
+
+.result-overlay {
+    background-color: rgba(255, 242, 0, 0.89);
+    color: Black;
+    border-radius: 3px;
+    font-family: Arial;
+    font-size: 12px;
+    padding: 3px;
+    text-align: center;
+    width: 120%;
+}
+
 .decision-overlay {
     background-color: rgba(255, 242, 0, 0.89);
     color: Black;
-    border-radius: 5px;
+    border-radius: 3px;
     font-family: Arial;
     font-size: 12px;
-    padding: 5px;
+    padding: 3px;
     text-align: center;
     width: 120%;
 }

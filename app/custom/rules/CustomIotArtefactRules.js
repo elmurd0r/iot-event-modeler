@@ -39,7 +39,7 @@ CustomIotArtefactRules.prototype.init = function() {
     // priority is important
     this.addRule('connection.create', 1500, (context) => {
         if(context.source.businessObject.type === 'decision-group' || context.target.businessObject.type === 'decision-group') {
-            if(context.target.type === 'bpmn:Task') {
+            if(context.target.type === 'bpmn:Task' && context.source.parent.businessObject.type !== 'decision-group') {
                 return {
                     type: 'bpmn:DataInputAssociation'
                 };
@@ -51,9 +51,19 @@ CustomIotArtefactRules.prototype.init = function() {
     });
 
     this.addRule('shape.create', 1500, (context) => {
-        console.log(context);
         if(context.target.businessObject.type === 'decision-group') {
-            if(context.shape.businessObject.type && (context.shape.type === 'bpmn:DataObjectReference' || context.shape.type === 'bpmn:SubProcess')) {
+            if(context.shape.businessObject.type === 'sensor' || context.shape.businessObject.type === 'decision-group') {
+                return true;
+            }
+            return false;
+        }
+    });
+
+    this.addRule('elements.move', 1500, (context) => {
+        if ( context.target?.businessObject.type === 'decision-group') {
+            let shapes = context.shapes;
+            let impossibleToAdd =  shapes.some(shape => shape.businessObject.type !== 'sensor' && shape.businessObject.type !== 'decision-group');
+            if(!impossibleToAdd) {
                 return true;
             }
             return false;
