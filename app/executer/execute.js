@@ -880,6 +880,28 @@ const addOverlaysDecision = (elem, states) => {
       }
     }
   }
+
+  let decisionLog = document.getElementById("decisionLog");
+  decisionLog.innerHTML += '<ul id="dec-'+elem.id+'" style="display: none" class="ttooltiptext">'+ spanStates + '</ul>';
+  let decOverlay = document.createElement('div');
+  decOverlay.className = "decision-overlay";
+  decOverlay.innerText = "Decision";
+
+  decOverlay.addEventListener('mouseover', (event)=>{
+    console.log(decisionLog.children);
+    for (let i = 0; i < decisionLog.children.length; i++) {
+      decisionLog.children[i].style.display = "none";
+    }
+    document.getElementById("dec-"+elem.id).style.display = "block";
+  });
+
+  decOverlay.addEventListener('mouseleave', (event)=>{
+    console.log(decisionLog.children);
+    for (let i = 0; i < decisionLog.children.length; i++) {
+      decisionLog.children[i].style.display = "none";
+    }
+  });
+
   overlays.add(elem, {
     html: decOverlay,
     position: {
