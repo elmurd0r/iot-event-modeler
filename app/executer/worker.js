@@ -84,7 +84,7 @@ const actorCall = (businessObj) => {
         let eventValUrl = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].url;
         let method = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].method;
         if(eventValUrl) {
-            if(method === 'GET') {
+            if(method !== 'POST') {
                 axios.get( eventValUrl).then((resp)=>{
                     console.log("HTTP GET successfully completed");
                     console.log('Executed call: ' + eventValUrl);
