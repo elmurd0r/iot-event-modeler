@@ -4,7 +4,7 @@
     <bpmn2:startEvent id="Event_1moe85l">
       <bpmn2:outgoing>Flow_1vlaelf</bpmn2:outgoing>
     </bpmn2:startEvent>
-    <bpmn2:task id="Activity_1u4ljg9" name="Hole Werkstück 1">
+    <bpmn2:task id="Activity_1u4ljg9" name="Hole Werkstück 3">
       <bpmn2:incoming>Flow_08pvvmf</bpmn2:incoming>
       <bpmn2:outgoing>Flow_11pca8d</bpmn2:outgoing>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_0tyy2ad">
@@ -14,7 +14,7 @@
     <bpmn2:dataObjectReference id="DataObjectReference_05aqvjs" name="Hochregallager" dataObjectRef="DataObject_1hg8lit" iot:type="obj">
       <bpmn2:extensionElements>
         <iot:properties>
-          <iot:property url="http://127.0.0.1:5000/hbw/unload?machine=hbw_1&#38;slot=0_0" />
+          <iot:property url="http://127.0.0.1:5000/hbw/unload?machine=hbw_1&#38;slot=0_2" />
         </iot:properties>
       </bpmn2:extensionElements>
     </bpmn2:dataObjectReference>
@@ -119,7 +119,7 @@
     <bpmn2:dataObjectReference id="DataObjectReference_193b7vf" name="Ofen" dataObjectRef="DataObject_1bmqot0" iot:type="actor-sub">
       <bpmn2:extensionElements>
         <iot:properties>
-          <iot:property url="http://127.0.0.1:5000/ov/burn?machine=ov_1" />
+          <iot:property url="http://127.0.0.1:5000/ov/burn?machine=ov_1" method="GET" />
         </iot:properties>
       </bpmn2:extensionElements>
     </bpmn2:dataObjectReference>
@@ -127,7 +127,7 @@
     <bpmn2:dataObjectReference id="DataObjectReference_0knyuv1" name="Transfergreifer" dataObjectRef="DataObject_0qrkm6p" iot:type="actor-sub">
       <bpmn2:extensionElements>
         <iot:properties>
-          <iot:property url="http://127.0.0.1:5000/wt/pick_up_and_transport?machine=wt_1&#38;start=oven&#38;end=milling_machine" />
+          <iot:property url="http://127.0.0.1:5000/wt/pick_up_and_transport?machine=wt_1&#38;start=oven&#38;end=milling_machine" method="GET" />
         </iot:properties>
       </bpmn2:extensionElements>
     </bpmn2:dataObjectReference>
