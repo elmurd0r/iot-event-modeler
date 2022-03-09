@@ -52,6 +52,7 @@ export default class CustomRenderer extends BaseRenderer {
           color = 'RED';
           break;
         case 'rgba(66, 180, 21, 0.7)':
+        case 'rgba(66, 180, 21, 1)':
           color = 'GREEN'
           break;
         default:
