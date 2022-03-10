@@ -306,6 +306,7 @@ listener.on('activity.wait', (waitObj) => {
         });
       }
       if(businessObj.type === 'artefact-catch') {
+        highlightElement(input, 'rgba(255, 143, 0, 1)')
         workerArr.push(
             pool.exec('sensorCatchArtefact', [businessObj, start_t, timeout], {
               on: payload => {
@@ -521,7 +522,6 @@ listener.on('activity.wait', (waitObj) => {
         let regex = /[a-zA-Z0-9_\-]*[.][a-zA-Z0-9_\-]*/gm;
         let stringForRegex = value.condition;
         let parsedVariableArray = stringForRegex.match(regex);
-
         let replacedArray = parsedVariableArray.map((str) => {
           let partElement = "";
           let keyArr = str.split('.');
@@ -579,15 +579,19 @@ listener.on('activity.wait', (waitObj) => {
         let rejected = values.filter(val => val.status === 'rejected');
 
         if (rejected.length === 0) {
+          highlightElement(treeNode.value, 'rgba(255, 143, 0, 1)');
           extractedDecision(iotInputs, workerArrDecision, treeNode.value.id);
           return extractedDecisionSeatteldPromise();
         } else {
           //fail
           console.log("FAIL");
+          highlightElement(treeNode.value, "rgb(245,61,51)");
+          rejected.forEach(rej => fillSidebarRightLog("msg: " + rej.reason.message + ", stack: " + rej.reason.stack))
           return new Promise((resolve,reject) => reject(new Error(id)));
         }
       });
     } else {
+      highlightElement(treeNode.value, 'rgba(255, 143, 0, 1)');
       extractedDecision(iotInputs, workerArrDecision, treeNode.value.id);
     }
     return extractedDecisionSeatteldPromise();
@@ -615,6 +619,7 @@ listener.on('activity.wait', (waitObj) => {
     }).filter(e => e !== undefined);
 
     if(iotDecisionGroup.length > 0) {
+      highlightElement(task, 'rgba(255, 143, 0, 1)');
       let x = createTree(iotDecisionGroup[0]);
       //console.log(x);
 
@@ -627,6 +632,8 @@ listener.on('activity.wait', (waitObj) => {
 
     if(iotInputs.length === 0 && iotOutputs.length === 0 && iotDecisionGroup.length === 0){
       waitObj.signal();
+    } else {
+      highlightElement(task, 'rgba(255, 143, 0, 1)');
     }
     if(iotInputs.length > 0 && iotOutputs.length === 0) {
       // run registered functions on the worker via exec
@@ -716,14 +723,14 @@ listener.on('activity.end', (element)=>{
     let iotInputs = businessObj.get("dataInputAssociations")?.map(input => {
       if (input.sourceRef[0].type) {
         let elementToColor = bpmnViewer.get('elementRegistry').find(element => element.id === input.sourceRef[0].id);
-        highlightElement(elementToColor, "rgba(66, 180, 21, 1.0)");
+        highlightElement(elementToColor, "rgba(66, 180, 21, 1)");
         return input.sourceRef[0].id;
       }
     });
     let iotOutputs = businessObj.get("dataOutputAssociations")?.map(input => {
       if(input.targetRef.type) {
         let elementToColor = bpmnViewer.get('elementRegistry').find(element => element.id === input.targetRef.id);
-        highlightElement(elementToColor, "rgba(66, 180, 21, 1.0)");
+        highlightElement(elementToColor, "rgba(66, 180, 21, 1)");
         return input.targetRef.id;
       }
     });
