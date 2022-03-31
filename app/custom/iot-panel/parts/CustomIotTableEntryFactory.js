@@ -42,6 +42,7 @@ function createInputTemplate(properties, canRemove) {
                 (canRemove ? 'bpp-table-row-removable' : '') + '" ' +
                 'id="camunda-table-row-cell-input-value-' + idx + '"' +
                 'name="' + escapeHTML(prop) + '" >' +
+                    '<option value="">-</option>' +
                     '<option value="GET">GET </option>' +
                     '<option value="POST">POST</option>' +
                 '</select>';
