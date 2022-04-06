@@ -1,90 +1,91 @@
 import svg64 from "svg64";
 
 //default
-import startSVG from "../svg/default/NewStartSVG.svg";
-import actorSVG from "../svg/default/Artefakt_Empfangend.svg";
-import actorSubSVG from "./default/Artefakt_Empfangend_Sub.svg";
-import sensorSVG from "./default/Artefakt_Sendend.svg";
-import sensorSubSVG from "./default/Artefakt_Senden_Sub.svg";
-import catchEvent from "../svg/default/IoT_Artefakt_Intermediate_Catch_Event.svg";
-import throwEvent from "../svg/default/IoT_Artefakt_Intermediate_Throw_Event.svg";
-import sensorCatchArtefact from "../svg/default/IoT_Artefakt_Sendend_Catch.svg";
-import sensorCatchArtefactSub from "../svg/default/IoT_Artefakt_Sendend_Catch_Sub.svg";
-import endSVG from "../svg/default/IoT_Artefakt_Endereignis.svg";
-import artifactObj from "../svg/default/artifact_obj.svg";
+import startEventSVG from "./default/start_event.svg";
+import catchEventSVG from "./default/catch_event.svg";
+import throwEventSVG from "./default/throw_event.svg";
+import endEventSVG from "./default/end_event.svg";
+import actuatorSVG from "./default/actuator.svg";
+import actuatorGroupSVG from "./default/actuator_group.svg";
+import sensorSVG from "./default/sensor.svg";
+import sensorGroupSVG from "./default/sensor_group.svg";
+import catchSVG from "./default/catch.svg";
+import catchCroupSVG from "./default/catch_group.svg";
+import objSVG from "./default/obj.svg";
 //RED
-import startSVGRed from "../svg/red/IoT_Artefakt_Startereignis_Rot.svg";
-import actorSVGRed from "../svg/red/Artefakt_Empfangend_Rot.svg";
-import actorSubSVGRed from "./red/Artefakt_Empfangend_Sub_Rot.svg";
-import sensorSVGRed from "../svg/red/Artefakt_Sendend_Rot.svg";
-import sensorSubSVGRed from "./red/Artefakt_Sendend_Sub_Rot.svg";
-import catchEventRed from "../svg/red/IoT_Artefakt_Intermediate_Catch_Event_Rot.svg";
-import throwEventRed from "../svg/red/IoT_Artefakt_Intermediate_Throw_Event_Rot.svg";
-import sensorCatchArtefactRed from "../svg/red/IoT_Artefakt_Sendend_Catch_Rot.svg";
-import sensorCatchArtefactSubRed from "../svg/red/IoT_Artefakt_Sendend_Catch_Sub_Rot.svg";
-import endSVGRed from "../svg/red/IoT_Artefakt_Endereignis_Rot.svg";
-import artifactObjRed from "../svg/red/Artefakt_Obj_Rot.svg"
+import startEventSVGRed from "./red/start_event_red.svg";
+import catchEventSVGRed from "./red/catch_event_red.svg";
+import throwEventSVGRed from "./red/throw_event_red.svg";
+import endEventSVGRed from "./red/end_event_red.svg";
+import actuatorSVGRed from "./red/actuator_red.svg";
+import actuatorGroupSVGRed from "./red/actuator_group_red.svg";
+import sensorSVGRed from "./red/sensor_red.svg";
+import sensorGroupSVGRed from "./red/sensor_group_red.svg";
+import catchSVGRed from "./red/catch_red.svg";
+import catchGroupSVGRed from "./red/catch_group_red.svg";
+import objSVGRed from "./red/obj_red.svg"
 //GREEN
-import startSVGGreen from "../svg/green/IoT_Artefakt_Startereignis_Gruen.svg";
-import actorSVGGreen from "../svg/green/Artefakt_Empfangend_Gruen.svg";
-import actorSubSVGGreen from "./green/Artefakt_Empfangend_Sub_Gruen.svg";
-import sensorSVGGreen from "../svg/green/Artefakt_Sendend_Gruen.svg";
-import sensorSubSVGGreen from "./green/Artefakt_Sendend_Sub_Gruen.svg";
-import catchEventGreen from "../svg/green/IoT_Artefakt_Intermediate_Catch_Event_Gruen.svg";
-import throwEventGreen from "../svg/green/IoT_Artefakt_Intermediate_Throw_Event_Gruen.svg";
-import sensorCatchArtefactGreen from "../svg/green/IoT_Artefakt_Sendend_Catch_Gruen.svg";
-import sensorCatchArtefactSubGreen from "../svg/green/IoT_Artefakt_Sendend_Catch_Sub_Gruen.svg";
-import endSVGGreen from "../svg/green/IoT_Artefakt_Endereignis_Gruen.svg";
-import artifactObjGreen from "../svg/green/Artefakt_Obj_Gruen.svg"
+import startEventSVGGreen from "./green/start_event_green.svg";
+import catchEventSVGGreen from "./green/catch_event_green.svg";
+import throwEventSVGGreen from "./green/throw_event_green.svg";
+import endEventSVGGreen from "./green/end_event_green.svg";
+import actuatorSVGGreen from "./green/actuator_green.svg";
+import actuatorGroupSVGGreen from "./green/actuator_group_green.svg";
+import sensorSVGGreen from "./green/sensor_green.svg";
+import sensorGroupSVGGreen from "./green/sensor_group_green.svg";
+import catchSVGGreen from "./green/catch_green.svg";
+import catchGroupSVGGreen from "./green/catch_group_green.svg";
+import objSVGGreen from "./green/obj_green.svg"
 //ORANGE
-import sensorCatchArtefactOrange from "../svg/orange/IoT_Artefakt_Sendend_Catch_Sub_Orange.svg";
-import actorSVGOrange from "../svg/orange/Artefakt_Empfangend_Orange.svg";
-import actorSubSVGOrange from "./orange/Artefakt_Empfangend_Sub.svg";
-import sensorSVGOrange from "../svg/orange/Artefakt_Sendend_Orange.svg";
-import sensorSubSVGOrange from "./orange/Artefakt_Sendend_Sub.svg";
+import catchGroupSVGOrange from "./orange/catch_group_orange.svg";
+import catchSVGOrange from "./orange/catch_orange.svg";
+import actuatorSVGOrange from "./orange/actuator_orange.svg";
+import actuatorGroupSVGOrange from "./orange/actuator_group_orange.svg";
+import sensorSVGOrange from "./orange/sensor_orange.svg";
+import sensorGroupSVGOrange from "./orange/sensor_group_orange.svg";
 
 
 //Base 64 encode SVG files
 //default
-export const startSVGEncoded = svg64(startSVG);
-export const actorSVGEncoded = svg64(actorSVG);
-export const actorSubSVGEncoded = svg64(actorSubSVG);
+export const startEventSVGEncoded = svg64(startEventSVG);
+export const catchEventSVGEncoded = svg64(catchEventSVG);
+export const throwEventSVGEncoded = svg64(throwEventSVG);
+export const endEventSVGEncoded = svg64(endEventSVG);
+export const actuatorSVGEncoded = svg64(actuatorSVG);
+export const actuatorGroupSVGEncoded = svg64(actuatorGroupSVG);
 export const sensorSVGEncoded = svg64(sensorSVG);
-export const sensorSubSVGEncoded = svg64(sensorSubSVG);
-export const catchEventEncoded = svg64(catchEvent);
-export const throwEventEncoded = svg64(throwEvent);
-export const sensorCatchSVGEncoded = svg64(sensorCatchArtefact);
-export const sensorCatchSVGEncodedSub = svg64(sensorCatchArtefactSub);
-export const endSVGEncoded = svg64(endSVG);
-export const objSVGEncoded = svg64(artifactObj);
+export const sensorGroupSVGEncoded = svg64(sensorGroupSVG);
+export const catchSVGEncoded = svg64(catchSVG);
+export const catchGroupSVGEncoded = svg64(catchCroupSVG);
+export const objSVGEncoded = svg64(objSVG);
 //RED
-export const startSVGEncodedRed = svg64(startSVGRed);
-export const actorSVGEncodedRed = svg64(actorSVGRed);
-export const actorSubSVGEncodedRed = svg64(actorSubSVGRed);
+export const startEventSVGEncodedRed = svg64(startEventSVGRed);
+export const catchEventSVGEncodedRed = svg64(catchEventSVGRed);
+export const throwEventSVGEncodedRed = svg64(throwEventSVGRed);
+export const endEventSVGEncodedRed = svg64(endEventSVGRed);
+export const actuatorSVGEncodedRed = svg64(actuatorSVGRed);
+export const actuatorGroupSVGEncodedRed = svg64(actuatorGroupSVGRed);
 export const sensorSVGEncodedRed = svg64(sensorSVGRed);
-export const sensorSubSVGEncodedRed = svg64(sensorSubSVGRed);
-export const catchEventEncodedRed = svg64(catchEventRed);
-export const throwEventEncodedRed = svg64(throwEventRed);
-export const sensorCatchSVGEncodedRed = svg64(sensorCatchArtefactRed);
-export const sensorCatchSVGEncodedSubRed = svg64(sensorCatchArtefactSubRed);
-export const endSVGEncodedRed = svg64(endSVGRed);
-export const objRedSVGEncoded = svg64(artifactObjRed)
+export const sensorGroupSVGEncodedRed = svg64(sensorGroupSVGRed);
+export const catchSVGEncodedRed = svg64(catchSVGRed);
+export const catchGroupSVGEncodedRed = svg64(catchGroupSVGRed);
+export const objSVGEncodedRed = svg64(objSVGRed)
 //GREEN
-export const startSVGEncodedGreen = svg64(startSVGGreen);
-export const actorSVGEncodedGreen = svg64(actorSVGGreen);
-export const actorSubSVGEncodedGreen = svg64(actorSubSVGGreen);
+export const startEventSVGEncodedGreen = svg64(startEventSVGGreen);
+export const catchEventSVGEncodedGreen = svg64(catchEventSVGGreen);
+export const throwEventSVGEncodedGreen = svg64(throwEventSVGGreen);
+export const endEventSVGEncodedGreen = svg64(endEventSVGGreen);
+export const actuatorSVGEncodedGreen = svg64(actuatorSVGGreen);
+export const actuatorGroupSVGEncodedGreen = svg64(actuatorGroupSVGGreen);
 export const sensorSVGEncodedGreen = svg64(sensorSVGGreen);
-export const sensorSubSVGEncodedGreen = svg64(sensorSubSVGGreen);
-export const catchEventEncodedGreen = svg64(catchEventGreen);
-export const throwEventEncodedGreen = svg64(throwEventGreen);
-export const sensorCatchSVGEncodedGreen = svg64(sensorCatchArtefactGreen);
-export const sensorCatchSVGEncodedSubGreen = svg64(sensorCatchArtefactSubGreen);
-export const endSVGEncodedGeen = svg64(endSVGGreen);
-export const objGreenSVGEncoded = svg64(artifactObjGreen)
+export const sensorGroupSVGEncodedGreen = svg64(sensorGroupSVGGreen);
+export const catchSVGEncodedGreen = svg64(catchSVGGreen);
+export const catchGroupSVGEncodedGreen = svg64(catchGroupSVGGreen);
+export const objSVGEncodedGreen = svg64(objSVGGreen)
 //ORANGE
-export const sensorCatchSVGEncodedOrange = svg64(sensorCatchArtefactOrange);
-
-export const actorSVGEncodedOrange = svg64(actorSVGOrange);
-export const actorSubSVGEncodedOrange = svg64(actorSubSVGOrange);
+export const catchSVGEncodedOrange = svg64(catchSVGOrange)
+export const catchGroupSVGEncodedOrange = svg64(catchGroupSVGOrange);
+export const actuatorSVGEncodedOrange = svg64(actuatorSVGOrange);
+export const actuatorGroupSVGEncodedOrange = svg64(actuatorGroupSVGOrange);
 export const sensorSVGEncodedOrange = svg64(sensorSVGOrange);
-export const sensorSubSVGEncodedOrange = svg64(sensorSubSVGOrange);
+export const sensorGroupSVGEncodedOrange = svg64(sensorGroupSVGOrange);

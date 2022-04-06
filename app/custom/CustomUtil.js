@@ -4,103 +4,113 @@ export const getEncodedSvg = (iotType, color) => {
     let imageHref;
     switch (iotType) {
         case 'start':
-            imageHref = SVGEncoded.startSVGEncoded;
+            imageHref = SVGEncoded.startEventSVGEncoded;
             if(color) {
-                imageHref = color === 'RED' ? SVGEncoded.startSVGEncodedRed : SVGEncoded.startSVGEncodedGreen;
+                imageHref = color === 'RED' ? SVGEncoded.startEventSVGEncodedRed : SVGEncoded.startEventSVGEncodedGreen;
             }
             break;
         case 'actor':
-            imageHref = SVGEncoded.actorSVGEncoded;
+            imageHref = SVGEncoded.actuatorSVGEncoded;
             if(color) {
                 switch (color) {
                     case 'RED':
-                        imageHref = SVGEncoded.actorSVGEncodedRed;
+                        imageHref = SVGEncoded.actuatorSVGEncodedRed;
                         break;
                     case 'ORANGE':
-                        imageHref = SVGEncoded.actorSVGEncodedOrange;
+                        imageHref = SVGEncoded.actuatorSVGEncodedOrange;
                         break;
                     default :
-                        imageHref = SVGEncoded.actorSVGEncodedGreen;
+                        imageHref = SVGEncoded.actuatorSVGEncodedGreen;
                         break;
                 }
             }
             break;
         case 'actor-sub':
-            imageHref = SVGEncoded.actorSubSVGEncoded;
+            imageHref = SVGEncoded.actuatorGroupSVGEncoded;
             if(color) {
                 switch (color) {
                     case 'RED':
-                        imageHref = SVGEncoded.actorSubSVGEncodedRed;
+                        imageHref = SVGEncoded.actuatorGroupSVGEncodedRed;
                         break;
                     case 'ORANGE':
-                        imageHref = SVGEncoded.actorSubSVGEncodedOrange;
+                        imageHref = SVGEncoded.actuatorGroupSVGEncodedOrange;
                         break;
                     default :
-                        imageHref = SVGEncoded.actorSubSVGEncodedGreen;
+                        imageHref = SVGEncoded.actuatorGroupSVGEncodedGreen;
                         break;
                 }
             }
             break;
         case 'sensor-sub':
-            imageHref = SVGEncoded.sensorSubSVGEncoded;
+            imageHref = SVGEncoded.sensorGroupSVGEncoded;
             if(color) {
                 switch (color) {
                     case 'RED':
-                        imageHref = SVGEncoded.sensorSubSVGEncodedRed;
+                        imageHref = SVGEncoded.sensorGroupSVGEncodedRed;
                         break;
                     case 'ORANGE':
-                        imageHref = SVGEncoded.sensorSubSVGEncodedOrange;
+                        imageHref = SVGEncoded.sensorGroupSVGEncodedOrange;
                         break;
                     default :
-                        imageHref = SVGEncoded.sensorSubSVGEncodedGreen;
+                        imageHref = SVGEncoded.sensorGroupSVGEncodedGreen;
                         break;
                 }
             }
             break;
         case 'throw':
-            imageHref = SVGEncoded.throwEventEncoded;
+            imageHref = SVGEncoded.throwEventSVGEncoded;
             if(color) {
-                imageHref = color === 'RED' ? SVGEncoded.throwEventEncodedRed : SVGEncoded.throwEventEncodedGreen;
+                imageHref = color === 'RED' ? SVGEncoded.throwEventSVGEncodedRed : SVGEncoded.throwEventSVGEncodedGreen;
             }
             break;
         case 'catch':
-            imageHref = SVGEncoded.catchEventEncoded;
+            imageHref = SVGEncoded.catchEventSVGEncoded;
             if(color) {
-                imageHref = color === 'RED' ? SVGEncoded.catchEventEncodedRed : SVGEncoded.catchEventEncodedGreen;
+                imageHref = color === 'RED' ? SVGEncoded.catchEventSVGEncodedRed : SVGEncoded.catchEventSVGEncodedGreen;
             }
             break;
         case 'artefact-catch':
-            imageHref = SVGEncoded.sensorCatchSVGEncoded;
+            imageHref = SVGEncoded.catchSVGEncoded;
             if(color) {
                 switch (color) {
                     case 'RED':
-                        imageHref = SVGEncoded.sensorCatchSVGEncodedRed;
+                        imageHref = SVGEncoded.catchSVGEncodedRed;
                         break;
                     case 'ORANGE':
-                        imageHref = SVGEncoded.sensorCatchSVGEncodedOrange;
+                        imageHref = SVGEncoded.catchSVGEncodedOrange;
                         break;
                     default :
-                        imageHref = SVGEncoded.sensorCatchSVGEncodedGreen;
+                        imageHref = SVGEncoded.catchSVGEncodedGreen;
                         break;
                 }
             }
             break;
         case 'artefact-catch-sub':
-            imageHref = SVGEncoded.sensorCatchSVGEncodedSub;
+            imageHref = SVGEncoded.catchGroupSVGEncoded;
             if(color) {
-                imageHref = color === 'RED' ? SVGEncoded.sensorCatchSVGEncodedSubRed : SVGEncoded.sensorCatchSVGEncodedSubGreen;
+                switch (color) {
+                    case 'RED':
+                        imageHref = SVGEncoded.catchGroupSVGEncodedRed;
+                        break;
+                    case 'ORANGE':
+                        imageHref = SVGEncoded.catchGroupSVGEncodedOrange;
+                        break;
+                    default :
+                        imageHref = SVGEncoded.catchGroupSVGEncodedGreen;
+                        break;
+                }
             }
             break;
         case 'end':
-            imageHref = SVGEncoded.endSVGEncoded;
+            imageHref = SVGEncoded.endEventSVGEncoded;
             if(color) {
-                imageHref = color === 'RED' ? SVGEncoded.endSVGEncodedRed : SVGEncoded.endSVGEncodedGeen;
+                imageHref = color === 'RED' ? SVGEncoded.endEventSVGEncodedRed : SVGEncoded.endEventSVGEncodedGreen;
             }
             break;
         case 'obj':
             imageHref = SVGEncoded.objSVGEncoded;
             if(color) {
-                imageHref = color === 'RED' ? SVGEncoded.objRedSVGEncoded : SVGEncoded.objGreenSVGEncoded;
+                imageHref = color === 'RED' ? SVGEncoded.objSVGEncodedRed : SVGEncoded.objSVGEncodedGreen;
             }
             break;
         case 'sensor':
