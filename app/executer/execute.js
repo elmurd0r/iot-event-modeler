@@ -244,6 +244,7 @@ listener.on('activity.wait', (waitObj) => {
 
   const extractedInputs = (iotInputs, workerArr) => {
     iotInputs.forEach(input => {
+      highlightElement(input, "rgba(255, 143, 0, 1)");
       let businessObj = getBusinessObject(input);
 
       if (businessObj.type === 'sensor') {
@@ -269,7 +270,7 @@ listener.on('activity.wait', (waitObj) => {
       }
       if (businessObj.type === 'sensor-sub') {
         let execArray = [];
-        waitObj.environment.variables[currentDecisionID] = {};
+        waitObj.environment.variables[input.id] = {};
         let values = businessObj.extensionElements?.values.filter(element => element['$type'] === 'iot:Properties')[0].values;
         values.forEach(value => {
           if (value.url && value.key && value.name) {
@@ -281,7 +282,7 @@ listener.on('activity.wait', (waitObj) => {
               console.log("Result:");
               console.log(result);
               if (result.value) {
-                waitObj.environment.variables[currentDecisionID][input.id] = {...waitObj.environment.variables[currentDecisionID][input.id], [value.name] : result.value };
+                waitObj.environment.variables[input.id] = {...waitObj.environment.variables[input.id], [value.name] : result.value };
               }
               highlightElement(input, "rgba(66, 180, 21, 0.7)");
               return result;
@@ -369,6 +370,7 @@ listener.on('activity.wait', (waitObj) => {
 
   const extractedOutputs = (iotOutputs, workerArr) => {
     iotOutputs.forEach(output => {
+      highlightElement(output, "rgba(255, 143, 0, 1)");
       let businessObj = getBusinessObject(output);
 
       if (businessObj.type === 'actor') {
