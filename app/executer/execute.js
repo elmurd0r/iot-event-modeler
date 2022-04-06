@@ -102,18 +102,15 @@ listener.on('activity.wait', (waitObj) => {
 
   if(startEvent || catchEvent) {
     let event = startEvent ? startEvent : catchEvent;
+    highlightElement(event, Color.orange);
     const mathLoopCall = (businessObj, eventValue) => {
       let extensionElements = businessObj.get("extensionElements")?.values;
-      //let name = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'key')?.value;
-      //let mathOp = businessObj.get("extensionElements")?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.name;
-      //let mathOpVal = businessObj.get("extensionElements")?.values[0]?.values?.find(s => s.name === ">" || s.name === "<" || s.name === "=")?.value;
-      //let timeout = businessObj.get("extensionElements")?.values[0]?.values?.find(elem => elem.name === 'timeout')?.value;
+      let iotProperties = extensionElements.filter(element => element['$type'] === 'iot:Properties')[0].values[0];
 
-      // NEUE ELEMENTE:
-      let name = extensionElements.filter(element => element['$type'] === 'iot:Properties')[0].values[0].key;
-      let mathOp = extensionElements.filter(element => element['$type'] === 'iot:Properties')[0].values[0].mathOP;
-      let mathOpVal = extensionElements.filter(element => element['$type'] === 'iot:Properties')[0].values[0].value;
-      let timeout = extensionElements.filter(element => element['$type'] === 'iot:Properties')[0].values[0].timeout;
+      let name = iotProperties.key;
+      let mathOp = iotProperties.mathOP;
+      let mathOpVal = iotProperties.value;
+      let timeout = iotProperties.timeout;
 
       if (name && mathOp && mathOpVal && mathOpVal) {
         mathOpVal = convertInputToFloatOrKeepType(mathOpVal);
@@ -205,9 +202,11 @@ listener.on('activity.wait', (waitObj) => {
   }
 
   if(throwEvent) {
+    highlightElement(throwEvent, Color.orange);
     let businessObj = getBusinessObject(throwEvent);
-    let eventValUrl = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].url;
-    let method = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0].method;
+    let iotProperties = businessObj.get("extensionElements")?.values.filter(element => element['$type'] === 'iot:Properties')[0].values[0];
+    let eventValUrl = iotProperties.url;
+    let method = iotProperties.method;
     if(eventValUrl) {
       if(method === 'GET') {
         axios.get( eventValUrl).then((resp)=>{
@@ -684,6 +683,7 @@ listener.on('activity.end', (element)=>{
   let obj = element.content.inbound;
 
   if(businessObj?.type === 'end') {
+    highlightElement(currentElement, Color.orange);
     const workerArr = [];
     workerArr.push(
       pool.exec('actorCall', [businessObj], {
