@@ -194,6 +194,7 @@ listener.on('activity.wait', (waitObj) => {
       else {
         console.log("No iot start URL value defined");
         fillSidebarRightLog("No iot start URL value defined");
+        highlightErrorElements(null, waitObj, "Not executed", "No iot start URL value defined", '-', boundaryEventType);
         engine.stop();
       }
     } else {
@@ -237,7 +238,7 @@ listener.on('activity.wait', (waitObj) => {
       }
     } else {
       console.log("Error in extensionsElement in IoT intermediate actor event");
-      fillSidebarRightLog("Error in extensionsElement in IoT intermediate actor event");
+      fillSidebarRightLog("No URL specified at IoT throw event");
       highlightErrorElements(null, waitObj, "Not executed" , "extensionElement", sourceId[0].sourceId, boundaryEventType);
     }
   }
@@ -703,7 +704,6 @@ listener.on('activity.end', (element)=>{
         let end_t_1 = new Date().getTime();
         let _time = end_t_1 - start_t;
         highlightErrorElements(null, element, "Not executed", e, "-", []);
-        addOverlays(currentElement, _time);
         console.log(e);
         throw e;
       })
