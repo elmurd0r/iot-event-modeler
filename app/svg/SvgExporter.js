@@ -38,6 +38,10 @@ import endSVGGreen from "../svg/green/IoT_Artefakt_Endereignis_Gruen.svg";
 import artifactObjGreen from "../svg/green/Artefakt_Obj_Gruen.svg"
 //ORANGE
 import sensorCatchArtefactOrange from "../svg/orange/IoT_Artefakt_Sendend_Catch_Sub_Orange.svg";
+import actorSVGOrange from "../svg/orange/Artefakt_Empfangend_Orange.svg";
+import actorSubSVGOrange from "./orange/Artefakt_Empfangend_Sub.svg";
+import sensorSVGOrange from "../svg/orange/Artefakt_Sendend_Orange.svg";
+import sensorSubSVGOrange from "./orange/Artefakt_Sendend_Sub.svg";
 
 
 //Base 64 encode SVG files
@@ -80,3 +84,7 @@ export const objGreenSVGEncoded = svg64(artifactObjGreen)
 //ORANGE
 export const sensorCatchSVGEncodedOrange = svg64(sensorCatchArtefactOrange);
 
+export const actorSVGEncodedOrange = svg64(actorSVGOrange);
+export const actorSubSVGEncodedOrange = svg64(actorSubSVGOrange);
+export const sensorSVGEncodedOrange = svg64(sensorSVGOrange);
+export const sensorSubSVGEncodedOrange = svg64(sensorSubSVGOrange);
