@@ -6,7 +6,17 @@ export const getEncodedSvg = (iotType, color) => {
         case 'start':
             imageHref = SVGEncoded.startEventSVGEncoded;
             if(color) {
-                imageHref = color === 'RED' ? SVGEncoded.startEventSVGEncodedRed : SVGEncoded.startEventSVGEncodedGreen;
+                switch (color) {
+                    case 'RED':
+                        imageHref = SVGEncoded.startEventSVGEncodedRed;
+                        break;
+                    case 'ORANGE':
+                        imageHref = SVGEncoded.startEventSVGEncodedOrange;
+                        break;
+                    default :
+                        imageHref = SVGEncoded.startEventSVGEncodedGreen;
+                        break;
+                }
             }
             break;
         case 'actor':
@@ -60,13 +70,33 @@ export const getEncodedSvg = (iotType, color) => {
         case 'throw':
             imageHref = SVGEncoded.throwEventSVGEncoded;
             if(color) {
-                imageHref = color === 'RED' ? SVGEncoded.throwEventSVGEncodedRed : SVGEncoded.throwEventSVGEncodedGreen;
+                switch (color) {
+                    case 'RED':
+                        imageHref = SVGEncoded.throwEventSVGEncodedRed;
+                        break;
+                    case 'ORANGE':
+                        imageHref = SVGEncoded.throwEventSVGEncodedOrange;
+                        break;
+                    default :
+                        imageHref = SVGEncoded.throwEventSVGEncodedGreen;
+                        break;
+                }
             }
             break;
         case 'catch':
             imageHref = SVGEncoded.catchEventSVGEncoded;
             if(color) {
-                imageHref = color === 'RED' ? SVGEncoded.catchEventSVGEncodedRed : SVGEncoded.catchEventSVGEncodedGreen;
+                switch (color) {
+                    case 'RED':
+                        imageHref = SVGEncoded.catchEventSVGEncodedRed;
+                        break;
+                    case 'ORANGE':
+                        imageHref = SVGEncoded.catchEventSVGEncodedOrange;
+                        break;
+                    default :
+                        imageHref = SVGEncoded.catchEventSVGEncodedGreen;
+                        break;
+                }
             }
             break;
         case 'artefact-catch':
@@ -104,13 +134,33 @@ export const getEncodedSvg = (iotType, color) => {
         case 'end':
             imageHref = SVGEncoded.endEventSVGEncoded;
             if(color) {
-                imageHref = color === 'RED' ? SVGEncoded.endEventSVGEncodedRed : SVGEncoded.endEventSVGEncodedGreen;
+                switch (color) {
+                    case 'RED':
+                        imageHref = SVGEncoded.endEventSVGEncodedRed;
+                        break;
+                    case 'ORANGE':
+                        imageHref = SVGEncoded.endEventSVGEncodedOrange;
+                        break;
+                    default :
+                        imageHref = SVGEncoded.endEventSVGEncodedGreen;
+                        break;
+                }
             }
             break;
         case 'obj':
             imageHref = SVGEncoded.objSVGEncoded;
             if(color) {
-                imageHref = color === 'RED' ? SVGEncoded.objSVGEncodedRed : SVGEncoded.objSVGEncodedGreen;
+                switch (color) {
+                    case 'RED':
+                        imageHref = SVGEncoded.objSVGEncodedRed;
+                        break;
+                    case 'ORANGE':
+                        imageHref = SVGEncoded.objSVGEncodedOrange;
+                        break;
+                    default :
+                        imageHref = SVGEncoded.objSVGEncodedGreen;
+                        break;
+                }
             }
             break;
         case 'sensor':

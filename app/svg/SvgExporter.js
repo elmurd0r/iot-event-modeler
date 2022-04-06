@@ -37,12 +37,17 @@ import catchSVGGreen from "./green/catch_green.svg";
 import catchGroupSVGGreen from "./green/catch_group_green.svg";
 import objSVGGreen from "./green/obj_green.svg"
 //ORANGE
-import catchGroupSVGOrange from "./orange/catch_group_orange.svg";
-import catchSVGOrange from "./orange/catch_orange.svg";
+import startEventSVGOrange from "./orange/start_event_orange.svg";
+import catchEventSVGOrange from "./orange/catch_event_orange.svg";
+import throwEventSVGOrange from "./orange/throw_event_orange.svg";
+import endEventSVGOrange from "./orange/end_event_orange.svg";
 import actuatorSVGOrange from "./orange/actuator_orange.svg";
 import actuatorGroupSVGOrange from "./orange/actuator_group_orange.svg";
 import sensorSVGOrange from "./orange/sensor_orange.svg";
 import sensorGroupSVGOrange from "./orange/sensor_group_orange.svg";
+import catchGroupSVGOrange from "./orange/catch_group_orange.svg";
+import catchSVGOrange from "./orange/catch_orange.svg";
+import objSVGOrange from "./orange/obj_orange.svg"
 
 
 //Base 64 encode SVG files
@@ -83,9 +88,14 @@ export const catchSVGEncodedGreen = svg64(catchSVGGreen);
 export const catchGroupSVGEncodedGreen = svg64(catchGroupSVGGreen);
 export const objSVGEncodedGreen = svg64(objSVGGreen)
 //ORANGE
-export const catchSVGEncodedOrange = svg64(catchSVGOrange)
-export const catchGroupSVGEncodedOrange = svg64(catchGroupSVGOrange);
+export const startEventSVGEncodedOrange = svg64(startEventSVGOrange);
+export const catchEventSVGEncodedOrange = svg64(catchEventSVGOrange);
+export const throwEventSVGEncodedOrange = svg64(throwEventSVGOrange);
+export const endEventSVGEncodedOrange = svg64(endEventSVGOrange);
 export const actuatorSVGEncodedOrange = svg64(actuatorSVGOrange);
 export const actuatorGroupSVGEncodedOrange = svg64(actuatorGroupSVGOrange);
 export const sensorSVGEncodedOrange = svg64(sensorSVGOrange);
 export const sensorGroupSVGEncodedOrange = svg64(sensorGroupSVGOrange);
+export const catchSVGEncodedOrange = svg64(catchSVGOrange)
+export const catchGroupSVGEncodedOrange = svg64(catchGroupSVGOrange);
+export const objSVGEncodedOrange = svg64(objSVGOrange)
