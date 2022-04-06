@@ -21,6 +21,7 @@ import {
   convertInputToFloatOrKeepType,
   getResponseByAttributeAccessor
 } from "./ExecuteHelper";
+import Color from "../custom/helper/Color";
 
 let start_t;
 let end_t;
@@ -244,7 +245,7 @@ listener.on('activity.wait', (waitObj) => {
 
   const extractedInputs = (iotInputs, workerArr) => {
     iotInputs.forEach(input => {
-      highlightElement(input, "rgba(255, 143, 0, 1)");
+      highlightElement(input, Color.orange);
       let businessObj = getBusinessObject(input);
 
       if (businessObj.type === 'sensor') {
@@ -259,7 +260,7 @@ listener.on('activity.wait', (waitObj) => {
               if (result.value) {
                 waitObj.environment.variables[input.id] = result.value;
               }
-              highlightElement(input, "rgba(66, 180, 21, 0.7)");
+              highlightElement(input, Color.green_low_opacity);
               return result;
             }).catch(e => {
               console.log(e);
@@ -284,7 +285,7 @@ listener.on('activity.wait', (waitObj) => {
               if (result.value) {
                 waitObj.environment.variables[input.id] = {...waitObj.environment.variables[input.id], [value.name] : result.value };
               }
-              highlightElement(input, "rgba(66, 180, 21, 0.7)");
+              highlightElement(input, Color.green_low_opacity);
               return result;
             }).catch(e => {
               console.log(e);
@@ -300,14 +301,14 @@ listener.on('activity.wait', (waitObj) => {
         Promise.allSettled(execArray).then((values) => {
           let rejected = values.filter(val => val.status === 'rejected');
           if (rejected.length === 0) {
-            highlightElement(input, "rgba(66, 180, 21, 0.7)");
+            highlightElement(input, Color.green_low_opacity);
           } else {
             highlightErrorElements(input, waitObj, "Not executed", "ActorGroup error", "-", boundaryEventType);
           }
         });
       }
       if(businessObj.type === 'artefact-catch') {
-        highlightElement(input, 'rgba(255, 143, 0, 1)')
+        highlightElement(input, Color.orange)
         workerArr.push(
             pool.exec('sensorCatchArtefact', [businessObj, start_t, timeout], {
               on: payload => {
@@ -319,7 +320,7 @@ listener.on('activity.wait', (waitObj) => {
               if (result.value) {
                 waitObj.environment.variables[input.id] = result.value;
               }
-              highlightElement(input, "rgba(66, 180, 21, 0.7)");
+              highlightElement(input, Color.green_low_opacity);
               return result;
             }).catch(e => {
               console.log(e);
@@ -358,7 +359,7 @@ listener.on('activity.wait', (waitObj) => {
         Promise.allSettled(execArray).then((values) => {
           let rejected = values.filter(val => val.status === 'rejected');
           if (rejected.length === 0) {
-            highlightElement(input, "rgba(66, 180, 21, 0.7)");
+            highlightElement(input, Color.green_low_opacity);
           } else {
             highlightErrorElements(input, waitObj, "Not executed", "Sensor Catch Artefact Group error", "-", boundaryEventType);
           }
@@ -370,7 +371,7 @@ listener.on('activity.wait', (waitObj) => {
 
   const extractedOutputs = (iotOutputs, workerArr) => {
     iotOutputs.forEach(output => {
-      highlightElement(output, "rgba(255, 143, 0, 1)");
+      highlightElement(output, Color.orange);
       let businessObj = getBusinessObject(output);
 
       if (businessObj.type === 'actor') {
@@ -382,7 +383,7 @@ listener.on('activity.wait', (waitObj) => {
             }).then(result => {
               console.log("Result:");
               console.log(result);
-              highlightElement(output, "rgba(66, 180, 21, 0.7)");
+              highlightElement(output, Color.green_low_opacity);
               return result;
             }).catch(e => {
               highlightErrorElements(output, waitObj, "Not executed", e, "-", boundaryEventType);
@@ -413,7 +414,7 @@ listener.on('activity.wait', (waitObj) => {
         Promise.allSettled(execArray).then((values) => {
           let rejected = values.filter(val => val.status === 'rejected');
           if (rejected.length === 0) {
-            highlightElement(output, "rgba(66, 180, 21, 0.7)");
+            highlightElement(output, Color.green_low_opacity);
           } else {
             highlightErrorElements(output, waitObj, "Not executed", "ActorGroup error", "-", boundaryEventType);
           }
@@ -429,7 +430,7 @@ listener.on('activity.wait', (waitObj) => {
             }).then(result => {
               console.log("Result:");
               console.log(result);
-              highlightElement(output, "rgba(66, 180, 21, 0.7)");
+              highlightElement(output, Color.green_low_opacity);
               return result;
             }).catch(e => {
               highlightErrorElements(output, waitObj, "Not executed", e, "-", boundaryEventType);
@@ -457,7 +458,7 @@ listener.on('activity.wait', (waitObj) => {
               if (result.value) {
                 waitObj.environment.variables[currentDecisionID] = {...waitObj.environment.variables[currentDecisionID], [input.id] : result.value };
               }
-              highlightElement(input, "rgba(66, 180, 21, 0.7)");
+              highlightElement(input, Color.green_low_opacity);
               //return result;
             }).catch(e => {
               console.log(e);
@@ -482,7 +483,7 @@ listener.on('activity.wait', (waitObj) => {
               if (result.value) {
                 waitObj.environment.variables[input.id] = {...waitObj.environment.variables[input.id], [value.name] : result.value };
               }
-              highlightElement(input, "rgba(66, 180, 21, 0.7)");
+              highlightElement(input, Color.green_low_opacity);
               return result;
             }).catch(e => {
               console.log(e);
@@ -498,7 +499,7 @@ listener.on('activity.wait', (waitObj) => {
         Promise.allSettled(execArray).then((values) => {
           let rejected = values.filter(val => val.status === 'rejected');
           if (rejected.length === 0) {
-            highlightElement(input, "rgba(66, 180, 21, 0.7)");
+            highlightElement(input, Color.green_low_opacity);
           } else {
             highlightErrorElements(input, waitObj, "Not executed", "ActorGroup error", "-", boundaryEventType);
           }
@@ -555,7 +556,7 @@ listener.on('activity.wait', (waitObj) => {
           let decisionResult = evalDecision(treeNode.value);
           addOverlaysDecision(treeNode.value, decisionResult);
           addOverlaysResult(treeNode.value, decisionResult);
-          highlightElement(treeNode.value, "rgba(66, 180, 21, 1.0)");
+          highlightElement(treeNode.value, Color.green_full_opacity);
           return new Promise(resolve => resolve("succsess"));
         } else {
           //fail
@@ -581,19 +582,19 @@ listener.on('activity.wait', (waitObj) => {
         let rejected = values.filter(val => val.status === 'rejected');
 
         if (rejected.length === 0) {
-          highlightElement(treeNode.value, 'rgba(255, 143, 0, 1)');
+          highlightElement(treeNode.value, Color.orange);
           extractedDecision(iotInputs, workerArrDecision, treeNode.value.id);
           return extractedDecisionSeatteldPromise();
         } else {
           //fail
           console.log("FAIL");
-          highlightElement(treeNode.value, "rgb(245,61,51)");
+          highlightElement(treeNode.value, Color.red);
           rejected.forEach(rej => fillSidebarRightLog("msg: " + rej.reason.message + ", stack: " + rej.reason.stack))
           return new Promise((resolve,reject) => reject(new Error(id)));
         }
       });
     } else {
-      highlightElement(treeNode.value, 'rgba(255, 143, 0, 1)');
+      highlightElement(treeNode.value, Color.orange);
       extractedDecision(iotInputs, workerArrDecision, treeNode.value.id);
     }
     return extractedDecisionSeatteldPromise();
@@ -621,7 +622,7 @@ listener.on('activity.wait', (waitObj) => {
     }).filter(e => e !== undefined);
 
     if(iotDecisionGroup.length > 0) {
-      highlightElement(task, 'rgba(255, 143, 0, 1)');
+      highlightElement(task, Color.orange);
       let x = createTree(iotDecisionGroup[0]);
       //console.log(x);
 
@@ -635,7 +636,7 @@ listener.on('activity.wait', (waitObj) => {
     if(iotInputs.length === 0 && iotOutputs.length === 0 && iotDecisionGroup.length === 0){
       waitObj.signal();
     } else {
-      highlightElement(task, 'rgba(255, 143, 0, 1)');
+      highlightElement(task, Color.orange);
     }
     if(iotInputs.length > 0 && iotOutputs.length === 0) {
       // run registered functions on the worker via exec
@@ -694,7 +695,7 @@ listener.on('activity.end', (element)=>{
         let _time = end_t_1 - start_t;
         console.log("Result:");
         console.log(result);
-        highlightElement(currentElement, "rgba(66, 180, 21, 0.7)");
+        highlightElement(currentElement, Color.green_low_opacity);
         addOverlays(currentElement, _time);
         fillSidebar(confirmIcon, element.name, element.id, _time, timeStamp, 'bpmn:IoTEndEvent', "-", obj ? obj[0].sourceId : '-');
         return result;
@@ -709,7 +710,7 @@ listener.on('activity.end', (element)=>{
     )
   } else {
     if(businessObj?.type !== 'decision-group') {
-      highlightElement(currentElement, "rgba(66, 180, 21, 0.7)");
+      highlightElement(currentElement, Color.green_low_opacity);
       addOverlays(currentElement, time);
       fillSidebar(confirmIcon, element.name, element.id, time, timeStamp, element.type, "-", obj ? obj[0].sourceId : '-');
     }
@@ -725,14 +726,14 @@ listener.on('activity.end', (element)=>{
     let iotInputs = businessObj.get("dataInputAssociations")?.map(input => {
       if (input.sourceRef[0].type) {
         let elementToColor = bpmnViewer.get('elementRegistry').find(element => element.id === input.sourceRef[0].id);
-        highlightElement(elementToColor, "rgba(66, 180, 21, 1)");
+        highlightElement(elementToColor, Color.green_full_opacity);
         return input.sourceRef[0].id;
       }
     });
     let iotOutputs = businessObj.get("dataOutputAssociations")?.map(input => {
       if(input.targetRef.type) {
         let elementToColor = bpmnViewer.get('elementRegistry').find(element => element.id === input.targetRef.id);
-        highlightElement(elementToColor, "rgba(66, 180, 21, 1)");
+        highlightElement(elementToColor, Color.green_full_opacity);
         return input.targetRef.id;
       }
     });
@@ -756,9 +757,9 @@ const highlightErrorElements = (iotArtifact, waitObj, time, errormsg, source, bo
 
   if(iotArtifact) {
     let iotArtifactElement = bpmnViewer.get('elementRegistry').find(e => e.id === iotArtifact.id);
-    highlightElement(iotArtifactElement, "rgb(245,61,51)");
+    highlightElement(iotArtifactElement, Color.red);
   }
-  highlightElement(element, "rgb(245,61,51)");
+  highlightElement(element, Color.red);
   let convertedTimeStamp = timestampToDate(waitObj.messageProperties.timestamp);
   fillSidebar(errIcon, waitObj.name, waitObj.id, time, convertedTimeStamp, waitObj.type, errormsg, source);
 }
@@ -948,7 +949,7 @@ const resetView = () => {
   let allElements = bpmnViewer.get('elementRegistry').filter((elem)=>elem.id);
   overlays.clear()
   // Schleife um alle BPMN Elemente wieder mit der Standardfarbe zu färben
-  highlightElementArr(allElements, "rgba(255,255,255,1.0)")
+  highlightElementArr(allElements, Color.white)
 
   document.getElementById("tableBody").innerHTML = "";
   document.getElementById("tableBodyLogRight").innerHTML = "";

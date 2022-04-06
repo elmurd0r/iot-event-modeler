@@ -22,6 +22,7 @@ import {
 
 import { isNil } from 'min-dash';
 import {getEncodedSvg} from "./CustomUtil";
+import Color from "./helper/Color";
 
 const HIGH_PRIORITY = 9000,
       TASK_BORDER_RADIUS = 2;
@@ -48,14 +49,14 @@ export default class CustomRenderer extends BaseRenderer {
       let imageHref, color;
 
       switch (getFillColor(element)) {
-        case 'rgb(245,61,51)':
+        case Color.red:
           color = 'RED';
           break;
-        case 'rgba(66, 180, 21, 0.7)':
-        case 'rgba(66, 180, 21, 1)':
+        case Color.green_low_opacity:
+        case Color.green_full_opacity:
           color = 'GREEN';
           break;
-        case 'rgba(255, 143, 0, 1)':
+        case Color.orange:
           color = 'ORANGE';
           break;
         default:
@@ -99,10 +100,10 @@ function drawImg(width, height, image, color) {
     href: image
   });
   switch (color) {
-    case 'rgb(245,61,51)':
+    case Color.red:
     svgClass(img).add('svgColorRed');
     break;
-    case 'rgba(66, 180, 21, 0.7)':
+    case Color.green_low_opacity:
     svgClass(img).add('svgColorGreen');
     break;
     default:
