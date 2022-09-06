@@ -14,7 +14,13 @@ import {
     delegate as domDelegate,
     event as domEvent
 } from 'min-dom';
-import {getEncodedSvg} from "../CustomUtil";
+
+import {
+    attr as svgAttr,
+    create as svgCreate
+} from 'tiny-svg';
+
+import {getSvg} from "../CustomUtil";
 
 
 var TOGGLE_SELECTOR = '.djs-palette-toggle',
@@ -237,7 +243,13 @@ CustomRealPalette.prototype._update = function() {
 
         var html;
         if(entry.iot && entry.iot !== 'decision-group') {
-            html =  ('<div class="entry" draggable="true"><img style="width: 25px" src="'+ getEncodedSvg(entry.iot, null) +'"></div>');
+            //html =  ('<div class="entry" draggable="true"><img style="width: 25px" src="'+ getEncodedSvg(entry.iot, null) +'"></div>');
+            let svgContainer = svgCreate(getSvg(entry.iot, null));
+            svgAttr(svgContainer, {
+                width: 37,
+                height: 37
+            });
+            html =  ('<div class="entry" draggable="true">' + svgContainer.outerHTML + '</div>');
         } else {
             html = entry.html || (
                 entry.separator ?

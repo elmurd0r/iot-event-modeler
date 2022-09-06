@@ -20,7 +20,7 @@ import {
 } from 'bpmn-js/lib/util/ModelUtil';
 
 import { isNil } from 'min-dash';
-import {getEncodedSvg} from "./CustomUtil";
+import {getSvg} from "./CustomUtil";
 import Color from "./helper/Color";
 
 const HIGH_PRIORITY = 9000,
@@ -45,7 +45,7 @@ export default class CustomRenderer extends BaseRenderer {
     const iotType = this.getIotType(element);
     if (!isNil(iotType) && iotType !== 'decision-group') {
 
-      let imageHref, color;
+      let svg, color;
 
       switch (getFillColor(element)) {
         case Color.red:
@@ -60,12 +60,12 @@ export default class CustomRenderer extends BaseRenderer {
           break;
         default:
       }
-      imageHref = getEncodedSvg(iotType, color);
+      svg = getSvg(iotType, color);
 
-      const img = drawImg(element.width, element.height, imageHref, color);
+      let svgElement = renderSVG(element.width, element.height, svg, color);
       svgClear(parentNode);
-      svgAppend(parentNode, img);
-      return img;
+      svgAppend(parentNode, svgElement);
+      return svgElement;
     }
     if (!isNil(iotType) && iotType === 'decision-group') {
       const DECISION_CONTAINER_PATH = {
@@ -125,6 +125,24 @@ function drawImg(width, height, image, color) {
   }
 
   return img;
+}
+
+function renderSVG(width, height, svg, color) {
+  let svgContainer = svgCreate(svg);
+  svgAttr(svgContainer, {
+    width: width,
+    height: height
+  });
+  switch (color) {
+    case Color.red:
+      svgClass(svgContainer).add('svgColorRed');
+      break;
+    case Color.green_low_opacity:
+      svgClass(svgContainer).add('svgColorGreen');
+      break;
+    default:
+  }
+  return svgContainer
 }
 
 function getScaledPath(rawPath, param) {

@@ -1,5 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="137px" height="166px" viewBox="-0.5 -0.5 137 166" style="background-color: rgb(255, 255, 255);">
-    <defs></defs>
+<svg width="137px" height="166px" viewBox="-0.5 -0.5 137 166">
     <g>
         <rect x="4.01" y="1" width="130" height="161" fill="none" stroke="#000000" stroke-width="3"></rect>
         <rect x="0" y="1" width="40" height="40" fill="none" stroke="none"></rect>
@@ -33,10 +32,4 @@
         <path d="M 43.14 123 L 52.56 123" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
         <ellipse cx="69.01" cy="109.5" rx="5.13" ry="5.5" fill="#ffffff" stroke="#000000" stroke-width="3"></ellipse>
     </g>
-    <switch>
-        <g></g>
-        <a transform="translate(0,-5)" xlink:href="https://www.diagrams.net/doc/faq/svg-export-text-problems">
-            <text text-anchor="middle" font-size="10px" x="50%" y="100%">Viewer does not support full SVG 1.1</text>
-        </a>
-    </switch>
 </svg>

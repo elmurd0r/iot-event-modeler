@@ -10,7 +10,7 @@ import actuatorGroupSVG from "./default/actuator_group.svg";
 import sensorSVG from "./default/sensor.svg";
 import sensorGroupSVG from "./default/sensor_group.svg";
 import catchSVG from "./default/catch.svg";
-import catchCroupSVG from "./default/catch_group.svg";
+import catchGroupSVG from "./default/catch_group.svg";
 import objSVG from "./default/obj.svg";
 //RED
 import startEventSVGRed from "./red/start_event_red.svg";
@@ -61,7 +61,7 @@ export const actuatorGroupSVGEncoded = svg64(actuatorGroupSVG);
 export const sensorSVGEncoded = svg64(sensorSVG);
 export const sensorGroupSVGEncoded = svg64(sensorGroupSVG);
 export const catchSVGEncoded = svg64(catchSVG);
-export const catchGroupSVGEncoded = svg64(catchCroupSVG);
+export const catchGroupSVGEncoded = svg64(catchGroupSVG);
 export const objSVGEncoded = svg64(objSVG);
 //RED
 export const startEventSVGEncodedRed = svg64(startEventSVGRed);
