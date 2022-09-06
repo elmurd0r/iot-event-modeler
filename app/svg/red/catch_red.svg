@@ -1,29 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="173px" height="218px" viewBox="-0.5 -0.5 173 218">
-    <defs></defs>
-    <g>
-        <rect x="3.01" y="10" width="166.99" height="205" fill="#f53d33" stroke="#000000" stroke-width="4"></rect>
-        <rect x="0" y="0" width="40" height="50" fill="none" stroke="none"></rect>
-        <g fill="#000000" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="40px">
-            <text x="19.5" y="43.5">S</text>
+<svg width="9.5250664mm" height="13.228925mm" viewBox="0 0 9.5250664 13.228925">
+    <g id="g1195" transform="matrix(0.0557054,0,0,0.06329629,-0.05626245,-0.50637032)">
+        <rect x="3.01" y="10" width="166.99001" height="205" fill="none" stroke="#000000" stroke-width="4" id="rect1149" style="fill:#f53d33;fill-opacity:1"></rect>
+        <g fill="#000000" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="40px" id="g1155">
+            <text x="19.5" y="43.5" id="text1153">S</text>
         </g>
-        <ellipse cx="86.5" cy="114.13" rx="71" ry="69.125" fill="none" stroke="#000000" stroke-width="6"></ellipse>
-        <ellipse cx="86.02" cy="114.12" rx="55.635" ry="55.25" fill="none" stroke="#000000" stroke-width="6"></ellipse>
-        <path d="M 67 98.37 Q 87 78.37 107 98.37" fill="none" stroke="#000000" stroke-width="4" stroke-miterlimit="10"></path>
-        <path d="M 57 88.37 Q 87 58.37 117 88.37" fill="none" stroke="#000000" stroke-width="5" stroke-miterlimit="10"></path>
-        <ellipse cx="86.5" cy="107.37" rx="5" ry="5" fill="none" stroke="#000000" stroke-width="4"></ellipse>
-        <ellipse cx="86.01" cy="133.54" rx="11.543478260869565" ry="11.543478260869565" fill="none" stroke="#000000" stroke-width="3"></ellipse>
-        <path d="M 106.53 148 L 106.53 125" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 112.95 148 L 112.95 125" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 105.1 146.5 L 114.44 146.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 99.48 126.5 L 107.17 126.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 112.3 126.5 L 120 126.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 118.5 125.5 L 118.5 119.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 101 125.5 L 101 119.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 99.48 119.5 L 120 119.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 61.64 148 L 61.64 118" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 68.05 148 L 68.05 118" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 60.14 119 L 69.56 119" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 60.14 147 L 69.56 147" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <ellipse cx="86.01" cy="133.5" rx="5.13" ry="5.5" fill="none" stroke="#000000" stroke-width="3"></ellipse>
+        <ellipse cx="86.5" cy="114.13" rx="71" ry="69.125" fill="none" stroke="#000000" stroke-width="6" id="ellipse1157"></ellipse>
+        <ellipse cx="86.019997" cy="114.12" rx="55.634998" ry="55.25" fill="none" stroke="#000000" stroke-width="6" id="ellipse1159"></ellipse>
+        <path d="m 67,98.37 q 20,-20 40,0" fill="none" stroke="#000000" stroke-width="4" stroke-miterlimit="10" id="path1161"></path>
+        <path d="m 57,88.37 q 30,-30 60,0" fill="none" stroke="#000000" stroke-width="5" stroke-miterlimit="10" id="path1163"></path>
+        <circle cx="86.5" cy="107.37" fill="none" stroke="#000000" stroke-width="4" id="ellipse1165" r="5"></circle>
+        <circle cx="86.010002" cy="133.53999" fill="none" stroke="#000000" stroke-width="3" id="ellipse1167" r="11.543478"></circle>
+        <path d="M 106.53,148 V 125" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path1169"></path>
+        <path d="M 112.95,148 V 125" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path1171"></path>
+        <path d="m 105.1,146.5 h 9.34" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path1173"></path>
+        <path d="m 99.48,126.5 h 7.69" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path1175"></path>
+        <path d="M 112.3,126.5 H 120" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path1177"></path>
+        <path d="m 118.5,125.5 v -6" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path1179"></path>
+        <path d="m 101,125.5 v -6" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path1181"></path>
+        <path d="M 99.48,119.5 H 120" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path1183"></path>
+        <path d="M 61.64,148 V 118" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path1185"></path>
+        <path d="M 68.05,148 V 118" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path1187"></path>
+        <path d="m 60.14,119 h 9.42" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path1189"></path>
+        <path d="m 60.14,147 h 9.42" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path1191"></path>
+        <ellipse cx="86.010002" cy="133.5" rx="5.1300001" ry="5.5" fill="none" stroke="#000000" stroke-width="3" id="ellipse1193"></ellipse>
     </g>
 </svg>

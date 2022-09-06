@@ -1,41 +1,32 @@
-<svg width="173px" height="220px" viewBox="-0.5 -0.5 173 220">
-    <defs />
-    <g>
-        <rect x="3.01" y="10" width="166.99" height="205" fill="#42b415" stroke="#000000" stroke-width="4" pointer-events="all" />
-        <rect x="0" y="0" width="40" height="50" fill="none" stroke="none" pointer-events="all" />
-        <g fill="#000000" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="40px">
-            <text x="19.5" y="43.5">S</text>
+<svg width="9.524909mm" height="13.229059mm" viewBox="0 0 9.524909 13.229059">
+    <g id="g2067" transform="matrix(0.05570448,0,0,0.06329693,-0.05626152,-0.50637544)">
+        <rect x="3.01" y="10" width="166.99001" height="205" fill="none" stroke="#000000" stroke-width="4" id="rect2013" style="fill:#42b415;fill-opacity:1"></rect>
+        <g fill="#000000" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="40px" id="g2019">
+            <text x="19.5" y="43.5" id="text2017">S</text>
         </g>
-        <ellipse cx="86.5" cy="111.13" rx="71" ry="69.125" fill="none" stroke="#000000" stroke-width="6" pointer-events="none" />
-        <ellipse cx="86.01" cy="111.12" rx="55.635" ry="55.25" fill="none" stroke="#000000" stroke-width="6" pointer-events="none" />
-        <path d="M 67 95.37 Q 87 75.37 107 95.37" fill="none" stroke="#000000" stroke-width="4" stroke-miterlimit="10" pointer-events="none" />
-        <path d="M 57 85.37 Q 87 55.37 117 85.37" fill="none" stroke="#000000" stroke-width="5" stroke-miterlimit="10" pointer-events="none" />
-        <ellipse cx="86.5" cy="104.37" rx="5" ry="5" fill="none" stroke="#000000" stroke-width="4" pointer-events="none" />
-        <ellipse cx="86.01" cy="130.54" rx="11.543478260869565" ry="11.543478260869565" fill="none" stroke="#000000" stroke-width="3" pointer-events="none" />
-        <path d="M 106.53 145 L 106.53 122" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" pointer-events="none" />
-        <path d="M 112.95 145 L 112.95 122" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" pointer-events="none" />
-        <path d="M 105.1 143.5 L 114.44 143.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" pointer-events="none" />
-        <path d="M 99.48 123.5 L 107.17 123.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" pointer-events="none" />
-        <path d="M 112.3 123.5 L 120 123.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" pointer-events="none" />
-        <path d="M 118.5 122.5 L 118.5 116.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" pointer-events="none" />
-        <path d="M 101 122.5 L 101 116.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" pointer-events="none" />
-        <path d="M 99.48 116.5 L 120 116.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" pointer-events="none" />
-        <path d="M 61.64 145 L 61.64 115" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" pointer-events="none" />
-        <path d="M 68.05 145 L 68.05 115" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" pointer-events="none" />
-        <path d="M 60.14 116 L 69.56 116" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" pointer-events="none" />
-        <path d="M 60.14 144 L 69.56 144" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" pointer-events="none" />
-        <ellipse cx="86.01" cy="130.5" rx="5.13" ry="5.5" fill="none" stroke="#000000" stroke-width="3" pointer-events="none" />
-        <rect x="74.51" y="191" width="24" height="24" fill="none" stroke="#000000" stroke-width="3" pointer-events="none" />
-        <g transform="translate(-0.5 -0.5)">
-            <switch>
-                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
-                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 22px; height: 1px; padding-top: 203px; margin-left: 76px;">
-                        <div style="box-sizing: border-box; font-size: 0px; text-align: center;">
-                            <div style="display: inline-block; font-size: 26px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; font-weight: bold; white-space: normal; overflow-wrap: normal;">+</div>
-                        </div>
-                    </div>
-                </foreignObject>
-                <text x="87" y="211" fill="#000000" font-family="Helvetica" font-size="26px" text-anchor="middle" font-weight="bold">+</text>
+        <ellipse cx="86.5" cy="111.13" rx="71" ry="69.125" fill="none" stroke="#000000" stroke-width="6" id="ellipse2021"></ellipse>
+        <ellipse cx="86.010002" cy="111.12" rx="55.634998" ry="55.25" fill="none" stroke="#000000" stroke-width="6" id="ellipse2023"></ellipse>
+        <path d="m 67,95.37 q 20,-20 40,0" fill="none" stroke="#000000" stroke-width="4" stroke-miterlimit="10" id="path2025"></path>
+        <path d="m 57,85.37 q 30,-30 60,0" fill="none" stroke="#000000" stroke-width="5" stroke-miterlimit="10" id="path2027"></path>
+        <circle cx="86.5" cy="104.37" fill="none" stroke="#000000" stroke-width="4" id="ellipse2029" r="5"></circle>
+        <circle cx="86.010002" cy="130.53999" fill="none" stroke="#000000" stroke-width="3" id="ellipse2031" r="11.543478"></circle>
+        <path d="M 106.53,145 V 122" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2033"></path>
+        <path d="M 112.95,145 V 122" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2035"></path>
+        <path d="m 105.1,143.5 h 9.34" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2037"></path>
+        <path d="m 99.48,123.5 h 7.69" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2039"></path>
+        <path d="M 112.3,123.5 H 120" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2041"></path>
+        <path d="m 118.5,122.5 v -6" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2043"></path>
+        <path d="m 101,122.5 v -6" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2045"></path>
+        <path d="M 99.48,116.5 H 120" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2047"></path>
+        <path d="M 61.64,145 V 115" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2049"></path>
+        <path d="M 68.05,145 V 115" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2051"></path>
+        <path d="m 60.14,116 h 9.42" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2053"></path>
+        <path d="m 60.14,144 h 9.42" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2055"></path>
+        <ellipse cx="86.010002" cy="130.5" rx="5.1300001" ry="5.5" fill="none" stroke="#000000" stroke-width="3" id="ellipse2057"></ellipse>
+        <rect x="74.510002" y="191" width="24" height="24" fill="none" stroke="#000000" stroke-width="3" id="rect2059"></rect>
+        <g transform="translate(-0.5,-0.5)" id="g2065">
+            <switch id="switch2063">
+                <text x="87" y="211" fill="#000000" font-family="Helvetica" font-size="26px" text-anchor="middle" font-weight="bold" id="text2061">+</text>
             </switch>
         </g>
     </g>

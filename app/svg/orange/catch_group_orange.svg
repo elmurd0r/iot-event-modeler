@@ -1,34 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="173px" height="211px" viewBox="-0.5 -0.5 173 211">
-    <defs></defs>
-    <g>
-        <rect x="3.01" y="2" width="166.99" height="205" fill="#ff8800" stroke="#000000" stroke-width="4"></rect>
-        <rect x="0" y="2" width="40" height="50" fill="none" stroke="none"></rect>
-        <g fill="#000000" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="39.99999999999999px">
-            <text x="19.5" y="45.5">S</text>
+<svg width="9.524909mm" height="13.229059mm" viewBox="0 0 9.524909 13.229059">
+    <g id="g2067" transform="matrix(0.05570448,0,0,0.06329693,-0.05626152,-0.50637544)">
+        <rect x="3.01" y="10" width="166.99001" height="205" fill="none" stroke="#000000" stroke-width="4" id="rect2013" style="fill:#ff8f00;fill-opacity:1"></rect>
+        <g fill="#000000" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="40px" id="g2019">
+            <text x="19.5" y="43.5" id="text2017">S</text>
         </g>
-        <ellipse cx="86.5" cy="103.12" rx="70.99999999999999" ry="69.12499999999999" fill="none" stroke="#000000" stroke-width="6"></ellipse>
-        <ellipse cx="86.01" cy="103.12" rx="55.63499999999999" ry="55.24999999999999" fill="none" stroke="#000000" stroke-width="6"></ellipse>
-        <path d="M 67 87.37 Q 87 67.37 107 87.37" fill="none" stroke="#000000" stroke-width="4" stroke-miterlimit="10"></path>
-        <path d="M 57 77.37 Q 87 47.37 117 77.37" fill="none" stroke="#000000" stroke-width="5" stroke-miterlimit="10"></path>
-        <ellipse cx="86.5" cy="96.37" rx="4.999999999999999" ry="4.999999999999999" fill="none" stroke="#000000" stroke-width="4"></ellipse>
-        <ellipse cx="86.01" cy="122.54" rx="11.543478260869563" ry="11.543478260869563" fill="none" stroke="#000000" stroke-width="3"></ellipse>
-        <path d="M 106.53 137 L 106.53 114" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 112.95 137 L 112.95 114" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 105.1 135.5 L 114.44 135.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 99.48 115.5 L 107.17 115.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 112.3 115.5 L 120 115.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 118.5 114.5 L 118.5 108.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 101 114.5 L 101 108.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 99.48 108.5 L 120 108.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 61.64 137 L 61.64 107" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 68.05 137 L 68.05 107" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 60.14 108 L 69.56 108" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 60.14 136 L 69.56 136" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <ellipse cx="86.01" cy="122.5" rx="5.129999999999999" ry="5.499999999999999" fill="none" stroke="#000000" stroke-width="3"></ellipse>
-        <rect x="74.51" y="183" width="24" height="24" fill="none" stroke="#000000" stroke-width="3"></rect>
-        <g transform="translate(-0.5 -0.5)scale(0.9999999999999999)">
-            <switch>
-                <text x="87" y="203" fill="#000000" font-family="Helvetica" font-size="26px" text-anchor="middle" font-weight="bold">+</text>
+        <ellipse cx="86.5" cy="111.13" rx="71" ry="69.125" fill="none" stroke="#000000" stroke-width="6" id="ellipse2021"></ellipse>
+        <ellipse cx="86.010002" cy="111.12" rx="55.634998" ry="55.25" fill="none" stroke="#000000" stroke-width="6" id="ellipse2023"></ellipse>
+        <path d="m 67,95.37 q 20,-20 40,0" fill="none" stroke="#000000" stroke-width="4" stroke-miterlimit="10" id="path2025"></path>
+        <path d="m 57,85.37 q 30,-30 60,0" fill="none" stroke="#000000" stroke-width="5" stroke-miterlimit="10" id="path2027"></path>
+        <circle cx="86.5" cy="104.37" fill="none" stroke="#000000" stroke-width="4" id="ellipse2029" r="5"></circle>
+        <circle cx="86.010002" cy="130.53999" fill="none" stroke="#000000" stroke-width="3" id="ellipse2031" r="11.543478"></circle>
+        <path d="M 106.53,145 V 122" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2033"></path>
+        <path d="M 112.95,145 V 122" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2035"></path>
+        <path d="m 105.1,143.5 h 9.34" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2037"></path>
+        <path d="m 99.48,123.5 h 7.69" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2039"></path>
+        <path d="M 112.3,123.5 H 120" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2041"></path>
+        <path d="m 118.5,122.5 v -6" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2043"></path>
+        <path d="m 101,122.5 v -6" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2045"></path>
+        <path d="M 99.48,116.5 H 120" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2047"></path>
+        <path d="M 61.64,145 V 115" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2049"></path>
+        <path d="M 68.05,145 V 115" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2051"></path>
+        <path d="m 60.14,116 h 9.42" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2053"></path>
+        <path d="m 60.14,144 h 9.42" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path2055"></path>
+        <ellipse cx="86.010002" cy="130.5" rx="5.1300001" ry="5.5" fill="none" stroke="#000000" stroke-width="3" id="ellipse2057"></ellipse>
+        <rect x="74.510002" y="191" width="24" height="24" fill="none" stroke="#000000" stroke-width="3" id="rect2059"></rect>
+        <g transform="translate(-0.5,-0.5)" id="g2065">
+            <switch id="switch2063">
+                <text x="87" y="211" fill="#000000" font-family="Helvetica" font-size="26px" text-anchor="middle" font-weight="bold" id="text2061">+</text>
             </switch>
         </g>
     </g>

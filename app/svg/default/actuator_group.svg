@@ -1,35 +1,34 @@
-<svg width="137px" height="166px" viewBox="-0.5 -0.5 137 166">
-    <g>
-        <rect x="4.01" y="1" width="130" height="161" fill="none" stroke="#000000" stroke-width="3"></rect>
-        <rect x="0" y="1" width="40" height="40" fill="none" stroke="none"></rect>
-        <g transform="translate(-0.5 -0.5)">
-            <switch>
-                <text x="20" y="31" fill="#000000" font-family="Helvetica" font-size="32px" text-anchor="middle" font-weight="bold">A</text>
-            </switch>
-        </g>
-        <path d="M 50 70 Q 70 50 90 70" fill="none" stroke="#000000" stroke-width="4" stroke-miterlimit="10"></path>
-        <path d="M 40 60 Q 70 30 100 60" fill="none" stroke="#000000" stroke-width="5" stroke-miterlimit="10"></path>
-        <path d="M 30 50 Q 70 10 110 50" fill="none" stroke="#000000" stroke-width="4" stroke-miterlimit="10"></path>
-        <ellipse cx="69.5" cy="79" rx="5" ry="5" fill="#ffffff" stroke="#000000" stroke-width="4"></ellipse>
-        <rect x="57.01" y="137.5" width="24" height="24" fill="none" stroke="#000000" stroke-width="3"></rect>
-        <g transform="translate(-0.5 -0.5)">
-            <switch>
-                <text x="69" y="155" fill="#000000" font-family="Helvetica" font-size="18px" text-anchor="middle" font-weight="bold">+</text>
-            </switch>
-        </g>
-        <ellipse cx="69.01" cy="109.54" rx="11.543478260869565" ry="11.543478260869565" fill="#ffffff" stroke="#000000" stroke-width="3"></ellipse>
-        <path d="M 89.53 124 L 89.53 101" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 95.95 124 L 95.95 101" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 88.1 122.5 L 97.44 122.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 82.48 102.5 L 90.17 102.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 95.3 102.5 L 103 102.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 101.5 101.5 L 101.5 95.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 84 101.5 L 84 95.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 82.48 95.5 L 103 95.5" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 44.64 124 L 44.64 94" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 51.05 124 L 51.05 94" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 43.14 95 L 52.56 95" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <path d="M 43.14 123 L 52.56 123" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10"></path>
-        <ellipse cx="69.01" cy="109.5" rx="5.13" ry="5.5" fill="#ffffff" stroke="#000000" stroke-width="3"></ellipse>
+<svg width="9.5248652mm" height="13.228941mm" viewBox="0 0 9.5248652 13.228941">
+    <g id="g186" transform="matrix(0.07161553,0,0,0.08066427,-0.179755,0.04033213)">
+      <rect x="4.0100002" y="1" width="130" height="161" fill="none" stroke="#000000" stroke-width="3" id="rect132"></rect>
+        <g transform="translate(-0.5,-0.5)" id="g140">
+        <switch id="switch138">
+          <text x="20" y="31" fill="#000000" font-family="Helvetica" font-size="32px" text-anchor="middle" font-weight="bold" id="text136">A</text>
+        </switch>
+      </g>
+        <path d="M 50,70 Q 70,50 90,70" fill="none" stroke="#000000" stroke-width="4" stroke-miterlimit="10" id="path142"></path>
+        <path d="m 40,60 q 30,-30 60,0" fill="none" stroke="#000000" stroke-width="5" stroke-miterlimit="10" id="path144"></path>
+        <path d="m 30,50 q 40,-40 80,0" fill="none" stroke="#000000" stroke-width="4" stroke-miterlimit="10" id="path146"></path>
+        <circle cx="69.5" cy="79" fill="#ffffff" stroke="#000000" stroke-width="4" id="ellipse148" r="5" style="fill:none"></circle>
+        <rect x="57.009998" y="137.5" width="24" height="24" fill="none" stroke="#000000" stroke-width="3" id="rect150"></rect>
+        <g transform="translate(-0.5,-0.5)" id="g156">
+        <switch id="switch154">
+          <text x="69" y="155" fill="#000000" font-family="Helvetica" font-size="18px" text-anchor="middle" font-weight="bold" id="text152">+</text>
+        </switch>
+      </g>
+        <circle cx="69.010002" cy="109.54" fill="#ffffff" stroke="#000000" stroke-width="3" id="ellipse158" r="11.543478" style="fill:none"></circle>
+        <path d="M 89.53,124 V 101" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path160"></path>
+        <path d="M 95.95,124 V 101" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path162"></path>
+        <path d="m 88.1,122.5 h 9.34" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path164"></path>
+        <path d="m 82.48,102.5 h 7.69" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path166"></path>
+        <path d="M 95.3,102.5 H 103" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path168"></path>
+        <path d="m 101.5,101.5 v -6" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path170"></path>
+        <path d="m 84,101.5 v -6" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path172"></path>
+        <path d="M 82.48,95.5 H 103" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path174"></path>
+        <path d="M 44.64,124 V 94" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path176"></path>
+        <path d="M 51.05,124 V 94" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path178"></path>
+        <path d="m 43.14,95 h 9.42" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path180"></path>
+        <path d="m 43.14,123 h 9.42" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path182"></path>
+        <ellipse cx="69.010002" cy="109.5" rx="5.1300001" ry="5.5" fill="#ffffff" stroke="#000000" stroke-width="3" id="ellipse184" style="fill:none"></ellipse>
     </g>
 </svg>
