@@ -69,7 +69,7 @@ export default class CustomRenderer extends BaseRenderer {
     }
     if (!isNil(iotType) && iotType === 'decision-group') {
       const DECISION_CONTAINER_PATH = {
-        d: 'm {mx},{my} l 0 12 c 0 0 5 0 5 -6 c 0 -1 0 -6 -5 -6 z'
+        d: 'm 6 6 l 0 4 l 20 0 l 0 -4 z m 0 0 l 0 12 l 20 0 l 0 -12 z m 0 8 l 20 0 m -13 -4 l 0 8 M 30 10 C 34 6 38 6 42 10 M 32 12 V 12 C 34 9 38 9 40 12 M 34 14 C 34 12 38 12 38 14 M 35 16 A 1 1 0 0 0 37 16 A 1 1 0 0 0 35 16'
       }
       const abspos = {
         abspos: {
@@ -79,7 +79,7 @@ export default class CustomRenderer extends BaseRenderer {
       }
       let pathData = getScaledPath(DECISION_CONTAINER_PATH, abspos)
       this.bpmnRenderer._drawPath(parentNode, pathData, {
-        strokeWidth: 2,
+        strokeWidth: 1,
         stroke: getStrokeColor(element, 'black')
       });
     }

@@ -208,7 +208,7 @@ export default class CustomPalette {
       },
         'create.iot-decision-group': {
           group: 'iot',
-          className: 'bpmn-icon-subprocess-expanded',
+          className: 'iot-decision-container iot-palette-element',
           title: translate('Create IoT Decision Group'),
           iot: 'decision-group',
           action: {

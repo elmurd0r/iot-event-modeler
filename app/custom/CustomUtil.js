@@ -11,6 +11,7 @@ import sensorGroupSVG from "../svg/default/sensor_group.svg";
 import catchSVG from "../svg/default/catch.svg";
 import catchGroupSVG from "../svg/default/catch_group.svg";
 import objSVG from "../svg/default/obj.svg";
+import decisionLargeSVG from "../svg/default/decision_group_large.svg";
 //RED
 import startEventSVGRed from "../svg/red/start_event_red.svg";
 import catchEventSVGRed from "../svg/red/catch_event_red.svg";
@@ -393,6 +394,9 @@ export const getSvg = (iotType, color) => {
                         break;
                 }
             }
+            break;
+        case 'decision-group':
+            svg = decisionLargeSVG;
             break;
         case 'sensor':
         default:
