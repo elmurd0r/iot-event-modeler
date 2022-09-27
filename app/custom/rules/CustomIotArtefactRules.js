@@ -41,7 +41,7 @@ CustomIotArtefactRules.prototype.init = function() {
         if(context.source.businessObject.type === 'decision-group' || context.target.businessObject.type === 'decision-group') {
             if(context.target.type === 'bpmn:Task' && context.source.parent.businessObject.type !== 'decision-group') {
                 return {
-                    type: 'bpmn:DataInputAssociation'
+                    type: 'bpmn:Association'
                 };
             }
             return false;
