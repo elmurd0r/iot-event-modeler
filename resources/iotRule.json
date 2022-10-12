@@ -1,0 +1,19 @@
+{
+  "name": "IotRule",
+  "uri": "http://dbis/schema/bpmn/iotr",
+  "prefix": "iotr",
+  "xml": {
+    "tagAlias": "lowerCase"
+  },
+  "types": [
+    {
+      "name": "Operator",
+      "extends": ["bpmn:TextAnnotation"],
+      "properties": [
+        { "name": "operator", "type": "String", "isAttr": true }
+      ]
+    }
+  ],
+  "emumerations": [],
+  "associations": []
+}

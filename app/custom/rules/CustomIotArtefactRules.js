@@ -59,7 +59,7 @@ CustomIotArtefactRules.prototype.init = function() {
 
     this.addRule('shape.create', 1500, (context) => {
         if(context.target.businessObject.type === 'decision-group') {
-            if(context.shape.businessObject.type === 'sensor' || context.shape.businessObject.type === 'decision-group') {
+            if(context.shape.businessObject.type === 'sensor' || context.shape.businessObject.type === 'decision-group' || context.shape.businessObject.operator) {
                 return true;
             }
             return false;
@@ -69,7 +69,7 @@ CustomIotArtefactRules.prototype.init = function() {
     this.addRule('elements.move', 1500, (context) => {
         if ( context.target?.businessObject.type === 'decision-group') {
             let shapes = context.shapes;
-            let impossibleToAdd =  shapes.some(shape => shape.businessObject.type !== 'sensor' && shape.businessObject.type !== 'decision-group');
+            let impossibleToAdd =  shapes.some(shape => shape.businessObject.type !== 'sensor' && shape.businessObject.type !== 'decision-group' && !shape.businessObject.operator);
             if(!impossibleToAdd) {
                 return true;
             }

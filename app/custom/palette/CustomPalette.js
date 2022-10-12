@@ -105,6 +105,19 @@ export default class CustomPalette {
       }
     }
 
+    function createRuleOperator(param) {
+      return function(event) {
+        const businessObject = bpmnFactory.create('bpmn:TextAnnotation');
+        businessObject.set('iotr:operator', '&&');
+
+        const shape = elementFactory.createShape({
+          type: 'bpmn:TextAnnotation',
+          businessObject: businessObject
+        });
+        create.start(event, shape);
+      };
+    }
+
     return {
       'create.iot-start': {
         group: 'iot',
@@ -224,6 +237,16 @@ export default class CustomPalette {
         action: {
           dragstart: createIotObj("obj"),
           click: createIotObj("obj")
+        }
+      },
+      'create.iotr-operator': {
+        group: 'iotr',
+        iot: 'rule-operator',
+        className: 'iotr-operator iot-palette-element',
+        title: translate('Create IoT Rule Operator'),
+        action: {
+          dragstart: createRuleOperator("test"),
+          click: createRuleOperator("test")
         }
       }
     };

@@ -41,8 +41,13 @@ export default class CustomRenderer extends BaseRenderer {
   }
 
   drawShape(parentNode, element) {
-    const shape = this.bpmnRenderer.drawShape(parentNode, element);
+    const iotRuleOperator = this.getIoTRuleOperator(element);
     const iotType = this.getIotType(element);
+    if(!isNil(iotRuleOperator)) {
+      element.width = 30
+    }
+
+    const shape = this.bpmnRenderer.drawShape(parentNode, element);
     if (!isNil(iotType) && iotType !== 'decision-group') {
 
       let svg, color;
@@ -83,6 +88,27 @@ export default class CustomRenderer extends BaseRenderer {
         stroke: getStrokeColor(element, 'black')
       });
     }
+    if (!isNil(iotRuleOperator)) {
+      element.width = 30
+      const RULE_OPERATOR_PATH = {
+        d: 'm {mx}, {my} m 10,0 l -10,0 l 0,{e.y0} l 10,0 m {cwidth},0 m -20,0 l 10,0 l 0,{e.y1} l -10,0',
+        height: 30,
+        width: 10,
+        heightElements: [30, -30],
+        widthElements: [10, -10]
+      }
+      let pathData = getScaledPath(RULE_OPERATOR_PATH,
+          {
+            xScaleFactor: 1,
+            yScaleFactor: 1,
+            containerWidth: element.width,
+            containerHeight: element.height,
+            position: {
+              mx: 0.0,
+              my: 0.0
+            }})
+      this.bpmnRenderer._drawPath(parentNode, pathData)
+    }
 
     return shape;
   }
@@ -90,6 +116,12 @@ export default class CustomRenderer extends BaseRenderer {
   getIotType(element) {
     const businessObject = getBusinessObject(element);
     const type = businessObject.get('iot:type');
+    return type || null;
+  }
+
+  getIoTRuleOperator(element) {
+    const businessObject = getBusinessObject(element);
+    const type = businessObject.get('iotr:operator');
     return type || null;
   }
 
@@ -165,7 +197,6 @@ function getScaledPath(rawPath, param) {
     var heightRatio = (param.containerHeight / rawPath.height) * param.yScaleFactor;
     var widthRatio = (param.containerWidth / rawPath.width) * param.xScaleFactor;
 
-
     // Apply height ratio
     for (var heightIndex = 0; heightIndex < rawPath.heightElements.length; heightIndex++) {
       coordinates['y' + heightIndex] = rawPath.heightElements[heightIndex] * heightRatio;
@@ -182,7 +213,8 @@ function getScaledPath(rawPath, param) {
       rawPath.d, {
         mx: mx,
         my: my,
-        e: coordinates
+        e: coordinates,
+        cwidth: param.containerWidth
       }
   );
   return path;
