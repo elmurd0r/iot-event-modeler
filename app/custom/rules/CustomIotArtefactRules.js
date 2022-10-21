@@ -52,21 +52,16 @@ CustomIotArtefactRules.prototype.init = function() {
 
     this.addRule('shape.create', 1500, (context) => {
         if(context.target.businessObject.type === 'decision-group') {
-            if(context.shape.businessObject.type === 'sensor' || context.shape.businessObject.type === 'decision-group' || context.shape.businessObject.operator || context.shape.type === 'bpmn:DataObjectReference') {
-                return true;
-            }
-            return false;
+            let shapeBoType = context.shape.businessObject.type;
+            let creatable = shapeBoType === 'sensor' || shapeBoType === 'decision-group' || context.shape.businessObject.operator || (context.shape.type === 'bpmn:DataObjectReference' && !shapeBoType)
+            return creatable;
         }
     });
 
     this.addRule('elements.move', 1500, (context) => {
         if ( context.target?.businessObject.type === 'decision-group') {
-            let shapes = context.shapes;
-            let impossibleToAdd =  shapes.some(shape => shape.businessObject.type !== 'sensor' && shape.businessObject.type !== 'decision-group' && !shape.businessObject.operator && shape.type !== 'bpmn:DataObjectReference');
-            if(!impossibleToAdd) {
-                return true;
-            }
-            return false;
+            let movable =  context.shapes.every(shape => shape.businessObject.type === 'sensor' || shape.businessObject.type === 'decision-group' || shape.businessObject.operator || (shape.type === 'bpmn:DataObjectReference' && !shape.businessObject.type));
+            return movable;
         }
     });
 
