@@ -1,11 +1,12 @@
 import BaseRenderer from 'diagram-js/lib/draw/BaseRenderer';
-import {getFillColor, getStrokeColor} from "bpmn-js/lib/draw/BpmnRenderUtil";
+import {getFillColor, getLabelColor, getSemantic, getStrokeColor} from "bpmn-js/lib/draw/BpmnRenderUtil";
 
 
 import {
   append as svgAppend,
   clear as svgClear,
   classes as svgClass,
+  classes as svgClasses,
   attr as svgAttr,
   create as svgCreate
 } from 'tiny-svg';
@@ -19,7 +20,7 @@ import {
   getBusinessObject
 } from 'bpmn-js/lib/util/ModelUtil';
 
-import { isNil } from 'min-dash';
+import {assign, isNil} from 'min-dash';
 import {getSvg} from "./CustomUtil";
 import Color from "./helper/Color";
 
@@ -28,11 +29,17 @@ const HIGH_PRIORITY = 9000,
 
 
 export default class CustomRenderer extends BaseRenderer {
-  constructor(eventBus, bpmnRenderer) {
+  constructor(eventBus, bpmnRenderer, textRenderer, config) {
     super(eventBus, HIGH_PRIORITY);
 
     this.eventBus = eventBus;
     this.bpmnRenderer = bpmnRenderer;
+    this.textRenderer = textRenderer
+
+    //Does not really inject config. but works anyway
+    this.defaultFillColor = config && config.defaultFillColor;
+    this.defaultStrokeColor = config && config.defaultStrokeColor;
+    this.defaultLabelColor = config && config.defaultLabelColor;
   }
 
   canRender(element) {
@@ -41,8 +48,11 @@ export default class CustomRenderer extends BaseRenderer {
   }
 
   drawShape(parentNode, element) {
+    console.log(element)
     const iotRuleOperator = this.getIoTRuleOperator(element);
     const iotType = this.getIotType(element);
+    const iotGateway = this.getIoTRuleGateway(element);
+    const iotCondEvent = this.getIoTConditionalEvent(element);
     if(!isNil(iotRuleOperator)) {
       element.width = 30
     }
@@ -68,6 +78,29 @@ export default class CustomRenderer extends BaseRenderer {
       svg = getSvg(iotType, color);
 
       let svgElement = renderSVG(element.width, element.height, svg, color);
+      svgClear(parentNode);
+      svgAppend(parentNode, svgElement);
+      return svgElement;
+    }
+    if(!isNil(iotGateway) && iotGateway !== 'condition') {
+      let svg, color;
+      svg = getSvg(iotGateway, color);
+      let svgElement = renderSVG(element.width, element.height, svg, color);
+      svgClear(parentNode);
+      svgAppend(parentNode, svgElement);
+      if(iotGateway === "result") {
+        this.renderEmbeddedLabel(parentNode, element, 'center-middle');
+      }
+      return svgElement;
+    }
+    if(!isNil(iotCondEvent)) {
+      let svg, color;
+      if(element.type === "bpmn:BoundaryEvent") {
+        color = "WHITE";
+      }
+      svg = getSvg(iotCondEvent, color);
+      let svgElement = renderSVG(element.width, element.height, svg, color);
+      console.log(element)
       svgClear(parentNode);
       svgAppend(parentNode, svgElement);
       return svgElement;
@@ -113,6 +146,9 @@ export default class CustomRenderer extends BaseRenderer {
     return shape;
   }
 
+  drawConnection(parentGfx, element) {
+  }
+
   getIotType(element) {
     const businessObject = getBusinessObject(element);
     const type = businessObject.get('iot:type');
@@ -125,6 +161,18 @@ export default class CustomRenderer extends BaseRenderer {
     return type || null;
   }
 
+  getIoTRuleGateway(element) {
+    const businessObject = getBusinessObject(element);
+    const type = businessObject.get('iotr:gateway');
+    return type || null;
+  }
+
+  getIoTConditionalEvent(element) {
+    const businessObject = getBusinessObject(element);
+    const type = businessObject.get('iotr:eventType');
+    return type || null;
+  }
+
   getShapePath(shape) {
     if (is(shape, 'bpmn:DataObjectReference')) {
       return getRoundRectPath(shape, TASK_BORDER_RADIUS);
@@ -132,9 +180,40 @@ export default class CustomRenderer extends BaseRenderer {
 
     return this.bpmnRenderer.getShapePath(shape);
   }
+
+  renderLabel(parentGfx, label, options) {
+
+    options = assign({
+      size: {
+        width: 100
+      }
+    }, options);
+
+    var text = this.textRenderer.createText(label || '', options);
+
+    svgClasses(text).add('djs-label');
+
+    svgAppend(parentGfx, text);
+
+    return text;
+  }
+
+  renderEmbeddedLabel(parentGfx, element, align) {
+    var semantic = getSemantic(element);
+
+    return this.renderLabel(parentGfx, semantic.name, {
+      box: element,
+      align: align,
+      padding: 5,
+      style: {
+        fill: getLabelColor(element, this.defaultLabelColor, this.defaultStrokeColor)
+      }
+    });
+  }
+
 }
 
-CustomRenderer.$inject = [ 'eventBus', 'bpmnRenderer' ];
+CustomRenderer.$inject = [ 'eventBus', 'bpmnRenderer', 'textRenderer', 'config' ];
 
 // helpers //////////
 

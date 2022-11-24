@@ -13,6 +13,13 @@ import catchGroupSVG from "../svg/default/catch_group.svg";
 import objSVG from "../svg/default/obj.svg";
 import decisionLargeSVG from "../svg/default/decision_group_large.svg";
 import ruleOperatorSVG from "../svg/default/rule_operator.svg";
+import orGatewaySVG from "../svg/default/container-components/or.svg";
+import andGatewaySVG from "../svg/default/container-components/and.svg";
+import resultGatewaySVG from "../svg/default/container-components/result.svg";
+import conditionGatewaySVG from "../svg/default/container-components/condition.svg";
+import conditionalStartSVG from "../svg/default/conditional/conditional_iot_start.svg";
+import conditionalIntermSVG from "../svg/default/conditional/conditional_iot_interm.svg";
+import conditionalIntermWhiteSVG from "../svg/default/conditional/conditional_iot_interm_white.svg";
 //RED
 import startEventSVGRed from "../svg/red/start_event_red.svg";
 import catchEventSVGRed from "../svg/red/catch_event_red.svg";
@@ -401,6 +408,24 @@ export const getSvg = (iotType, color) => {
             break;
         case 'rule-operator':
             svg = ruleOperatorSVG;
+            break;
+        case 'or':
+            svg = orGatewaySVG;
+            break;
+        case 'and':
+            svg = andGatewaySVG;
+            break;
+        case 'result':
+            svg = resultGatewaySVG;
+            break;
+        case 'condition':
+            svg = conditionGatewaySVG;
+            break;
+        case 'cond-start':
+            svg = conditionalStartSVG;
+            break;
+        case 'cond-interm':
+            svg = color ? conditionalIntermWhiteSVG : conditionalIntermSVG;
             break;
         case 'sensor':
         default:
