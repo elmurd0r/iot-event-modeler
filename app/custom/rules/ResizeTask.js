@@ -22,8 +22,18 @@ ResizeTask.prototype.init = function() {
                 data.shape.businessObject.$instanceOf('bpmn:DataObjectReference'))
         ) {
             if (data.newBounds) {
+                if(data.shape.businessObject.gateway === "condition"){
+                    data.newBounds.width=Math.max(50,data.newBounds.width);
+                    data.newBounds.height=Math.max(21,data.newBounds.height);
+                    return true;
+                }
+                if(data.shape.businessObject.$instanceOf('bpmn:DataObjectReference')){
+                    data.newBounds.width=Math.max(36,data.newBounds.width);
+                    data.newBounds.height=Math.max(50,data.newBounds.height);
+                    return true;
+                }
                 data.newBounds.width=Math.max(100,data.newBounds.width);
-                data.newBounds.height=Math.max(80,data.newBounds.height);
+                data.newBounds.height=Math.max(42,data.newBounds.height);
             }
             return true;
         }
