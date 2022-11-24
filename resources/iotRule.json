@@ -12,6 +12,20 @@
       "properties": [
         { "name": "operator", "type": "String", "isAttr": true }
       ]
+    },
+    {
+      "name": "Gateway",
+      "extends": ["bpmn:Task"],
+      "properties": [
+        { "name": "gateway", "type": "String", "isAttr": true }
+      ]
+    },
+    {
+      "name": "Conditional Events",
+      "extends": ["bpmn:Event"],
+      "properties": [
+        { "name": "eventType", "type": "String", "isAttr": true }
+      ]
     }
   ],
   "emumerations": [],
