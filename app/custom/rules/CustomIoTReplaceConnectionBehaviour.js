@@ -49,6 +49,9 @@ export default function CustomIoTReplaceConnectionBehavior(eventBus, modeling, b
             if (bpmnRules.canConnectMessageFlow(source, target)) {
                 replacementType = 'bpmn:MessageFlow';
             }
+            if(source.businessObject.type === 'sensor' || source.businessObject.type === 'decision-group' || source.businessObject.gateway || (source.type === 'bpmn:DataObjectReference' && !source.businessObject.type)) {
+                remove = false;
+            }
         }
 
         // transform message flows into sequence flows, if possible
