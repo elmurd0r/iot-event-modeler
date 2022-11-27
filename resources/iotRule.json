@@ -17,7 +17,8 @@
       "name": "Gateway",
       "extends": ["bpmn:Task"],
       "properties": [
-        { "name": "gateway", "type": "String", "isAttr": true }
+        { "name": "gateway", "type": "String", "isAttr": true },
+        { "name": "prio", "type": "Integer", "isAttr": true }
       ]
     },
     {

@@ -90,6 +90,7 @@ export default class CustomRenderer extends BaseRenderer {
       svgAppend(parentNode, svgElement);
       if(iotGateway === "result") {
         this.renderEmbeddedLabel(parentNode, element, 'center-middle');
+        this.renderPrioLabel(parentNode, element, 'center-top');
       }
       return svgElement;
     }
@@ -207,6 +208,19 @@ export default class CustomRenderer extends BaseRenderer {
       padding: 5,
       style: {
         fill: getLabelColor(element, this.defaultLabelColor, this.defaultStrokeColor)
+      }
+    });
+  }
+
+  renderPrioLabel(parentGfx, element, align) {
+    var semantic = getSemantic(element);
+    let prio = semantic.prio || ''
+    return this.renderLabel(parentGfx, prio + "", {
+      box: element,
+      align: align,
+      padding: element.height / 2 + 5,
+      style: {
+        fill: getLabelColor(element, "red", this.defaultStrokeColor)
       }
     });
   }
