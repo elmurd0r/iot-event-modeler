@@ -6,7 +6,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        node-version: [ 14 ]
+        node-version: [ 18.x ]
 
     runs-on: ${{ matrix.os }}
 
@@ -29,4 +29,4 @@ jobs:
     - name: Install dependencies
       run: npm install
     - name: Build
-      run: npm run all
+      run: npm run build
