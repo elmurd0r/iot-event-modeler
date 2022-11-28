@@ -1,16 +1,5 @@
 export var START_EVENT = [
     {
-        label: 'IoT Start Event',
-        actionName: 'replace-with-iot-start',
-        className: 'iot-element',
-        iot: 'start',
-        target: {
-            type: 'bpmn:StartEvent',
-            eventDefinitionType: 'bpmn:MessageEventDefinition',
-            'iot:type': 'start'
-        }
-    },
-    {
         label: 'Start Event',
         actionName: 'replace-with-none-start',
         className: 'bpmn-icon-start-event-none',
@@ -100,28 +89,6 @@ export var START_EVENT_SUB_PROCESS = [
 ];
 
 export var INTERMEDIATE_EVENT = [
-    {
-        label: 'IoT Intermediate catch Event',
-        actionName: 'replace-with-iot-intermediate-catch',
-        className: 'iot-element',
-        iot: 'catch',
-        target: {
-            type: 'bpmn:IntermediateCatchEvent',
-            eventDefinitionType: 'bpmn:MessageEventDefinition',
-            'iot:type': 'catch'
-        }
-    },
-    {
-        label: 'IoT Intermediate throw Event',
-        actionName: 'replace-with-iot-intermediate-throw',
-        className: 'iot-element',
-        iot: 'throw',
-        target: {
-            type: 'bpmn:IntermediateCatchEvent',
-            eventDefinitionType: 'bpmn:MessageEventDefinition',
-            'iot:type': 'throw'
-        }
-    },
     {
         label: 'Start Event',
         actionName: 'replace-with-none-start',
@@ -246,17 +213,6 @@ export var INTERMEDIATE_EVENT = [
 
 
 export var END_EVENT = [
-    {
-        label: 'IoT End Event',
-        actionName: 'replace-with-iot-end',
-        className: 'iot-element',
-        iot: 'end',
-        target: {
-            type: 'bpmn:EndEvent',
-            eventDefinitionType: 'bpmn:MessageEventDefinition',
-            'iot:type': 'end'
-        }
-    },
     {
         label: 'Start Event',
         actionName: 'replace-with-none-start',
@@ -591,56 +547,6 @@ export var IOT_REFERENCE = [
         target: {
             type: 'bpmn:DataObjectReference',
             'iot:type': 'sensor'
-        }
-    },
-    {
-        label: 'IoT Artefact Catch',
-        actionName: 'replace-with-iot-artefact-catch',
-        className: 'iot-element',
-        iot: 'artefact-catch',
-        target: {
-            type: 'bpmn:DataObjectReference',
-            'iot:type': 'artefact-catch'
-        }
-    },
-    {
-        label: 'IoT Actor',
-        actionName: 'replace-with-iot-actor',
-        className: 'iot-element',
-        iot: 'actor',
-        target: {
-            type: 'bpmn:DataObjectReference',
-            'iot:type': 'actor'
-        }
-    },
-    {
-        label: 'IoT Actor Sub',
-        actionName: 'replace-with-iot-actor-sub',
-        className: 'iot-element',
-        iot: 'actor-sub',
-        target: {
-            type: 'bpmn:DataObjectReference',
-            'iot:type': 'actor-sub'
-        }
-    },
-    {
-        label: 'IoT Artefact Catch Sub',
-        actionName: 'replace-with-iot-artefact-catch-sub',
-        className: 'iot-element',
-        iot: 'artefact-catch-sub',
-        target: {
-            type: 'bpmn:DataObjectReference',
-            'iot:type': 'artefact-catch-sub'
-        }
-    },
-    {
-        label: 'IoT Sensor Sub',
-        actionName: 'replace-with-iot-sensor-sub',
-        className: 'iot-element',
-        iot: 'sensor-sub',
-        target: {
-            type: 'bpmn:DataObjectReference',
-            'iot:type': 'sensor-sub'
         }
     }
 ]
