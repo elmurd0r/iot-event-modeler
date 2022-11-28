@@ -6,16 +6,12 @@ module.exports = {
   }],
   resolve: {
     fallback: {
-      "stream": require.resolve("stream-browserify"),
-      "vm": require.resolve("vm-browserify"),
-      "timers": require.resolve("timers-browserify")
+      "stream": require.resolve("stream-browserify")
     }
   },
   entry: {
-    'app': '/app/app.js',
-    'execute': '/app/executer/execute.js',
-    'worker': '/app/executer/worker.js'
-},
+    'app': '/app/app.js'
+  },
   output: {
     path: __dirname + '/public',
     filename: '[name].js'
@@ -37,7 +33,6 @@ module.exports = {
       patterns: [
         { from: 'assets/**', to: 'vendor/bpmn-js', context: 'node_modules/bpmn-js/dist/' },
         { from: '**/*.{html,css}', context: 'app/' },
-        { from: '**/*.{html,css}', context: 'app/executer' },
         { from: 'svg/**/!(*.js)', to: '.', context: 'app/' },
         { from: 'node_modules/bpmn-js-properties-panel/dist/assets', to: 'vendor/bpmn-js-properties-panel/assets' },
         { from: 'css/bootstrap.css', to: 'vendor/bootstrap/', context: 'node_modules/bootstrap/dist/' },
