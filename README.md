@@ -16,7 +16,7 @@ To start the example execute
 npm start
 ```
 
-To build the example into the `public` folder execute
+[Optional] To build the example into the `public` folder execute
 
 ```sh
 npm run all
