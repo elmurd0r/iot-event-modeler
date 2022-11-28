@@ -16,6 +16,21 @@ export default class CustomPalette {
       translate
     } = this;
 
+    function createDecision(decisionType) {
+      return function(event) {
+        const businessObject = bpmnFactory.create('bpmn:SubProcess');
+        businessObject.set('type', decisionType);
+
+        const shape = elementFactory.createShape({
+          type: 'bpmn:SubProcess',
+          businessObject: businessObject,
+          isExpanded: true
+        });
+        create.start(event, shape);
+      };
+    }
+
+
     function createIotObj(iotType) {
       return function(event) {
         const businessObject = bpmnFactory.create('bpmn:DataObjectReference');
@@ -88,6 +103,64 @@ export default class CustomPalette {
 
         create.start(event, shape);
       }
+    }
+
+    function createRuleOperator(param) {
+      return function(event) {
+        const businessObject = bpmnFactory.create('bpmn:TextAnnotation');
+        businessObject.set('iotr:operator', '&&');
+
+        const shape = elementFactory.createShape({
+          type: 'bpmn:TextAnnotation',
+          businessObject: businessObject
+        });
+        create.start(event, shape);
+      };
+    }
+
+    function createRuleGateway(param) {
+      return function(event) {
+        const businessObject = bpmnFactory.create('bpmn:Task');
+        businessObject.set('iotr:gateway', param);
+
+        const shape = elementFactory.createShape({
+          type: 'bpmn:Task',
+          businessObject: businessObject
+        });
+        shape.height = 42;
+        if (param === 'condition') {
+          shape.height = 21;
+        }
+        create.start(event, shape);
+      };
+    }
+
+    function createIotConditionalStart() {
+      return function(event) {
+        const businessObject = bpmnFactory.create('bpmn:StartEvent');
+        businessObject.set('iotr:eventType', 'cond-start');
+
+        const shape = elementFactory.createShape({
+          type: 'bpmn:StartEvent',
+          businessObject: businessObject
+        });
+
+        create.start(event, shape);
+      };
+    }
+
+    function createIotConditionalInterm() {
+      return function(event) {
+        const businessObject = bpmnFactory.create('bpmn:IntermediateCatchEvent');
+        businessObject.set('iotr:eventType', 'cond-interm');
+
+        const shape = elementFactory.createShape({
+          type: 'bpmn:IntermediateCatchEvent',
+          businessObject: businessObject
+        });
+
+        create.start(event, shape);
+      };
     }
 
     return {
@@ -191,6 +264,16 @@ export default class CustomPalette {
           click: createIotObj("artefact-catch-sub")
         }
       },
+        'create.iot-decision-group': {
+          group: 'iot',
+          className: 'iot-decision-container iot-palette-element',
+          title: translate('Create IoT Decision Group'),
+          iot: 'decision-group',
+          action: {
+            dragstart: createDecision("decision-group"),
+            click: createDecision("decision-group"),
+          }
+      },
       'create.iot-obj': {
         group: 'iot',
         className: 'iot-artefact-obj iot-palette-element',
@@ -199,6 +282,66 @@ export default class CustomPalette {
         action: {
           dragstart: createIotObj("obj"),
           click: createIotObj("obj")
+        }
+      },
+      'create.iotr-or-gateway': {
+        group: 'iotr',
+        iot: 'or',
+        className: 'iotr-gateway iot-palette-element',
+        title: translate('Create IoT OR Gateway'),
+        action: {
+          dragstart: createRuleGateway("or"),
+          click: createRuleGateway("or")
+        }
+      },
+      'create.iotr-and-gateway': {
+        group: 'iotr',
+        iot: 'and',
+        className: 'iotr-gateway iot-palette-element',
+        title: translate('Create IoT AND Gateway'),
+        action: {
+          dragstart: createRuleGateway("and"),
+          click: createRuleGateway("and")
+        }
+      },
+      'create.iotr-result-gateway': {
+        group: 'iotr',
+        iot: 'result',
+        className: 'iotr-gateway iot-palette-element',
+        title: translate('Create IoT Result Gateway'),
+        action: {
+          dragstart: createRuleGateway("result"),
+          click: createRuleGateway("result")
+        }
+      },
+        'create.iotr-condition-gateway': {
+      group: 'iotr',
+          iot: 'condition',
+          className: 'iotr-gateway iot-palette-element',
+          title: translate('Create IoT condition Gateway'),
+          action: {
+        dragstart: createRuleGateway("condition"),
+            click: createRuleGateway("condition")
+      }
+    },
+      'create.iotr-conditionalStart': {
+        group: 'iotr',
+        iot: 'cond-start',
+        className: 'iotr-event iot-palette-element',
+        title: translate('Create IoT conditional start event'),
+        action: {
+          dragstart: createIotConditionalStart(),
+          click: createIotConditionalStart()
+        }
+      },
+      'create.iotr-conditionalInterm': {
+        group: 'iotr',
+        iot: 'cond-interm',
+        className: 'iotr-event iot-palette-element',
+        title: translate('Create IoT conditional Intermediate event'),
+        action: {
+          dragstart: createIotConditionalInterm(),
+          click: createIotConditionalInterm()
         }
       }
     };

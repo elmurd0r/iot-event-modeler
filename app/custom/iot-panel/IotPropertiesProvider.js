@@ -1,5 +1,6 @@
 // Require your custom property entries.
 import spellProps from './parts/ValueProps';
+import ruleProps from './parts/rules/RuleProps';
 
 let LOW_PRIORITY = 500;
 
@@ -17,6 +18,7 @@ function createIotTabGroups(element, bpmnFactory, elementRegistry, translate) {
 
     // Add the spell props to the black magic group.
     spellProps(iotGroup, element, bpmnFactory, translate);
+    ruleProps(iotGroup, element, bpmnFactory, translate);
 
     return [
         iotGroup

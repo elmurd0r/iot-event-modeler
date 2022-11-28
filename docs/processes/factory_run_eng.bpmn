@@ -1,0 +1,370 @@
+#<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:iot="http://some-company/schema/bpmn/iot" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="Process_1" isExecutable="true">
+    <bpmn2:startEvent id="Event_1moe85l">
+      <bpmn2:outgoing>Flow_1vlaelf</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:task id="Activity_1u4ljg9" name="Pick up white wp">
+      <bpmn2:incoming>Flow_08pvvmf</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_11pca8d</bpmn2:outgoing>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_0tyy2ad">
+        <bpmn2:targetRef>DataObjectReference_05aqvjs</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:dataObjectReference id="DataObjectReference_05aqvjs" name="High-Bay Warehouse" dataObjectRef="DataObject_1hg8lit" iot:type="obj">
+      <bpmn2:extensionElements>
+        <iot:properties>
+          <iot:property url="http://127.0.0.1:5000/hbw/unload?machine=hbw_1&#38;slot=0_2" />
+        </iot:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:dataObjectReference>
+    <bpmn2:dataObject id="DataObject_1hg8lit" />
+    <bpmn2:sequenceFlow id="Flow_1vlaelf" sourceRef="Event_1moe85l" targetRef="Gateway_0x75pjv" />
+    <bpmn2:parallelGateway id="Gateway_0x75pjv">
+      <bpmn2:incoming>Flow_1vlaelf</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_08pvvmf</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0yvrs8v</bpmn2:outgoing>
+    </bpmn2:parallelGateway>
+    <bpmn2:sequenceFlow id="Flow_08pvvmf" sourceRef="Gateway_0x75pjv" targetRef="Activity_1u4ljg9" />
+    <bpmn2:task id="Activity_0wgibwh" name="Move VG to high-bay warehouse">
+      <bpmn2:incoming>Flow_0yvrs8v</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1mnn4wx</bpmn2:outgoing>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_00ploix">
+        <bpmn2:targetRef>DataObjectReference_1jn49fl</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_0yvrs8v" sourceRef="Gateway_0x75pjv" targetRef="Activity_0wgibwh" />
+    <bpmn2:dataObjectReference id="DataObjectReference_1jn49fl" name="Vacuum Gripper" dataObjectRef="DataObject_0ggwx3s" iot:type="obj">
+      <bpmn2:extensionElements>
+        <iot:properties>
+          <iot:property url="http://127.0.0.1:5000/vgr/move_to?factory=1&#38;machine=vgr_1&#38;position=high_bay_warehouse" />
+        </iot:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:dataObjectReference>
+    <bpmn2:dataObject id="DataObject_0ggwx3s" />
+    <bpmn2:task id="Activity_0kg2b51" name="Wait until wp arrived at transferpoint">
+      <bpmn2:incoming>Flow_1mnn4wx</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0zj0005</bpmn2:outgoing>
+      <bpmn2:property id="Property_1nnq1hu" name="__targetRef_placeholder" />
+      <bpmn2:dataInputAssociation id="DataInputAssociation_00zf6dn">
+        <bpmn2:sourceRef>DataObjectReference_1nzppry</bpmn2:sourceRef>
+        <bpmn2:targetRef>Property_1nnq1hu</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_1mnn4wx" sourceRef="Activity_0wgibwh" targetRef="Activity_0kg2b51" />
+    <bpmn2:boundaryEvent id="Event_0k95qi2" name="120s" attachedToRef="Activity_0kg2b51">
+      <bpmn2:outgoing>Flow_0bvw1ut</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition id="TimerEventDefinition_1wgaa28">
+        <bpmn2:timeDuration xsi:type="bpmn2:tFormalExpression">PT120S</bpmn2:timeDuration>
+      </bpmn2:timerEventDefinition>
+    </bpmn2:boundaryEvent>
+    <bpmn2:endEvent id="Event_11rrpg5">
+      <bpmn2:incoming>Flow_0bvw1ut</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_0bvw1ut" sourceRef="Event_0k95qi2" targetRef="Event_11rrpg5" />
+    <bpmn2:task id="Activity_11ya75u" name="Transport wp to Oven">
+      <bpmn2:incoming>Flow_0zj0005</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0uhn600</bpmn2:outgoing>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_0vd5gb2">
+        <bpmn2:targetRef>DataObjectReference_0767wdm</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_0zj0005" sourceRef="Activity_0kg2b51" targetRef="Activity_11ya75u" />
+    <bpmn2:task id="Activity_0kaljq3" name="Burn wp">
+      <bpmn2:incoming>Flow_0uhn600</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_15gk5b0</bpmn2:outgoing>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_1dm14bu">
+        <bpmn2:targetRef>DataObjectReference_193b7vf</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:task id="Activity_02lin08" name="Transport wp to turntable">
+      <bpmn2:incoming>Flow_0fi1q6g</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1oq2oai</bpmn2:outgoing>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_0h2lb06">
+        <bpmn2:targetRef>DataObjectReference_0knyuv1</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_1oq2oai" sourceRef="Activity_02lin08" targetRef="Activity_0yrqswd" />
+    <bpmn2:task id="Activity_0yrqswd" name="Mill wp and eject it afterwards">
+      <bpmn2:incoming>Flow_1oq2oai</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1hwfx01</bpmn2:outgoing>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_0vu9rqn">
+        <bpmn2:targetRef>DataObjectReference_0dx57c1</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:task id="Activity_152fwpg" name="Eject wp based on color">
+      <bpmn2:incoming>Flow_1hwfx01</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1glq17o</bpmn2:outgoing>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_1gdxjga">
+        <bpmn2:targetRef>DataObjectReference_1lkjhqk</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_1hwfx01" sourceRef="Activity_0yrqswd" targetRef="Activity_152fwpg" />
+    <bpmn2:dataObjectReference id="DataObjectReference_1nzppry" name="Outside Photoelectric Barrier" dataObjectRef="DataObject_028h341" iot:type="artefact-catch">
+      <bpmn2:extensionElements>
+        <iot:properties>
+          <iot:property value="true" mathOP="=" key="attributes.0.interrupted" url="http://127.0.0.1:5000/hbw/status_of_light_barrier?machine=hbw_1&#38;lb=1" />
+        </iot:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:dataObjectReference>
+    <bpmn2:dataObject id="DataObject_028h341" />
+    <bpmn2:dataObjectReference id="DataObjectReference_0767wdm" name="Vacuum Gripper" dataObjectRef="DataObject_04ev1ng" iot:type="obj">
+      <bpmn2:extensionElements>
+        <iot:properties>
+          <iot:property url="http://127.0.0.1:5000/vgr/pick_up_and_transport?machine=vgr_1&#38;start=high_bay_warehouse&#38;end=oven" />
+        </iot:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:dataObjectReference>
+    <bpmn2:dataObject id="DataObject_04ev1ng" />
+    <bpmn2:dataObjectReference id="DataObjectReference_193b7vf" name="Oven" dataObjectRef="DataObject_1bmqot0" iot:type="actor-sub">
+      <bpmn2:extensionElements>
+        <iot:properties>
+          <iot:property url="http://127.0.0.1:5000/ov/burn?machine=ov_1" method="GET" />
+        </iot:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:dataObjectReference>
+    <bpmn2:dataObject id="DataObject_1bmqot0" />
+    <bpmn2:dataObjectReference id="DataObjectReference_0knyuv1" name="Transfer Gripper" dataObjectRef="DataObject_0qrkm6p" iot:type="actor-sub">
+      <bpmn2:extensionElements>
+        <iot:properties>
+          <iot:property url="http://127.0.0.1:5000/wt/pick_up_and_transport?machine=wt_1&#38;start=oven&#38;end=milling_machine" method="GET" />
+        </iot:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:dataObjectReference>
+    <bpmn2:dataObject id="DataObject_0qrkm6p" />
+    <bpmn2:dataObjectReference id="DataObjectReference_0dx57c1" name="Milling machine" dataObjectRef="DataObject_1amcxwe" iot:type="obj">
+      <bpmn2:extensionElements>
+        <iot:properties>
+          <iot:property url="http://127.0.0.1:5000/mm/mill?factory=1&#38;machine=mm_1&#38;start=initial&#38;end=ejection" />
+        </iot:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:dataObjectReference>
+    <bpmn2:dataObject id="DataObject_1amcxwe" />
+    <bpmn2:dataObjectReference id="DataObjectReference_1lkjhqk" name="Sorting Machine" dataObjectRef="DataObject_1tjhuen" iot:type="obj">
+      <bpmn2:extensionElements>
+        <iot:properties>
+          <iot:property url="http://127.0.0.1:5000/sm/sort?machine=sm_1&#38;predefined_ejection_location=sink_1&#38;start=initial" />
+        </iot:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:dataObjectReference>
+    <bpmn2:dataObject id="DataObject_1tjhuen" />
+    <bpmn2:endEvent id="Event_1rxj213">
+      <bpmn2:incoming>Flow_1glq17o</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_1glq17o" sourceRef="Activity_152fwpg" targetRef="Event_1rxj213" />
+    <bpmn2:sequenceFlow id="Flow_0uhn600" sourceRef="Activity_11ya75u" targetRef="Activity_0kaljq3" />
+    <bpmn2:sequenceFlow id="Flow_11pca8d" sourceRef="Activity_1u4ljg9" targetRef="Gateway_00z8d6x" />
+    <bpmn2:parallelGateway id="Gateway_00z8d6x">
+      <bpmn2:incoming>Flow_11pca8d</bpmn2:incoming>
+      <bpmn2:incoming>Flow_15gk5b0</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0fi1q6g</bpmn2:outgoing>
+    </bpmn2:parallelGateway>
+    <bpmn2:sequenceFlow id="Flow_15gk5b0" sourceRef="Activity_0kaljq3" targetRef="Gateway_00z8d6x" />
+    <bpmn2:sequenceFlow id="Flow_0fi1q6g" sourceRef="Gateway_00z8d6x" targetRef="Activity_02lin08" />
+    <bpmn2:textAnnotation id="TextAnnotation_14s8ro2">
+      <bpmn2:text>wp = workpiece</bpmn2:text>
+    </bpmn2:textAnnotation>
+    <bpmn2:association id="Association_0mf9sb7" sourceRef="Activity_1u4ljg9" targetRef="TextAnnotation_14s8ro2" />
+    <bpmn2:textAnnotation id="TextAnnotation_12awi8r">
+      <bpmn2:text>VG = Vacuum Gripper</bpmn2:text>
+    </bpmn2:textAnnotation>
+    <bpmn2:association id="Association_1yefc2i" sourceRef="Activity_0wgibwh" targetRef="TextAnnotation_12awi8r" />
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNEdge id="Flow_0fi1q6g_di" bpmnElement="Flow_0fi1q6g">
+        <di:waypoint x="755" y="330" />
+        <di:waypoint x="780" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15gk5b0_di" bpmnElement="Flow_15gk5b0">
+        <di:waypoint x="670" y="330" />
+        <di:waypoint x="705" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11pca8d_di" bpmnElement="Flow_11pca8d">
+        <di:waypoint x="470" y="540" />
+        <di:waypoint x="730" y="540" />
+        <di:waypoint x="730" y="355" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0uhn600_di" bpmnElement="Flow_0uhn600">
+        <di:waypoint x="530" y="330" />
+        <di:waypoint x="570" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1glq17o_di" bpmnElement="Flow_1glq17o">
+        <di:waypoint x="1150" y="330" />
+        <di:waypoint x="1182" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hwfx01_di" bpmnElement="Flow_1hwfx01">
+        <di:waypoint x="1010" y="330" />
+        <di:waypoint x="1050" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1oq2oai_di" bpmnElement="Flow_1oq2oai">
+        <di:waypoint x="880" y="330" />
+        <di:waypoint x="910" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zj0005_di" bpmnElement="Flow_0zj0005">
+        <di:waypoint x="390" y="330" />
+        <di:waypoint x="430" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bvw1ut_di" bpmnElement="Flow_0bvw1ut">
+        <di:waypoint x="340" y="388" />
+        <di:waypoint x="340" y="412" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1mnn4wx_di" bpmnElement="Flow_1mnn4wx">
+        <di:waypoint x="250" y="330" />
+        <di:waypoint x="290" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0yvrs8v_di" bpmnElement="Flow_0yvrs8v">
+        <di:waypoint x="125" y="330" />
+        <di:waypoint x="150" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08pvvmf_di" bpmnElement="Flow_08pvvmf">
+        <di:waypoint x="100" y="355" />
+        <di:waypoint x="100" y="540" />
+        <di:waypoint x="370" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vlaelf_di" bpmnElement="Flow_1vlaelf">
+        <di:waypoint x="48" y="330" />
+        <di:waypoint x="75" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1moe85l_di" bpmnElement="Event_1moe85l">
+        <dc:Bounds x="12" y="312" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1u4ljg9_di" bpmnElement="Activity_1u4ljg9">
+        <dc:Bounds x="370" y="500" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_05aqvjs_di" bpmnElement="DataObjectReference_05aqvjs">
+        <dc:Bounds x="404" y="624" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="395" y="672" width="56" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0s17yd0_di" bpmnElement="Gateway_0x75pjv">
+        <dc:Bounds x="75" y="305" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0wgibwh_di" bpmnElement="Activity_0wgibwh">
+        <dc:Bounds x="150" y="290" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_1jn49fl_di" bpmnElement="DataObjectReference_1jn49fl">
+        <dc:Bounds x="182" y="395" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="160" y="443" width="80" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0kg2b51_di" bpmnElement="Activity_0kg2b51">
+        <dc:Bounds x="290" y="290" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_11rrpg5_di" bpmnElement="Event_11rrpg5">
+        <dc:Bounds x="322" y="412" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_11ya75u_di" bpmnElement="Activity_11ya75u">
+        <dc:Bounds x="430" y="290" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0kaljq3_di" bpmnElement="Activity_0kaljq3">
+        <dc:Bounds x="570" y="290" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_02lin08_di" bpmnElement="Activity_02lin08">
+        <dc:Bounds x="780" y="290" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0yrqswd_di" bpmnElement="Activity_0yrqswd">
+        <dc:Bounds x="910" y="290" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_152fwpg_di" bpmnElement="Activity_152fwpg">
+        <dc:Bounds x="1050" y="290" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_1nzppry_di" bpmnElement="DataObjectReference_1nzppry">
+        <dc:Bounds x="322" y="195" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="308" y="160" width="64" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_0767wdm_di" bpmnElement="DataObjectReference_0767wdm">
+        <dc:Bounds x="462" y="405" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="440" y="456" width="80" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_193b7vf_di" bpmnElement="DataObjectReference_193b7vf">
+        <dc:Bounds x="602" y="405" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="606" y="455" width="27" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_0knyuv1_di" bpmnElement="DataObjectReference_0knyuv1">
+        <dc:Bounds x="812" y="405" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="790" y="456" width="81" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_0dx57c1_di" bpmnElement="DataObjectReference_0dx57c1">
+        <dc:Bounds x="942" y="405" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="922" y="455" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_1lkjhqk_di" bpmnElement="DataObjectReference_1lkjhqk">
+        <dc:Bounds x="1082" y="405" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1061" y="456" width="80" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1rxj213_di" bpmnElement="Event_1rxj213">
+        <dc:Bounds x="1182" y="312" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0h1qf4j_di" bpmnElement="Gateway_00z8d6x">
+        <dc:Bounds x="705" y="305" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_14s8ro2_di" bpmnElement="TextAnnotation_14s8ro2">
+        <dc:Bounds x="230" y="490" width="100" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_12awi8r_di" bpmnElement="TextAnnotation_12awi8r">
+        <dc:Bounds x="136" y="230" width="128" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1mq3gl6_di" bpmnElement="Event_0k95qi2">
+        <dc:Bounds x="322" y="352" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="298" y="383" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_0tyy2ad_di" bpmnElement="DataOutputAssociation_0tyy2ad">
+        <di:waypoint x="420" y="580" />
+        <di:waypoint x="420" y="624" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_00ploix_di" bpmnElement="DataOutputAssociation_00ploix">
+        <di:waypoint x="199" y="370" />
+        <di:waypoint x="198" y="395" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_00zf6dn_di" bpmnElement="DataInputAssociation_00zf6dn">
+        <di:waypoint x="340" y="245" />
+        <di:waypoint x="340" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_0vd5gb2_di" bpmnElement="DataOutputAssociation_0vd5gb2">
+        <di:waypoint x="479" y="370" />
+        <di:waypoint x="478" y="405" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_1dm14bu_di" bpmnElement="DataOutputAssociation_1dm14bu">
+        <di:waypoint x="620" y="370" />
+        <di:waypoint x="620" y="405" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_0h2lb06_di" bpmnElement="DataOutputAssociation_0h2lb06">
+        <di:waypoint x="829" y="370" />
+        <di:waypoint x="829" y="405" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_0vu9rqn_di" bpmnElement="DataOutputAssociation_0vu9rqn">
+        <di:waypoint x="959" y="370" />
+        <di:waypoint x="958" y="405" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_1gdxjga_di" bpmnElement="DataOutputAssociation_1gdxjga">
+        <di:waypoint x="1099" y="370" />
+        <di:waypoint x="1099" y="405" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0mf9sb7_di" bpmnElement="Association_0mf9sb7">
+        <di:waypoint x="370" y="528" />
+        <di:waypoint x="330" y="518" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1yefc2i_di" bpmnElement="Association_1yefc2i">
+        <di:waypoint x="206" y="290" />
+        <di:waypoint x="211" y="260" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

@@ -72,6 +72,19 @@
       ]
     },
     {
+      "name": "IotDecisionGroup",
+      "extends": [
+        "bpmn:SubProcess"
+      ],
+      "properties": [
+        {
+          "name": "type",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    },
+    {
       "name": "Properties",
       "superClass": [
         "Element"
@@ -125,6 +138,16 @@
         },
         {
           "name": "timeout",
+          "type": "String",
+          "isAttr": true
+        },
+        {
+          "name": "condition",
+          "type": "String",
+          "isAttr": true
+        },
+        {
+          "name": "result",
           "type": "String",
           "isAttr": true
         },

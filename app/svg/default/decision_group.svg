@@ -1,0 +1,15 @@
+<svg width="30.427082mm" height="25.135418mm" viewBox="0 0 30.427082 25.135418">
+  <g id="layer1">
+    <g class="djs-element djs-shape" data-element-id="Activity_1o8lidm" transform="matrix(0.26458333,0,0,0.26458333,1.984375,1.984375)" style="display:block" id="g149">
+      <g class="djs-visual" id="g143">
+        <rect x="0" y="0" width="100" height="80" rx="10" ry="10" style="fill:#ffffff;fill-opacity:0.95;stroke:#000000;stroke-width:2px" id="rect137"></rect>
+        <text class="djs-label" style="font-weight:normal;font-size:12px;font-family:Arial, sans-serif;fill:#000000" id="text141">
+          <tspan x="50" y="43.599998" id="tspan139"></tspan>
+        </text>
+        <path d="m 6 6 l 0 4 l 20 0 l 0 -4 z m 0 0 l 0 12 l 20 0 l 0 -12 z m 0 8 l 20 0 m -13 -4 l 0 8 M 30 10 C 34 6 38 6 42 10 M 32 12 V 12 C 34 9 38 9 40 12 M 34 14 C 34 12 38 12 38 14 M 35 16 A 1 1 0 0 0 37 16 A 1 1 0 0 0 35 16" style="fill: none; stroke-width: 1px; stroke: black;"></path>
+      </g>
+      <rect class="djs-hit djs-hit-all" x="0" y="0" width="100" height="80" style="fill:none;stroke:#ffffff;stroke-width:15px;stroke-opacity:0" id="rect145"></rect>
+      <rect x="-6" y="-6" width="112" height="92" class="djs-outline" style="fill:none" id="rect147"></rect>
+    </g>
+  </g>
+</svg>

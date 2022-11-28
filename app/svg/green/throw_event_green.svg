@@ -1,0 +1,23 @@
+<svg width="9.5248766mm" height="9.5249958mm" viewBox="0 0 9.5248766 9.5249958">
+    <g id="g3230" transform="matrix(0.05388288,0,0,0.05602939,0.04122037,0.05602939)">
+        <ellipse cx="87.620003" cy="84" rx="85.385002" ry="82" fill="#ffffff" stroke="#000000" stroke-width="6" id="ellipse3192" style="fill:#42b415;fill-opacity:1"></ellipse>
+        <ellipse cx="87.5" cy="84.5" rx="71.264999" ry="67.5" fill="#ffffff" stroke="#000000" stroke-width="6" id="ellipse3194" style="fill:none"></ellipse>
+        <path d="m 68,63 q 20,-20 40,0" fill="none" stroke="#000000" stroke-width="4" stroke-miterlimit="10" id="path3196"></path>
+        <path d="m 58,53 q 30,-30 60,0" fill="none" stroke="#000000" stroke-width="5" stroke-miterlimit="10" id="path3198"></path>
+        <circle cx="87.5" cy="72" fill="#ffffff" stroke="#000000" stroke-width="4" id="ellipse3200" r="5" style="fill:none"></circle>
+        <circle cx="87.010002" cy="106.54" fill="#000000" stroke="#000000" stroke-width="3" id="ellipse3202" r="11.543478"></circle>
+        <path d="M 107.53,121 V 98" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path3204"></path>
+        <path d="M 111.95,121 V 98" fill="none" stroke="#000000" stroke-width="7" stroke-miterlimit="10" id="path3206"></path>
+        <path d="m 106.1,119.5 h 9.34" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path3208"></path>
+        <path d="m 100.48,99.5 h 7.69" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path3210"></path>
+        <path d="M 113.3,99.5 H 121" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path3212"></path>
+        <path d="m 119.5,98.5 v -6" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path3214"></path>
+        <path d="m 102,98.5 v -6" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path3216"></path>
+        <path d="M 100.41,95.5 H 121" fill="none" stroke="#000000" stroke-width="9" stroke-miterlimit="10" id="path3218"></path>
+        <path d="M 62.64,121 V 91" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path3220"></path>
+        <path d="M 66.05,121 V 91" fill="none" stroke="#000000" stroke-width="9" stroke-miterlimit="10" id="path3222"></path>
+        <path d="m 61.14,92 h 9.42" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path3224"></path>
+        <path d="m 61.14,120 h 9.42" fill="none" stroke="#000000" stroke-width="3" stroke-miterlimit="10" id="path3226"></path>
+        <ellipse cx="87.010002" cy="106.5" rx="5.1300001" ry="5.5" fill="#ffffff" stroke="#000000" stroke-width="3" id="ellipse3228" style="fill:#42b415;fill-opacity:1"></ellipse>
+    </g>
+</svg>

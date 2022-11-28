@@ -7,6 +7,7 @@ import newDiagram from '../resources/newDiagram.bpmn';
 import customModule from './custom';
 import iotExtension from '../resources/iot.json';
 import camundaExtension from '../resources/camunda.json';
+import iotRuleExtension from '../resources/iotRule.json';
 import {is, getBusinessObject} from "bpmn-js/lib/util/ModelUtil";
 
 const containerEl = document.getElementById('js-canvas'),
@@ -36,7 +37,8 @@ const bpmnModeler = new BpmnModeler({
   taskResizingEnabled: true,
   moddleExtensions: {
     iot: iotExtension,
-    camunda: camundaExtension
+    camunda: camundaExtension,
+    iotr: iotRuleExtension
   }
 });
 

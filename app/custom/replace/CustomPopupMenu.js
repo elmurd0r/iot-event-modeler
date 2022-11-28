@@ -15,7 +15,12 @@ import {
     remove as domRemove
 } from 'min-dom';
 
-import {getEncodedSvg} from "../CustomUtil";
+import {
+    attr as svgAttr,
+    create as svgCreate
+} from 'tiny-svg';
+
+import {getSvg} from "../CustomUtil";
 
 var DATA_REF = 'data-id';
 
@@ -528,8 +533,12 @@ CustomPopupMenu.prototype._createEntry = function(entry, id) {
         });
         // custom img if iot
         if (entry.iot) {
-            let svgSrc = getEncodedSvg(entry.iot, null);
-            entryContainer.appendChild(domify('<img style="width: 20px" src="' + svgSrc  + '" />'));
+            let svgContainer = svgCreate(getSvg(entry.iot, null));
+            svgAttr(svgContainer, {
+                width: 20,
+                height: 20
+            });
+            entryContainer.appendChild(domify(svgContainer.outerHTML));
         }
     }
 
