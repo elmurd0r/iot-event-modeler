@@ -15,7 +15,6 @@ const containerEl = document.getElementById('js-canvas'),
       panel = document.getElementById('js-properties-panel'),
       saveXML = document.getElementById('saveXML'),
       saveSVG = document.getElementById('saveSVG'),
-      btnExec = document.getElementById('btnExec'),
       newDiaBtn = document.getElementById('js-create-diagram'),
       newDia = document.getElementById('newDia');
 
@@ -66,14 +65,6 @@ saveSVG.addEventListener('click', (event)=>{
   }).catch((e)=>{
     setEncoded(saveSVG, 'diagram.svg', null);
   });
-})
-
-btnExec.addEventListener('click', (event)=>{
-  bpmnModeler.saveXML({format: true}).then(({ xml }) => {
-    sessionStorage.setItem('xml', xml)
-  }).catch((e)=>{
-    console.log("save xml failure");
-  })
 })
 
 newDiaBtn.addEventListener('click', (e)=>{
