@@ -94,6 +94,14 @@ export default class CustomRenderer extends BaseRenderer {
       }
       return svgElement;
     }
+    if(!isNil(iotGateway) && iotGateway === 'condition') {
+      //manipulate too rounded corners
+      svgAttr(shape, {
+        rx: 2,
+        ry: 2
+      })
+      return shape
+    }
     if(!isNil(iotCondEvent)) {
       let svg, color;
       if(element.type === "bpmn:BoundaryEvent") {

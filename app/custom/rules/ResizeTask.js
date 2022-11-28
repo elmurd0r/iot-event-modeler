@@ -32,6 +32,11 @@ ResizeTask.prototype.init = function() {
                     data.newBounds.height=Math.max(50,data.newBounds.height);
                     return true;
                 }
+                if(data.shape.businessObject.gateway === "and" || data.shape.businessObject.gateway === "or"){
+                    data.newBounds.width=Math.max(50,data.newBounds.width);
+                    data.newBounds.height=Math.max(20,data.newBounds.height);
+                    return true;
+                }
                 data.newBounds.width=Math.max(100,data.newBounds.width);
                 data.newBounds.height=Math.max(42,data.newBounds.height);
             }
