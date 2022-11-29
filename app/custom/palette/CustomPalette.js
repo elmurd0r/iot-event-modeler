@@ -94,7 +94,7 @@ export default class CustomPalette {
     return {
       'create.iot-sensor': {
         group: 'iot',
-        title: translate('Create IoT Sensor'),
+        title: translate('Create IoT Sensor Artifact'),
         className: 'iot-sensor iot-palette-element',
         iot: 'sensor',
         action: {
@@ -105,7 +105,7 @@ export default class CustomPalette {
         'create.iot-decision-group': {
           group: 'iot',
           className: 'iot-decision-container iot-palette-element',
-          title: translate('Create IoT Decision Group'),
+          title: translate('Create IoT Decision Container'),
           iot: 'decision-group',
           action: {
             dragstart: createDecision("decision-group"),
@@ -116,7 +116,7 @@ export default class CustomPalette {
         group: 'iotr',
         iot: 'or',
         className: 'iotr-gateway iot-palette-element',
-        title: translate('Create IoT OR Gateway'),
+        title: translate('Create Or Conjunction'),
         action: {
           dragstart: createRuleGateway("or"),
           click: createRuleGateway("or")
@@ -126,7 +126,7 @@ export default class CustomPalette {
         group: 'iotr',
         iot: 'and',
         className: 'iotr-gateway iot-palette-element',
-        title: translate('Create IoT AND Gateway'),
+        title: translate('Create And Conjunction'),
         action: {
           dragstart: createRuleGateway("and"),
           click: createRuleGateway("and")
@@ -136,7 +136,7 @@ export default class CustomPalette {
         group: 'iotr',
         iot: 'result',
         className: 'iotr-gateway iot-palette-element',
-        title: translate('Create IoT Result Gateway'),
+        title: translate('Create Output-Entry'),
         action: {
           dragstart: createRuleGateway("result"),
           click: createRuleGateway("result")
@@ -146,7 +146,7 @@ export default class CustomPalette {
       group: 'iotr',
           iot: 'condition',
           className: 'iotr-gateway iot-palette-element',
-          title: translate('Create IoT condition Gateway'),
+          title: translate('Create Condition'),
           action: {
         dragstart: createRuleGateway("condition"),
             click: createRuleGateway("condition")
@@ -166,7 +166,7 @@ export default class CustomPalette {
         group: 'iotr',
         iot: 'cond-interm',
         className: 'iotr-event iot-palette-element',
-        title: translate('Create IoT conditional Intermediate event'),
+        title: translate('Create IoT conditional intermediate event'),
         action: {
           dragstart: createIotConditionalInterm(),
           click: createIotConditionalInterm()
