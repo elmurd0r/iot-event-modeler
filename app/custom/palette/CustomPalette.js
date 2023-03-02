@@ -84,7 +84,8 @@ export default class CustomPalette {
 
         const shape = elementFactory.createShape({
           type: 'bpmn:IntermediateCatchEvent',
-          businessObject: businessObject
+          businessObject: businessObject,
+          eventDefinitionType: 'bpmn:MessageEventDefinition'
         });
 
         create.start(event, shape);
