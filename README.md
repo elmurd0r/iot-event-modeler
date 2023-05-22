@@ -1,9 +1,16 @@
 # IoT Event Modeler
 
 ## About
-This project creates an IoT event BPMN 2.0 modeler based on bpmn.io.
+This project creates a BPMN 2.0 modeler supporting *IoT-driven Events* based on bpmn.io.
 
 ![Screenshot](resources/Screenshot.png)
+
+You can find out more about the IoT event modeler in the following publication:
+
+Integrating IoT-Driven Events into Business Processes<br>
+Yusuf Kirikkayis, Florian Gallik, Ronny Seiger, and Manfred Reichert<br>
+In: Intelligent Information Systems, CAiSE Forum 2023, Zaragoza, Spain, June 12–16, 2023<br>
+https://link.springer.com/chapter/10.1007/978-3-031-34674-3_11
 
 
 ## Run the Modeler
